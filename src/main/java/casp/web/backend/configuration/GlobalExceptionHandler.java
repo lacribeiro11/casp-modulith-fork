@@ -1,4 +1,4 @@
-package casp.web.backend.presentation.layer.configuration;
+package casp.web.backend.configuration;
 
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;

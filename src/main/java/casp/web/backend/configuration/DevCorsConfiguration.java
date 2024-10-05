@@ -1,4 +1,4 @@
-package casp.web.backend.presentation.layer.configuration;
+package casp.web.backend.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
