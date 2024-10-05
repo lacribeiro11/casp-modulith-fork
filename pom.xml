@@ -176,28 +176,31 @@
                     <excludes>
                         <exclude>**/*Test*.class</exclude>
                         <exclude>**/AdminApplication.class</exclude>
-                        <exclude>**/presentation/layer/configuration/*.class</exclude>
-                        <exclude>**/presentation/layer/dtos/**/*.class</exclude>
-                        <exclude>**/data/access/layer/commons/*.class</exclude>
-                        <exclude>**/data/access/layer/enumerations/*.class</exclude>
-                        <exclude>**/data/access/layer/dog/*Dog.class</exclude>
-                        <exclude>**/data/access/layer/dog/*DogHasHandler.class</exclude>
-                        <exclude>**/data/access/layer/dog/*Grade.class</exclude>
-                        <exclude>**/data/access/layer/event/calendar/*Calendar.class</exclude>
-                        <exclude>**/data/access/layer/event/options/*.class</exclude>
-                        <exclude>**/data/access/layer/event/participants/*BaseParticipant.class</exclude>
-                        <exclude>**/data/access/layer/event/participants/*CoTrainer.class</exclude>
-                        <exclude>**/data/access/layer/event/participants/*EventParticipant.class</exclude>
-                        <exclude>**/data/access/layer/event/participants/*ExamParticipant.class</exclude>
-                        <exclude>**/data/access/layer/event/participants/*Space.class</exclude>
-                        <exclude>**/data/access/layer/event/types/*BaseEvent.class</exclude>
-                        <exclude>**/data/access/layer/event/types/*Course.class</exclude>
-                        <exclude>**/data/access/layer/event/types/*Event.class</exclude>
-                        <exclude>**/data/access/layer/event/types/*Exam.class</exclude>
-                        <exclude>**/data/access/layer/event/TypesRegex.class</exclude>
-                        <exclude>**/data/access/layer/member/*Card.class</exclude>
-                        <exclude>**/data/access/layer/member/*Member.class</exclude>
-                        <exclude>**/data/access/layer/member/*MembershipFee.class</exclude>
+                        <exclude>**/common/*.class</exclude>
+                        <exclude>**/configuration/*.class</exclude>
+                        <exclude>**/commons/*.class</exclude>
+                        <exclude>**/dtos/**/*.class</exclude>
+                        <exclude>**/*Dog.class</exclude>
+                        <exclude>**/*DogHasHandler.class</exclude>
+                        <exclude>**/*Grade.class</exclude>
+                        <exclude>**/*Calendar.class</exclude>
+                        <exclude>**/*CalendarEntry.class</exclude>
+                        <exclude>**/*BaseEventOption.class</exclude>
+                        <exclude>**/*DailyEventOption.class</exclude>
+                        <exclude>**/*WeeklyEventOption.class</exclude>
+                        <exclude>**/*WeeklyEventOptionRecurrence.class</exclude>
+                        <exclude>**/*BaseParticipant.class</exclude>
+                        <exclude>**/*CoTrainer.class</exclude>
+                        <exclude>**/*EventParticipant.class</exclude>
+                        <exclude>**/*ExamParticipant.class</exclude>
+                        <exclude>**/*Space.class</exclude>
+                        <exclude>**/*BaseEvent.class</exclude>
+                        <exclude>**/*Course.class</exclude>
+                        <exclude>**/*Event.class</exclude>
+                        <exclude>**/*Exam.class</exclude>
+                        <exclude>**/*Member.class</exclude>
+                        <exclude>**/*MembershipFee.class</exclude>
+                        <exclude>**/*Card.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
