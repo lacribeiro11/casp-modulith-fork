@@ -1,0 +1,44 @@
+package casp.web.backend.datav2.event.types;
+
+import casp.web.backend.common.EntityStatus;
+import casp.web.backend.datav2.event.participants.EventParticipant;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class EventTest {
+
+    private Event event;
+
+    private static EventParticipant mockParticipant(final EntityStatus entityStatus) {
+        var participant = mock(EventParticipant.class, Answers.RETURNS_DEEP_STUBS);
+        when(participant.getMember().getEntityStatus()).thenReturn(entityStatus);
+        return participant;
+    }
+
+    @BeforeEach
+    void setUp() {
+        event = new Event();
+    }
+
+    @Test
+    void getParticipants() {
+        var active = mockParticipant(EntityStatus.ACTIVE);
+        var inactive = mockParticipant(EntityStatus.INACTIVE);
+        var deleted = mockParticipant(EntityStatus.DELETED);
+        event.setParticipants(Set.of(active, inactive, deleted));
+
+        assertThat(event.getParticipants())
+                .singleElement()
+                .isEqualTo(active);
+    }
+}
