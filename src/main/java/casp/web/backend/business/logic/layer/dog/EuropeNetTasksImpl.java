@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.dog;
 
+import casp.web.backend.common.EuropeNetState;
 import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.enumerations.EuropeNetState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
