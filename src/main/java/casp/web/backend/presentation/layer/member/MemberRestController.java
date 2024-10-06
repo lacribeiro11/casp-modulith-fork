@@ -114,4 +114,11 @@ class MemberRestController {
     ResponseEntity<Set<String>> getMembersEmailByIds(final @RequestParam @Size(min = 1) Set<UUID> membersId) {
         return ResponseEntity.ok(memberService.getMembersEmailByIds(membersId));
     }
+
+    // TODO #16 Delete after the data migration
+    @PostMapping("/migrate-data")
+    ResponseEntity<Void> migrateDataToV2() {
+        memberService.migrateDataToV2();
+        return ResponseEntity.noContent().build();
+    }
 }

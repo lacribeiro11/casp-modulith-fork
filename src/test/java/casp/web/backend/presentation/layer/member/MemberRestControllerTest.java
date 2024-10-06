@@ -1,6 +1,7 @@
 package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.TestFixture;
+import casp.web.backend.business.logic.layer.member.MemberService;
 import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.enumerations.EntityStatus;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -35,6 +37,7 @@ import static casp.web.backend.presentation.layer.dtos.member.MemberMapper.MEMBE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,6 +66,9 @@ class MemberRestControllerTest {
     private CardRepository cardRepository;
     @Autowired
     private DogRepository dogRepository;
+
+    @SpyBean
+    private MemberService memberService;
 
     private MemberDto john;
     private MemberDto zephyr;
@@ -151,6 +157,14 @@ class MemberRestControllerTest {
                 .andReturn();
 
         assertThat(MvcMapper.toObject(mvcResult, typeReference)).containsExactlyInAnyOrder(john.getEmail(), zephyr.getEmail());
+    }
+
+    @Test
+    void migrateDataToV2() throws Exception {
+        mockMvc.perform(post(MEMBER_URL_PREFIX + "/migrate-data"))
+                .andExpect(status().isNoContent());
+
+        verify(memberService).migrateDataToV2();
     }
 
     private ResultActions getMemberById(final UUID id) throws Exception {

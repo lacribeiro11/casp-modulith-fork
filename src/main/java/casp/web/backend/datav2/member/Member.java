@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 @QueryEntity
-@Document
+// TODO #16 Rename it back to member after the data migration
+@Document(collection = "memberV2")
 public class Member extends BaseDocument {
 
     @NotBlank
