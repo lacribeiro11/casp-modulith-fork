@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.dog;
 
 import casp.web.backend.common.EuropeNetState;
+import casp.web.backend.common.Gender;
 import casp.web.backend.data.access.layer.commons.BaseDocument;
-import casp.web.backend.data.access.layer.enumerations.Gender;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

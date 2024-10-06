@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.member;
 
+import casp.web.backend.common.Gender;
 import casp.web.backend.data.access.layer.commons.BaseDocument;
-import casp.web.backend.data.access.layer.enumerations.Gender;
 import casp.web.backend.data.access.layer.enumerations.Role;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
