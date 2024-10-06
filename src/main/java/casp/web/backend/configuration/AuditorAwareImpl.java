@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.commons;
+package casp.web.backend.configuration;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
