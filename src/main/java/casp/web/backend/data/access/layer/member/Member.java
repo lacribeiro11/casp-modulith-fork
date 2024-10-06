@@ -3,6 +3,7 @@ package casp.web.backend.data.access.layer.member;
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
+import casp.web.backend.datav2.member.Card;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
 
 @QueryEntity
 @Document
@@ -51,6 +51,10 @@ public class Member extends BaseDocument {
     @NotNull
     @Valid
     private Set<MembershipFee> membershipFees = new HashSet<>();
+
+    @NotNull
+    @Valid
+    private Set<Card> cards = new HashSet<>();
 
     public String getFirstName() {
         return firstName;
@@ -140,6 +144,14 @@ public class Member extends BaseDocument {
         this.membershipFees = membershipFees;
     }
 
+    public Set<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<Card> cards) {
+        this.cards = cards;
+    }
+
     @Override
     public boolean equals(final Object o) {
         return super.equals(o);
@@ -148,29 +160,5 @@ public class Member extends BaseDocument {
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Member.class.getSimpleName() + "[", "]")
-                .add("firstName='" + firstName + "'")
-                .add("lastName='" + lastName + "'")
-                .add("birthDate=" + birthDate)
-                .add("gender=" + gender)
-                .add("telephoneNumber='" + telephoneNumber + "'")
-                .add("email='" + email + "'")
-                .add("address='" + address + "'")
-                .add("postcode='" + postcode + "'")
-                .add("city='" + city + "'")
-                .add("roles=" + roles)
-                .add("membershipFees=" + membershipFees)
-                .add("id=" + id)
-                .add("version=" + version)
-                .add("createdBy='" + createdBy + "'")
-                .add("created=" + created)
-                .add("modifiedBy='" + modifiedBy + "'")
-                .add("modified=" + modified)
-                .add("entityStatus=" + entityStatus)
-                .toString();
     }
 }

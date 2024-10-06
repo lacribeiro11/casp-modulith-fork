@@ -7,7 +7,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDate;
 
-// Cannot be a record because of querydsl
 @PaymentConstraint
 public class MembershipFee implements Payment {
     private String comment;

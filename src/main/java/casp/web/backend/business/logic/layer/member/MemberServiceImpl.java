@@ -10,7 +10,6 @@ import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.datav2.member.MemberV2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,6 @@ class MemberServiceImpl implements MemberService {
     private final BaseParticipantObserver baseParticipantObserver;
     private final BaseEventObserver baseEventObserver;
     private final CardRepository cardRepository;
-    private final MemberV2Repository memberV2Repository;
 
     @Autowired
     MemberServiceImpl(final MemberRepository memberRepository,
@@ -50,15 +48,13 @@ class MemberServiceImpl implements MemberService {
                       final CardService cardService,
                       final BaseParticipantObserver baseParticipantObserver,
                       final BaseEventObserver baseEventObserver,
-                      final CardRepository cardRepository,
-                      final MemberV2Repository memberV2Repository) {
+                      final CardRepository cardRepository) {
         this.memberRepository = memberRepository;
         this.dogHasHandlerService = dogHasHandlerService;
         this.cardService = cardService;
         this.baseParticipantObserver = baseParticipantObserver;
         this.baseEventObserver = baseEventObserver;
         this.cardRepository = cardRepository;
-        this.memberV2Repository = memberV2Repository;
     }
 
     @Override
@@ -154,9 +150,8 @@ class MemberServiceImpl implements MemberService {
     public void migrateDataToV2() {
         memberRepository.findAll().forEach(mv1 -> {
             var cardV1Set = cardRepository.findAllByMemberId(mv1.getId());
-            var memberV2 = MEMBER_V2_MAPPER.toMemberV2(mv1);
-            memberV2.setCards(MEMBER_V2_MAPPER.toCardV2Set(cardV1Set));
-            memberV2Repository.save(memberV2);
+            mv1.setCards(MEMBER_V2_MAPPER.toCardV2Set(cardV1Set));
+            memberRepository.save(mv1);
         });
     }
 }

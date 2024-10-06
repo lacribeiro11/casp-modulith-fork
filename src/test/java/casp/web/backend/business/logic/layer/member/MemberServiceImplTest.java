@@ -62,7 +62,7 @@ class MemberServiceImplTest {
     private BaseEventObserver baseEventObserver;
 
     @Captor
-    private ArgumentCaptor<casp.web.backend.datav2.member.Member> memberV2Captor;
+    private ArgumentCaptor<Member> memberCaptor;
 
     @InjectMocks
     private MemberServiceImpl memberService;
@@ -156,9 +156,9 @@ class MemberServiceImplTest {
 
         memberService.migrateDataToV2();
 
-        verify(memberV2Repository).save(memberV2Captor.capture());
+        verify(memberRepository).save(memberCaptor.capture());
 
-        var memberV2 = memberV2Captor.getValue();
+        var memberV2 = memberCaptor.getValue();
         assertEquals(member.getId(), memberV2.getId());
         assertThat(memberV2.getMembershipFees())
                 .singleElement()
