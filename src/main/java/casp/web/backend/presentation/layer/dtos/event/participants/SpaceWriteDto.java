@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.commons.Payment;
-import casp.web.backend.data.access.layer.commons.PaymentConstraint;
+import casp.web.backend.configuration.Payment;
+import casp.web.backend.configuration.PaymentConstraint;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;

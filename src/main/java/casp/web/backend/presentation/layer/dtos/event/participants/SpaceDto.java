@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.commons.Payment;
-import casp.web.backend.data.access.layer.commons.PaymentConstraint;
+import casp.web.backend.configuration.Payment;
+import casp.web.backend.configuration.PaymentConstraint;
 import casp.web.backend.data.access.layer.event.participants.Space;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
 import jakarta.validation.constraints.Digits;

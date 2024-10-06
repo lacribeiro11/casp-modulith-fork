@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
-import casp.web.backend.data.access.layer.commons.Payment;
-import casp.web.backend.data.access.layer.commons.PaymentConstraint;
+import casp.web.backend.configuration.Payment;
+import casp.web.backend.configuration.PaymentConstraint;
 import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.event.types.Course;
 import com.querydsl.core.annotations.QueryEntity;
