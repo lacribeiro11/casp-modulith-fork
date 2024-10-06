@@ -1,7 +1,6 @@
 package casp.web.backend.data.access.layer.event.calendar;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.commons.BaseDocumentTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CalendarTest extends BaseDocumentTest {
+class CalendarTest {
     @Test
     void sort() {
         var nowCalendarEntry = TestFixture.createCalendarEntry();

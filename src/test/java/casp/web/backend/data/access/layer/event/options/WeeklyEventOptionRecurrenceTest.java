@@ -1,7 +1,6 @@
 package casp.web.backend.data.access.layer.event.options;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.commons.BaseDocumentTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class WeeklyEventOptionRecurrenceTest extends BaseDocumentTest {
+class WeeklyEventOptionRecurrenceTest {
 
     @Test
     void sort() {
