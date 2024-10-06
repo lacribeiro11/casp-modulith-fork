@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.enumerations.EventResponse;
+import casp.web.backend.common.EventResponse;
 import casp.web.backend.data.access.layer.event.TypesRegex;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

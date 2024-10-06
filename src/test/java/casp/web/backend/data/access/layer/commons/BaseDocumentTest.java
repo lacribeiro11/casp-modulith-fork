@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.commons;
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.enumerations.EventResponse;
+import casp.web.backend.common.EventResponse;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipant;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

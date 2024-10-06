@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 
+import casp.web.backend.common.EventResponse;
 import casp.web.backend.data.access.layer.commons.BaseDocument;
-import casp.web.backend.data.access.layer.enumerations.EventResponse;
 import casp.web.backend.data.access.layer.event.TypesRegex;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import com.querydsl.core.annotations.QueryEntity;
