@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.types;
 
 
-import casp.web.backend.data.access.layer.commons.BaseDocument;
+import casp.web.backend.common.BaseDocument;
 import casp.web.backend.data.access.layer.event.TypesRegex;
 import casp.web.backend.data.access.layer.event.options.DailyEventOption;
 import casp.web.backend.data.access.layer.event.options.WeeklyEventOption;

@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.member;
 
-import casp.web.backend.data.access.layer.commons.BaseDocument;
+import casp.web.backend.common.BaseDocument;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

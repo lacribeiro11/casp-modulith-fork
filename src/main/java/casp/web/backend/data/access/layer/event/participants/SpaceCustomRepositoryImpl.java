@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
+import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.commons.BaseDocument;
 import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.QDogHasHandler;
 import com.querydsl.core.types.dsl.BooleanExpression;
