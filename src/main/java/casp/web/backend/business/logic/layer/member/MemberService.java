@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.member;
 
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.enumerations.Role;
+import casp.web.backend.common.Role;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.data.access.layer.member.Member;
 import jakarta.annotation.Nullable;
