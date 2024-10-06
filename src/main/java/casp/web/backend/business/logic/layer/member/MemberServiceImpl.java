@@ -7,8 +7,10 @@ import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
 import casp.web.backend.data.access.layer.enumerations.EntityStatus;
 import casp.web.backend.data.access.layer.enumerations.Role;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
+import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.datav2.member.MemberV2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static casp.web.backend.business.logic.layer.member.MemberV2Mapper.MEMBER_V2_MAPPER;
 
 /**
  * Member Service
@@ -37,18 +41,24 @@ class MemberServiceImpl implements MemberService {
     private final CardService cardService;
     private final BaseParticipantObserver baseParticipantObserver;
     private final BaseEventObserver baseEventObserver;
+    private final CardRepository cardRepository;
+    private final MemberV2Repository memberV2Repository;
 
     @Autowired
     MemberServiceImpl(final MemberRepository memberRepository,
                       final DogHasHandlerService dogHasHandlerService,
                       final CardService cardService,
                       final BaseParticipantObserver baseParticipantObserver,
-                      final BaseEventObserver baseEventObserver) {
+                      final BaseEventObserver baseEventObserver,
+                      final CardRepository cardRepository,
+                      final MemberV2Repository memberV2Repository) {
         this.memberRepository = memberRepository;
         this.dogHasHandlerService = dogHasHandlerService;
         this.cardService = cardService;
         this.baseParticipantObserver = baseParticipantObserver;
         this.baseEventObserver = baseEventObserver;
+        this.cardRepository = cardRepository;
+        this.memberV2Repository = memberV2Repository;
     }
 
     @Override
@@ -138,5 +148,15 @@ class MemberServiceImpl implements MemberService {
                     .ifPresentOrElse(baseEvent::setMember,
                             () -> LOG.warn("No active member found with id: {}", baseEvent.getMemberId()));
         }
+    }
+
+    @Override
+    public void migrateDataToV2() {
+        memberRepository.findAll().forEach(mv1 -> {
+            var cardV1Set = cardRepository.findAllByMemberId(mv1.getId());
+            var memberV2 = MEMBER_V2_MAPPER.toMemberV2(mv1);
+            memberV2.setCards(MEMBER_V2_MAPPER.toCardV2Set(cardV1Set));
+            memberV2Repository.save(memberV2);
+        });
     }
 }

@@ -7,12 +7,17 @@ import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
 import casp.web.backend.data.access.layer.enumerations.EntityStatus;
 import casp.web.backend.data.access.layer.enumerations.Role;
 import casp.web.backend.data.access.layer.event.types.Event;
+import casp.web.backend.data.access.layer.member.Card;
+import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.datav2.member.MemberV2Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,10 +32,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -40,6 +47,10 @@ import static org.mockito.Mockito.when;
 class MemberServiceImplTest {
     @Mock
     private MemberRepository memberRepository;
+    @Mock
+    private CardRepository cardRepository;
+    @Mock
+    private MemberV2Repository memberV2Repository;
 
     @Mock
     private DogHasHandlerService dogHasHandlerService;
@@ -49,6 +60,9 @@ class MemberServiceImplTest {
     private BaseParticipantObserver baseParticipantObserver;
     @Mock
     private BaseEventObserver baseEventObserver;
+
+    @Captor
+    private ArgumentCaptor<casp.web.backend.datav2.member.Member> memberV2Captor;
 
     @InjectMocks
     private MemberServiceImpl memberService;
@@ -129,6 +143,29 @@ class MemberServiceImplTest {
         verify(cardService).activateCardsByMemberId(member.getId());
         verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(member.getId());
         verify(baseEventObserver).activateBaseEventsByMemberId(member.getId());
+    }
+
+    @Test
+    void migrateDataToV2() {
+        var membershipFee = TestFixture.createMembershipFee();
+        var card = mock(Card.class);
+        member.setMembershipFees(Set.of(membershipFee));
+        when(memberRepository.findAll()).thenReturn(List.of(member));
+        when(cardRepository.findAllByMemberId(member.getId())).thenReturn(Set.of(card));
+        when(card.getCode()).thenReturn(UUID.randomUUID().toString());
+
+        memberService.migrateDataToV2();
+
+        verify(memberV2Repository).save(memberV2Captor.capture());
+
+        var memberV2 = memberV2Captor.getValue();
+        assertEquals(member.getId(), memberV2.getId());
+        assertThat(memberV2.getMembershipFees())
+                .singleElement()
+                .satisfies(mfv2 -> assertEquals(membershipFee.getPaidDate(), mfv2.getPaidDate()));
+        assertThat(memberV2.getCards())
+                .singleElement()
+                .satisfies(cardV2 -> assertEquals(card.getCode(), cardV2.getCode()));
     }
 
     @Nested

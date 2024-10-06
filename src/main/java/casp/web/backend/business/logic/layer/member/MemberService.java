@@ -36,4 +36,6 @@ public interface MemberService {
     Set<String> getMembersEmailByIds(Set<UUID> membersId);
 
     void setActiveMemberToBaseEvent(BaseEvent baseEvent);
+
+    void migrateDataToV2();
 }

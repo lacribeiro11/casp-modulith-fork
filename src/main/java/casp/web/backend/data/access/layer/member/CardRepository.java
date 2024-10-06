@@ -16,4 +16,6 @@ public interface CardRepository extends MongoRepository<Card, UUID>, QuerydslPre
     Optional<Card> findByIdAndEntityStatus(UUID id, EntityStatus entityStatus);
 
     Set<Card> findAllByMemberIdAndEntityStatusNot(UUID memberId, EntityStatus entityStatus);
+
+    Set<Card> findAllByMemberId(UUID memberId);
 }
