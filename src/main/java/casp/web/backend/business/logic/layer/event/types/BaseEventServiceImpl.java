@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.event.types;
 
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantService;
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipant;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.data.access.layer.event.types.BaseEventRepository;

@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.dog;
 
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.enumerations.EuropeNetState;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

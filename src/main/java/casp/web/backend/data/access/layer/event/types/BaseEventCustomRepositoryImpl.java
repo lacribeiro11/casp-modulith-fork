@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.event.types;
 
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

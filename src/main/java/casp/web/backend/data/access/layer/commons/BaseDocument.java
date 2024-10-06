@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.commons;
 
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

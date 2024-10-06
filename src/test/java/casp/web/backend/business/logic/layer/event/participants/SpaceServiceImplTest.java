@@ -1,9 +1,9 @@
 package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.TestFixture;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipant;
 import casp.web.backend.data.access.layer.event.participants.Space;
 import casp.web.backend.data.access.layer.event.participants.SpaceRepository;

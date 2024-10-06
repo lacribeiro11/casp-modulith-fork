@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.presentation.layer.MvcMapper;

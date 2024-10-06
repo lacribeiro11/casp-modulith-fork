@@ -1,6 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+
+import casp.web.backend.common.EntityStatus;
 
 import java.util.Set;
 import java.util.UUID;

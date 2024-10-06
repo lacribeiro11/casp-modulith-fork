@@ -3,7 +3,7 @@ package casp.web.backend.presentation.layer.member;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.business.logic.layer.member.CardService;
 import casp.web.backend.business.logic.layer.member.MemberService;
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.enumerations.Role;
 import casp.web.backend.presentation.layer.dtos.member.MemberDto;
 import jakarta.validation.Valid;

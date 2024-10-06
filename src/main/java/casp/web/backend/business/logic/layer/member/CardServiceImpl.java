@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.member;
 
 
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.member.Card;
 import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;

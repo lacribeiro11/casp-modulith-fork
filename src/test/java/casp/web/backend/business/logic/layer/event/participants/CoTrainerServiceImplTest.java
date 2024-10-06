@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.enumerations.EntityStatus;
+import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipant;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipantRepository;
 import casp.web.backend.data.access.layer.event.participants.CoTrainer;
