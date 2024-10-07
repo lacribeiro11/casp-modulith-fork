@@ -14,10 +14,6 @@ public interface BaseMapper<E extends BaseDocument, D> {
     @Mapping(target = "entityStatus", ignore = true)
     @Mapping(target = "id", conditionExpression = "java(null != dto.getId())")
     @Mapping(target = "version", conditionExpression = "java(0 < dto.getVersion())")
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "created", conditionExpression = "java(null != dto.getCreated())")
-    @Mapping(target = "modifiedBy", ignore = true)
-    @Mapping(target = "modified", conditionExpression = "java(null != dto.getModified())")
     E toDocument(D dto);
 
     List<D> toDtoList(List<E> documentList);
