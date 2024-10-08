@@ -1,4 +1,4 @@
-package casp.web.backend.depracrated.member;
+package casp.web.backend.deprecated.member;
 
 import casp.web.backend.common.EntityStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;

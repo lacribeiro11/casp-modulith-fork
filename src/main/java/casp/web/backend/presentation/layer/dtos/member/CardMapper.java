@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.member;
 
-import casp.web.backend.depracrated.member.Card;
+import casp.web.backend.deprecated.member.Card;
 import casp.web.backend.presentation.layer.dtos.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

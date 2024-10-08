@@ -10,8 +10,8 @@ import casp.web.backend.data.access.layer.event.participants.BaseParticipantRepo
 import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.depracrated.member.Card;
-import casp.web.backend.depracrated.member.CardRepository;
+import casp.web.backend.deprecated.member.Card;
+import casp.web.backend.deprecated.member.CardRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.RestResponsePage;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;

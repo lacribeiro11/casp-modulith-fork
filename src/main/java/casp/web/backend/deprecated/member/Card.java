@@ -1,4 +1,4 @@
-package casp.web.backend.depracrated.member;
+package casp.web.backend.deprecated.member;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.data.access.layer.member.Member;

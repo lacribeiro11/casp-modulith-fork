@@ -1,4 +1,4 @@
-package casp.web.backend.depracrated.member;
+package casp.web.backend.deprecated.member;
 
 import casp.web.backend.data.access.layer.member.Card;
 import org.mapstruct.Mapper;
@@ -14,7 +14,7 @@ import java.util.Set;
 public interface MemberV2Mapper {
     MemberV2Mapper MEMBER_V2_MAPPER = Mappers.getMapper(MemberV2Mapper.class);
 
-    Card toCardV2(casp.web.backend.depracrated.member.Card card);
+    Card toCardV2(casp.web.backend.deprecated.member.Card card);
 
-    Set<Card> toCardV2Set(Set<casp.web.backend.depracrated.member.Card> cardSet);
+    Set<Card> toCardV2Set(Set<casp.web.backend.deprecated.member.Card> cardSet);
 }

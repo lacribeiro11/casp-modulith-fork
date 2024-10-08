@@ -3,8 +3,8 @@ package casp.web.backend.business.logic.layer.member;
 
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.depracrated.member.Card;
-import casp.web.backend.depracrated.member.CardRepository;
+import casp.web.backend.deprecated.member.Card;
+import casp.web.backend.deprecated.member.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

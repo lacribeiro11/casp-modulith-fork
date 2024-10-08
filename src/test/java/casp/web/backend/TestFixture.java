@@ -16,7 +16,7 @@ import casp.web.backend.data.access.layer.event.types.Event;
 import casp.web.backend.data.access.layer.event.types.Exam;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MembershipFee;
-import casp.web.backend.depracrated.member.Card;
+import casp.web.backend.deprecated.member.Card;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

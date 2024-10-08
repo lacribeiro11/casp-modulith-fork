@@ -180,6 +180,7 @@
                         <exclude>**/configuration/*.class</exclude>
                         <exclude>**/commons/*.class</exclude>
                         <exclude>**/dtos/**/*.class</exclude>
+                        <exclude>**/deprecated/**/*.class</exclude>
                         <exclude>**/*Dog.class</exclude>
                         <exclude>**/*DogHasHandler.class</exclude>
                         <exclude>**/*Grade.class</exclude>
