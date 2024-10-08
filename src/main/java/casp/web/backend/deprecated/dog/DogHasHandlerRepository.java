@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.dog;
+package casp.web.backend.deprecated.dog;
 
 import casp.web.backend.common.EntityStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -9,11 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * IDogHasHandlerRepository
- *
- * @author sarah
+ * @deprecated It will be removed in #3.
  */
-
 public interface DogHasHandlerRepository extends MongoRepository<DogHasHandler, UUID>, QuerydslPredicateExecutor<DogHasHandler>, DogHasHandlerCustomRepository {
 
     Set<DogHasHandler> findAllByDogIdAndEntityStatus(UUID dogId, EntityStatus entityStatus);

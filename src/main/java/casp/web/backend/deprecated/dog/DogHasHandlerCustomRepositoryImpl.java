@@ -1,6 +1,8 @@
-package casp.web.backend.data.access.layer.dog;
+package casp.web.backend.deprecated.dog;
 
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.data.access.layer.dog.Dog;
+import casp.web.backend.data.access.layer.dog.QDog;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.QMember;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
 @Component
 class DogHasHandlerCustomRepositoryImpl implements DogHasHandlerCustomRepository {
     private static final QMember MEMBER = QMember.member;

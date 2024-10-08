@@ -2,8 +2,8 @@ package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.dog.DogHasHandler;
-import casp.web.backend.data.access.layer.dog.QDogHasHandler;
+import casp.web.backend.deprecated.dog.DogHasHandler;
+import casp.web.backend.deprecated.dog.QDogHasHandler;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;

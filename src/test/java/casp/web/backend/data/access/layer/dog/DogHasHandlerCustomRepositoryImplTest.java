@@ -3,6 +3,8 @@ package casp.web.backend.data.access.layer.dog;
 
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.deprecated.dog.DogHasHandler;
+import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
