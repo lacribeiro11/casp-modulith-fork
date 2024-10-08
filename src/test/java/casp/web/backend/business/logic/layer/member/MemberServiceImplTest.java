@@ -9,7 +9,6 @@ import casp.web.backend.common.Role;
 import casp.web.backend.data.access.layer.event.types.Event;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.datav2.member.MemberV2Repository;
 import casp.web.backend.deprecated.member.Card;
 import casp.web.backend.deprecated.member.CardRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,8 +48,6 @@ class MemberServiceImplTest {
     private MemberRepository memberRepository;
     @Mock
     private CardRepository cardRepository;
-    @Mock
-    private MemberV2Repository memberV2Repository;
 
     @Mock
     private DogHasHandlerService dogHasHandlerService;
