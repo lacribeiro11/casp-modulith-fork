@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.util.StringJoiner;
 
 @QueryEntity
 @Document
@@ -148,30 +147,5 @@ public class Dog extends BaseDocument {
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Dog.class.getSimpleName() + "[", "]")
-                .add("created=" + created)
-                .add("name='" + name + "'")
-                .add("breederName='" + breederName + "'")
-                .add("breedName='" + breedName + "'")
-                .add("birthDate=" + birthDate)
-                .add("pedigree='" + pedigree + "'")
-                .add("gender=" + gender)
-                .add("chipNumber='" + chipNumber + "'")
-                .add("rabiesDate=" + rabiesDate)
-                .add("height=" + height)
-                .add("ownerName='" + ownerName + "'")
-                .add("ownerAddress='" + ownerAddress + "'")
-                .add("europeNetState=" + europeNetState)
-                .add("id=" + id)
-                .add("version=" + version)
-                .add("createdBy='" + createdBy + "'")
-                .add("modifiedBy='" + modifiedBy + "'")
-                .add("modified=" + modified)
-                .add("entityStatus=" + entityStatus)
-                .toString();
     }
 }

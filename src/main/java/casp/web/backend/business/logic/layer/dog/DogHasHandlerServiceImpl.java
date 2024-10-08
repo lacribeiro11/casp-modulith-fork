@@ -141,6 +141,15 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         });
     }
 
+    @Override
+    public void migrateDataToV2() {
+        dogHasHandlerRepository.findAll().forEach(dh -> {
+            dogRepository.findById(dh.getDogId()).ifPresent(dh::setDog);
+            memberRepository.findById(dh.getMemberId()).ifPresent(dh::setMember);
+            dogHasHandlerRepository.save(dh);
+        });
+    }
+
     private Set<DogHasHandler> setMissingMembersAndDogs(final Set<DogHasHandler> dogHasHandlers) {
         dogHasHandlers.forEach(this::setDogAndMember);
         return dogHasHandlers;

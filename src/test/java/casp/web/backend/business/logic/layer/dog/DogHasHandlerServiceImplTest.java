@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -108,6 +110,42 @@ class DogHasHandlerServiceImplTest {
         assertThat(dogHasHandlerService.getDogHasHandlerIdsByDogId(dogId)).containsExactly(dogHasHandler.getId());
     }
 
+    @Test
+    void migrateDataToV2() {
+        var mockedDogHasHandler = mock(DogHasHandler.class);
+        when(mockedDogHasHandler.getDogId()).thenReturn(dogId);
+        when(mockedDogHasHandler.getMemberId()).thenReturn(memberId);
+        when(dogHasHandlerRepository.findAll()).thenReturn(List.of(mockedDogHasHandler));
+        when(dogRepository.findById(dogId)).thenReturn(Optional.of(dog));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+
+        dogHasHandlerService.migrateDataToV2();
+
+        verify(mockedDogHasHandler).setMember(member);
+        verify(mockedDogHasHandler).setDog(dog);
+        verify(dogHasHandlerRepository).save(mockedDogHasHandler);
+    }
+
+    @Test
+    void deactivateDogHasHandlersByMemberId() {
+        when(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE)).thenReturn(Set.of(dogHasHandler));
+
+        dogHasHandlerService.deactivateDogHasHandlersByMemberId(memberId);
+
+        verify(baseParticipantObserver).deactivateParticipantsByMemberOrHandlerId(dogHasHandler.getId());
+        assertSame(EntityStatus.INACTIVE, dogHasHandler.getEntityStatus());
+    }
+
+    @Test
+    void activateDogHasHandlersByMemberId() {
+        when(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.INACTIVE)).thenReturn(Set.of(dogHasHandler));
+
+        dogHasHandlerService.activateDogHasHandlersByMemberId(memberId);
+
+        verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(dogHasHandler.getId());
+        assertSame(EntityStatus.ACTIVE, dogHasHandler.getEntityStatus());
+    }
+
     @Nested
     class GetMembersEmailByIds {
         @Test
@@ -134,26 +172,6 @@ class DogHasHandlerServiceImplTest {
 
             assertThat(dogHasHandlerService.getMembersEmailByIds(Set.of(dogHasHandler.getId()))).isEmpty();
         }
-    }
-
-    @Test
-    void deactivateDogHasHandlersByMemberId() {
-        when(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE)).thenReturn(Set.of(dogHasHandler));
-
-        dogHasHandlerService.deactivateDogHasHandlersByMemberId(memberId);
-
-        verify(baseParticipantObserver).deactivateParticipantsByMemberOrHandlerId(dogHasHandler.getId());
-        assertSame(EntityStatus.INACTIVE, dogHasHandler.getEntityStatus());
-    }
-
-    @Test
-    void activateDogHasHandlersByMemberId() {
-        when(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.INACTIVE)).thenReturn(Set.of(dogHasHandler));
-
-        dogHasHandlerService.activateDogHasHandlersByMemberId(memberId);
-
-        verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(dogHasHandler.getId());
-        assertSame(EntityStatus.ACTIVE, dogHasHandler.getEntityStatus());
     }
 
     @Nested

@@ -7,14 +7,16 @@ import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
-// Cannot be a record because of querydsl
 public class Grade {
     @NotBlank
     private String name;
+
     @NotNull
     private GradeType type;
+
     @Positive
     private long points;
+
     @NotNull
     private LocalDate examDate;
 

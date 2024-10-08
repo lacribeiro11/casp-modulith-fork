@@ -84,4 +84,10 @@ public interface DogHasHandlerService {
      * @param memberId the id of the member
      */
     void activateDogHasHandlersByMemberId(UUID memberId);
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    void migrateDataToV2();
 }

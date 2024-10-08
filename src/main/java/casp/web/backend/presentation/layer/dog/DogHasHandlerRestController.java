@@ -118,4 +118,14 @@ class DogHasHandlerRestController {
     ResponseEntity<Set<String>> getMembersEmailByIds(final @RequestParam @Size(min = 1) Set<UUID> ids) {
         return ResponseEntity.ok(dogHasHandlerService.getMembersEmailByIds(ids));
     }
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    @PostMapping("/migrate-data")
+    ResponseEntity<Void> migrateDataToV2() {
+        dogHasHandlerService.migrateDataToV2();
+        return ResponseEntity.noContent().build();
+    }
 }
