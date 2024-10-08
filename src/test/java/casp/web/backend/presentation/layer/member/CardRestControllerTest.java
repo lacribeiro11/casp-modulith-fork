@@ -2,8 +2,8 @@ package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.depracrated.member.CardRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.member.CardDto;
 import com.fasterxml.jackson.core.type.TypeReference;

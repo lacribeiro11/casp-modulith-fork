@@ -115,7 +115,10 @@ class MemberRestController {
         return ResponseEntity.ok(memberService.getMembersEmailByIds(membersId));
     }
 
-    // TODO #16 Delete after the data migration
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
     @PostMapping("/migrate-data")
     ResponseEntity<Void> migrateDataToV2() {
         memberService.migrateDataToV2();

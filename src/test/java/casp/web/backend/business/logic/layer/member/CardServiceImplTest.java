@@ -1,10 +1,10 @@
 package casp.web.backend.business.logic.layer.member;
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.member.Card;
-import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.depracrated.member.Card;
+import casp.web.backend.depracrated.member.CardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

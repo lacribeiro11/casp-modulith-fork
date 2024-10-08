@@ -3,7 +3,6 @@ package casp.web.backend.data.access.layer.member;
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
-import casp.web.backend.datav2.member.Card;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

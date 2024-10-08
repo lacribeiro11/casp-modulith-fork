@@ -1,30 +1,18 @@
 package casp.web.backend.data.access.layer.member;
 
-import casp.web.backend.common.BaseDocument;
-import com.querydsl.core.annotations.QueryEntity;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.annotation.Id;
 
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.Objects;
 
-@QueryEntity
-@Document
-public class Card extends BaseDocument {
 
+public class Card {
+    @Id
     @NotBlank
     private String code;
 
-    @NotNull
-    private UUID memberId;
-
-    @Valid
-    @DBRef
-    private Member member;
-
+    @PositiveOrZero
     private double balance;
 
     public String getCode() {
@@ -33,22 +21,6 @@ public class Card extends BaseDocument {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public UUID getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(UUID memberId) {
-        this.memberId = memberId;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(final Member member) {
-        this.member = member;
     }
 
     public double getBalance() {
@@ -61,28 +33,13 @@ public class Card extends BaseDocument {
 
     @Override
     public boolean equals(final Object o) {
-        return super.equals(o);
+        if (this == o) return true;
+        if (!(o instanceof Card card)) return false;
+        return Objects.equals(code, card.code);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Card.class.getSimpleName() + "[", "]")
-                .add("code='" + code + "'")
-                .add("memberId=" + memberId)
-                .add("member=" + member)
-                .add("balance=" + balance)
-                .add("id=" + id)
-                .add("version=" + version)
-                .add("createdBy='" + createdBy + "'")
-                .add("created=" + created)
-                .add("modifiedBy='" + modifiedBy + "'")
-                .add("modified=" + modified)
-                .add("entityStatus=" + entityStatus)
-                .toString();
+        return Objects.hashCode(code);
     }
 }

@@ -7,9 +7,9 @@ import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
-import casp.web.backend.data.access.layer.member.CardRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.depracrated.member.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static casp.web.backend.business.logic.layer.member.MemberV2Mapper.MEMBER_V2_MAPPER;
+import static casp.web.backend.depracrated.member.MemberV2Mapper.MEMBER_V2_MAPPER;
 
 /**
  * Member Service

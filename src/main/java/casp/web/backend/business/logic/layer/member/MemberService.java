@@ -37,5 +37,9 @@ public interface MemberService {
 
     void setActiveMemberToBaseEvent(BaseEvent baseEvent);
 
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
     void migrateDataToV2();
 }
