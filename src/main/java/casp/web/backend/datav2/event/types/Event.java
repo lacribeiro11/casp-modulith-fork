@@ -1,7 +1,7 @@
 package casp.web.backend.datav2.event.types;
 
 import casp.web.backend.common.BaseEventType;
-import casp.web.backend.datav2.event.participants.EventParticipant;
+import casp.web.backend.data.access.layer.event.participants.EventParticipant;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

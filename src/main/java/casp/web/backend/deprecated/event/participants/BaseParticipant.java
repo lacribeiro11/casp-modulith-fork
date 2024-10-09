@@ -16,7 +16,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 /**
- * @deprecated It will be removed in #3.
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.participants.BaseParticipant} instead. It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity

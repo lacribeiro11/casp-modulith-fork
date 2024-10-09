@@ -1,7 +1,7 @@
 package casp.web.backend.datav2.event.types;
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.datav2.event.participants.ExamParticipant;
+import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package casp.web.backend.datav2.event.participants;
+package casp.web.backend.data.access.layer.event.participants;
 
 
 import casp.web.backend.common.BaseParticipantType;
@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
 
-public abstract class BaseParticipant {
+abstract class BaseParticipant {
     @NotNull
     BaseParticipantType participantType;
 

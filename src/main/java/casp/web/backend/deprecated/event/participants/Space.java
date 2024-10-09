@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.StringJoiner;
 
 /**
- * @deprecated It will be removed in #3.
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.participants.Space} instead.It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
 @PaymentConstraint
