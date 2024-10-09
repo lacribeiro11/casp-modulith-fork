@@ -1,4 +1,4 @@
-package casp.web.backend.datav2.event.calendar;
+package casp.web.backend.data.access.layer.event.calendar;
 
 import casp.web.backend.configuration.CalendarFromToConstraint;
 import casp.web.backend.configuration.CalendarValidation;
