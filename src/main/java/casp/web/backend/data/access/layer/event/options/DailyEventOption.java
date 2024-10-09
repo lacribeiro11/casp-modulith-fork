@@ -1,15 +1,15 @@
 package casp.web.backend.data.access.layer.event.options;
 
 
+import casp.web.backend.common.BaseEventOptionType;
+import casp.web.backend.configuration.EventOptionTimes;
+import casp.web.backend.configuration.EventOptionTimesConstraint;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
-import java.util.StringJoiner;
 
 @EventOptionTimesConstraint
 public class DailyEventOption extends BaseEventOption implements EventOptionTimes {
-    private static final String OPTION_TYPE = "DAILY";
-
     @NotNull
     private LocalTime startTime;
 
@@ -17,7 +17,7 @@ public class DailyEventOption extends BaseEventOption implements EventOptionTime
     private LocalTime endTime;
 
     public DailyEventOption() {
-        super(OPTION_TYPE);
+        super(BaseEventOptionType.DAILY);
     }
 
     @Override
@@ -36,16 +36,5 @@ public class DailyEventOption extends BaseEventOption implements EventOptionTime
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", DailyEventOption.class.getSimpleName() + "[", "]")
-                .add("startTime=" + startTime)
-                .add("endTime=" + endTime)
-                .add("startRecurrence=" + startRecurrence)
-                .add("endRecurrence=" + endRecurrence)
-                .add("repeatEvery=" + repeatEvery)
-                .toString();
     }
 }

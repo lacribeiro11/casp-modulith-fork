@@ -1,35 +1,32 @@
 package casp.web.backend.data.access.layer.event.options;
 
-import casp.web.backend.data.access.layer.event.types.BaseEvent;
-import jakarta.validation.constraints.NotBlank;
+import casp.web.backend.common.BaseEventOptionType;
+import casp.web.backend.configuration.BaseEventOptionRecurrencesConstraint;
+import casp.web.backend.configuration.BaseEventOptionValidation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
-/**
- * This class isn't abstract for the same reason, like {@link BaseEvent}
- * Would be better to use baseEvent as id, but is giving too many errors
- * https://stackoverflow.com/questions/16246675/hibernate-error-a-different-object-with-the-same-identifier-value-was-already-a
- */
 @BaseEventOptionRecurrencesConstraint
-public abstract class BaseEventOption {
-    @NotBlank
-    protected String optionType;
+public abstract class BaseEventOption implements BaseEventOptionValidation {
+    @NotNull
+    BaseEventOptionType optionType;
 
     @NotNull
-    protected LocalDate startRecurrence;
+    LocalDate startRecurrence;
 
     @NotNull
-    protected LocalDate endRecurrence;
+    LocalDate endRecurrence;
 
     @Positive
-    protected int repeatEvery = 1;
+    int repeatEvery = 1;
 
-    BaseEventOption(final String optionType) {
+    BaseEventOption(final BaseEventOptionType optionType) {
         this.optionType = optionType;
     }
 
+    @Override
     public LocalDate getStartRecurrence() {
         return startRecurrence;
     }
@@ -38,6 +35,7 @@ public abstract class BaseEventOption {
         this.startRecurrence = startRecurrence;
     }
 
+    @Override
     public LocalDate getEndRecurrence() {
         return endRecurrence;
     }
@@ -54,11 +52,11 @@ public abstract class BaseEventOption {
         this.repeatEvery = repeatEvery;
     }
 
-    public String getOptionType() {
+    public BaseEventOptionType getOptionType() {
         return optionType;
     }
 
-    public void setOptionType(final String optionType) {
+    public void setOptionType(final BaseEventOptionType optionType) {
         this.optionType = optionType;
     }
 }
