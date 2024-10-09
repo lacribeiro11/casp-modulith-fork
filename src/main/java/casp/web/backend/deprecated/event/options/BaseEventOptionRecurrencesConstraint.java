@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.options;
+package casp.web.backend.deprecated.event.options;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -9,9 +9,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This validation will check if the end recurrence is after the start recurrence. <br>
- * If any one of the attributes is null, it will return true, because there are the not null annotations .
+ * @deprecated It will be removed in #3.
  */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {BaseEventOptionRecurrencesValidation.class})

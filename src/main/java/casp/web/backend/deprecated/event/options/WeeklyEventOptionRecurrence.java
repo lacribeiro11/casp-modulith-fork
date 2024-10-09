@@ -1,17 +1,25 @@
-package casp.web.backend.datav2.event.options;
+package casp.web.backend.deprecated.event.options;
 
 
-import casp.web.backend.configuration.EventOptionTimes;
-import casp.web.backend.configuration.EventOptionTimesConstraint;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.UUID;
 
-// It contains too many interfaces to be a well implemented record.
+/**
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.options.WeeklyEventOptionRecurrence} instead. It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @EventOptionTimesConstraint
 public class WeeklyEventOptionRecurrence implements Comparable<WeeklyEventOptionRecurrence>, EventOptionTimes {
+
+    @Id
+    protected UUID id = UUID.randomUUID();
+
     @NotNull
     private DayOfWeek dayOfWeek;
 
@@ -21,15 +29,12 @@ public class WeeklyEventOptionRecurrence implements Comparable<WeeklyEventOption
     @NotNull
     private LocalTime endTime;
 
-    private static int getCompareValue(LocalTime thisLocalTime, LocalTime otherLocalTime) {
-        var value = thisLocalTime.toNanoOfDay() - otherLocalTime.toNanoOfDay();
-        if (value < 0) {
-            return -1;
-        } else if (value > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
     }
 
     public DayOfWeek getDayOfWeek() {
@@ -60,7 +65,7 @@ public class WeeklyEventOptionRecurrence implements Comparable<WeeklyEventOption
 
     @Override
     public int compareTo(WeeklyEventOptionRecurrence o) {
-        var compareValue = getDayOfWeek().getValue() - o.getDayOfWeek().getValue();
+        int compareValue = getDayOfWeek().getValue() - o.getDayOfWeek().getValue();
         if (compareValue == 0) {
             compareValue = getCompareValue(getStartTime(), o.getStartTime());
         }
@@ -74,11 +79,32 @@ public class WeeklyEventOptionRecurrence implements Comparable<WeeklyEventOption
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof WeeklyEventOptionRecurrence that)) return false;
-        return dayOfWeek == that.dayOfWeek && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dayOfWeek, startTime, endTime);
+        return Objects.hashCode(id);
+    }
+
+    private static int getCompareValue(LocalTime thisLocalTime, LocalTime otherLocalTime) {
+        long value = thisLocalTime.toNanoOfDay() - otherLocalTime.toNanoOfDay();
+        if (value < 0) {
+            return -1;
+        } else if (value > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", WeeklyEventOptionRecurrence.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("dayOfWeek=" + dayOfWeek)
+                .add("startTime=" + startTime)
+                .add("endTime=" + endTime)
+                .toString();
     }
 }

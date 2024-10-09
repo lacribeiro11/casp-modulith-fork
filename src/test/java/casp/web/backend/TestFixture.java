@@ -1,9 +1,6 @@
 package casp.web.backend;
 
 import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.event.options.DailyEventOption;
-import casp.web.backend.data.access.layer.event.options.WeeklyEventOption;
-import casp.web.backend.data.access.layer.event.options.WeeklyEventOptionRecurrence;
 import casp.web.backend.data.access.layer.event.participants.CoTrainer;
 import casp.web.backend.data.access.layer.event.participants.EventParticipant;
 import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
@@ -16,6 +13,9 @@ import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MembershipFee;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.event.calendar.Calendar;
+import casp.web.backend.deprecated.event.options.DailyEventOption;
+import casp.web.backend.deprecated.event.options.WeeklyEventOption;
+import casp.web.backend.deprecated.event.options.WeeklyEventOptionRecurrence;
 import casp.web.backend.deprecated.member.Card;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

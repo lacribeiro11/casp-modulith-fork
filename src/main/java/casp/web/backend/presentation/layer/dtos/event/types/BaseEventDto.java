@@ -2,7 +2,7 @@ package casp.web.backend.presentation.layer.dtos.event.types;
 
 
 import casp.web.backend.data.access.layer.event.TypesRegex;
-import casp.web.backend.data.access.layer.event.options.BaseEventOption;
+import casp.web.backend.deprecated.event.options.BaseEventOption;
 import casp.web.backend.presentation.layer.dtos.event.calendar.CalendarDto;
 import casp.web.backend.presentation.layer.dtos.member.SimpleMemberDto;
 import jakarta.validation.Valid;

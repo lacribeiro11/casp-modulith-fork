@@ -1,5 +1,7 @@
 package casp.web.backend.data.access.layer.event.options;
 
+import casp.web.backend.deprecated.event.options.DailyEventOption;
+import casp.web.backend.deprecated.event.options.EventOptionTimesValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.types;
 
 
-import casp.web.backend.data.access.layer.event.options.DailyEventOption;
-import casp.web.backend.data.access.layer.event.options.WeeklyEventOption;
+import casp.web.backend.deprecated.event.options.DailyEventOption;
+import casp.web.backend.deprecated.event.options.WeeklyEventOption;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

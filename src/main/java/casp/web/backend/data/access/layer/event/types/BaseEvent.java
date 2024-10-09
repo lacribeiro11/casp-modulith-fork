@@ -3,9 +3,9 @@ package casp.web.backend.data.access.layer.event.types;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.data.access.layer.event.TypesRegex;
-import casp.web.backend.data.access.layer.event.options.DailyEventOption;
-import casp.web.backend.data.access.layer.event.options.WeeklyEventOption;
 import casp.web.backend.data.access.layer.member.Member;
+import casp.web.backend.deprecated.event.options.DailyEventOption;
+import casp.web.backend.deprecated.event.options.WeeklyEventOption;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

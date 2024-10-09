@@ -1,32 +1,34 @@
-package casp.web.backend.datav2.event.options;
+package casp.web.backend.deprecated.event.options;
 
-import casp.web.backend.common.BaseEventOptionType;
-import casp.web.backend.configuration.BaseEventOptionRecurrencesConstraint;
-import casp.web.backend.configuration.BaseEventOptionValidation;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
+
+/**
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.options.BaseEventOption} instead. It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @BaseEventOptionRecurrencesConstraint
-public abstract class BaseEventOption implements BaseEventOptionValidation {
-    @NotNull
-    BaseEventOptionType optionType;
+public abstract class BaseEventOption {
+    @NotBlank
+    protected String optionType;
 
     @NotNull
-    LocalDate startRecurrence;
+    protected LocalDate startRecurrence;
 
     @NotNull
-    LocalDate endRecurrence;
+    protected LocalDate endRecurrence;
 
     @Positive
-    int repeatEvery = 1;
+    protected int repeatEvery = 1;
 
-    BaseEventOption(final BaseEventOptionType optionType) {
+    BaseEventOption(final String optionType) {
         this.optionType = optionType;
     }
 
-    @Override
     public LocalDate getStartRecurrence() {
         return startRecurrence;
     }
@@ -35,7 +37,6 @@ public abstract class BaseEventOption implements BaseEventOptionValidation {
         this.startRecurrence = startRecurrence;
     }
 
-    @Override
     public LocalDate getEndRecurrence() {
         return endRecurrence;
     }
@@ -52,11 +53,11 @@ public abstract class BaseEventOption implements BaseEventOptionValidation {
         this.repeatEvery = repeatEvery;
     }
 
-    public BaseEventOptionType getOptionType() {
+    public String getOptionType() {
         return optionType;
     }
 
-    public void setOptionType(final BaseEventOptionType optionType) {
+    public void setOptionType(final String optionType) {
         this.optionType = optionType;
     }
 }
