@@ -1,11 +1,11 @@
 package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.CoTrainer;
+import casp.web.backend.deprecated.event.types.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

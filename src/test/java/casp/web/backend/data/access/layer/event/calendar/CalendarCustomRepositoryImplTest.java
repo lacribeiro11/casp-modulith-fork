@@ -1,11 +1,11 @@
 package casp.web.backend.data.access.layer.event.calendar;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
-import casp.web.backend.data.access.layer.event.types.Event;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.calendar.Calendar;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
+import casp.web.backend.deprecated.event.types.BaseEventRepository;
+import casp.web.backend.deprecated.event.types.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

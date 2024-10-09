@@ -1,7 +1,7 @@
 package casp.web.backend.deprecated.event.participants;
 
-import casp.web.backend.data.access.layer.event.types.Exam;
 import casp.web.backend.deprecated.dog.DogHasHandler;
+import casp.web.backend.deprecated.event.types.Exam;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import org.springframework.data.annotation.TypeAlias;

@@ -1,13 +1,17 @@
-package casp.web.backend.data.access.layer.event;
+package casp.web.backend.deprecated.event;
 
-import casp.web.backend.data.access.layer.event.types.Course;
-import casp.web.backend.data.access.layer.event.types.Event;
-import casp.web.backend.data.access.layer.event.types.Exam;
 import casp.web.backend.deprecated.event.participants.CoTrainer;
 import casp.web.backend.deprecated.event.participants.EventParticipant;
 import casp.web.backend.deprecated.event.participants.ExamParticipant;
 import casp.web.backend.deprecated.event.participants.Space;
+import casp.web.backend.deprecated.event.types.Course;
+import casp.web.backend.deprecated.event.types.Event;
+import casp.web.backend.deprecated.event.types.Exam;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 public final class TypesRegex {
     public static final String BASE_EVENT_TYPES_REGEX = "^" + Event.EVENT_TYPE
             + "|" + Course.EVENT_TYPE

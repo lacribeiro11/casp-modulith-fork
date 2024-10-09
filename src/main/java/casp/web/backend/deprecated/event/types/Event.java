@@ -1,48 +1,29 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.event.types;
 
 import com.querydsl.core.annotations.QueryEntity;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.StringJoiner;
 
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity
 @Document(BaseEvent.COLLECTION)
-@TypeAlias(Exam.EVENT_TYPE)
-public class Exam extends BaseEvent {
-    public static final String EVENT_TYPE = "EXAM";
+@TypeAlias(Event.EVENT_TYPE)
+public class Event extends BaseEvent {
+    public static final String EVENT_TYPE = "EVENT";
 
-    @NotBlank
-    private String judgeName;
-
-    public Exam() {
+    public Event() {
         super(EVENT_TYPE);
-    }
-
-    public String getJudgeName() {
-        return judgeName;
-    }
-
-    public void setJudgeName(String judgeName) {
-        this.judgeName = judgeName;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Exam.class.getSimpleName() + "[", "]")
-                .add("judgeName='" + judgeName + "'")
+        return new StringJoiner(", ", Event.class.getSimpleName() + "[", "]")
                 .add("eventType='" + eventType + "'")
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")

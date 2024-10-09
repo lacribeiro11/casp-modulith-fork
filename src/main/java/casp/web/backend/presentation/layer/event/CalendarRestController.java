@@ -2,9 +2,9 @@ package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.member.MemberService;
-import casp.web.backend.data.access.layer.event.TypesRegex;
-import casp.web.backend.data.access.layer.event.types.Course;
-import casp.web.backend.data.access.layer.event.types.Event;
+import casp.web.backend.deprecated.event.TypesRegex;
+import casp.web.backend.deprecated.event.types.Course;
+import casp.web.backend.deprecated.event.types.Event;
 import casp.web.backend.presentation.layer.dtos.event.calendar.CalendarDto;
 import casp.web.backend.presentation.layer.dtos.event.types.BaseEventDto;
 import casp.web.backend.presentation.layer.event.facades.CourseFacade;

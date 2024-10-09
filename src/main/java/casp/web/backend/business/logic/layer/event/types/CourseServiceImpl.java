@@ -3,11 +3,11 @@ package casp.web.backend.business.logic.layer.event.types;
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.CoTrainerService;
 import casp.web.backend.business.logic.layer.event.participants.SpaceService;
-import casp.web.backend.data.access.layer.event.types.BaseEvent;
-import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
-import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.participants.Space;
+import casp.web.backend.deprecated.event.types.BaseEvent;
+import casp.web.backend.deprecated.event.types.BaseEventRepository;
+import casp.web.backend.deprecated.event.types.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.types;
 
-import casp.web.backend.data.access.layer.event.types.Course;
+import casp.web.backend.deprecated.event.types.Course;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

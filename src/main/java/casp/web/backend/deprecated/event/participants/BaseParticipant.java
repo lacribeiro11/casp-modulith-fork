@@ -3,8 +3,8 @@ package casp.web.backend.deprecated.event.participants;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.EventResponse;
-import casp.web.backend.data.access.layer.event.TypesRegex;
-import casp.web.backend.data.access.layer.event.types.BaseEvent;
+import casp.web.backend.deprecated.event.TypesRegex;
+import casp.web.backend.deprecated.event.types.BaseEvent;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

@@ -1,11 +1,11 @@
 package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.participants.SpaceRepository;
+import casp.web.backend.deprecated.event.types.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

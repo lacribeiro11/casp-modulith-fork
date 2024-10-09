@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.event.types;
 
 import casp.web.backend.common.EntityStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Component
 class BaseEventCustomRepositoryImpl implements BaseEventCustomRepository {
     private static final QBaseEvent BASE_EVENT = QBaseEvent.baseEvent;

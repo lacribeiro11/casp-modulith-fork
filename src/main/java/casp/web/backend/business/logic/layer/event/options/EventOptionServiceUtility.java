@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.event.options;
 
-import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.calendar.Calendar;
+import casp.web.backend.deprecated.event.types.BaseEvent;
 
 import java.util.ArrayList;
 import java.util.List;

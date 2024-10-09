@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.event.types;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.data.access.layer.member.MemberRepository;

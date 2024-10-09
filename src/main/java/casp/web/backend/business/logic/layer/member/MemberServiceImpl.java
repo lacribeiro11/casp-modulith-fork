@@ -6,9 +6,9 @@ import casp.web.backend.business.logic.layer.event.participants.BaseParticipantO
 import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
-import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.member.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,12 +2,12 @@ package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.CoTrainer;
+import casp.web.backend.deprecated.event.types.Course;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

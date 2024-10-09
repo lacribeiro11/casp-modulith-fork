@@ -1,9 +1,9 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.event.types;
 
 
 import casp.web.backend.common.BaseDocument;
-import casp.web.backend.data.access.layer.event.TypesRegex;
 import casp.web.backend.data.access.layer.member.Member;
+import casp.web.backend.deprecated.event.TypesRegex;
 import casp.web.backend.deprecated.event.options.DailyEventOption;
 import casp.web.backend.deprecated.event.options.WeeklyEventOption;
 import com.querydsl.core.annotations.QueryEntity;
@@ -17,7 +17,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// cannot be abstract because of error: abstract types either need to be mapped to concrete types, have custom deserializer, or contain additional type information
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @BaseEventOptionConstraint
 @QueryEntity
 @Document(BaseEvent.COLLECTION)

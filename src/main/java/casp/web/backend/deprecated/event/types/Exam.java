@@ -1,32 +1,36 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.event.types;
 
 import com.querydsl.core.annotations.QueryEntity;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.StringJoiner;
 
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity
 @Document(BaseEvent.COLLECTION)
-@TypeAlias(Course.EVENT_TYPE)
-public class Course extends BaseEvent {
-    public static final String EVENT_TYPE = "COURSE";
+@TypeAlias(Exam.EVENT_TYPE)
+public class Exam extends BaseEvent {
+    public static final String EVENT_TYPE = "EXAM";
 
-    @PositiveOrZero
-    private int spaceLimit;
+    @NotBlank
+    private String judgeName;
 
-    public Course() {
+    public Exam() {
         super(EVENT_TYPE);
     }
 
-    public int getSpaceLimit() {
-        return spaceLimit;
+    public String getJudgeName() {
+        return judgeName;
     }
 
-    public void setSpaceLimit(int spaceLimit) {
-        this.spaceLimit = spaceLimit;
+    public void setJudgeName(String judgeName) {
+        this.judgeName = judgeName;
     }
 
     @Override
@@ -41,8 +45,8 @@ public class Course extends BaseEvent {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Course.class.getSimpleName() + "[", "]")
-                .add("spaceLimit=" + spaceLimit)
+        return new StringJoiner(", ", Exam.class.getSimpleName() + "[", "]")
+                .add("judgeName='" + judgeName + "'")
                 .add("eventType='" + eventType + "'")
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
