@@ -1,5 +1,7 @@
 package casp.web.backend.data.access.layer.event.calendar;
 
+import casp.web.backend.deprecated.event.calendar.Calendar;
+import casp.web.backend.deprecated.event.calendar.CalendarFromToValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

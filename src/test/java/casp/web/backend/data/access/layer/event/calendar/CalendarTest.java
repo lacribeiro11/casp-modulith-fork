@@ -1,6 +1,7 @@
 package casp.web.backend.data.access.layer.event.calendar;
 
 import casp.web.backend.TestFixture;
+import casp.web.backend.deprecated.event.calendar.Calendar;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

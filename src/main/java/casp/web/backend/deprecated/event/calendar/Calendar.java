@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.calendar;
+package casp.web.backend.deprecated.event.calendar;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
@@ -11,6 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
+/**
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.calendar.CalendarEntry} instead. It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity
 @Document
 @CalendarFromToConstraint

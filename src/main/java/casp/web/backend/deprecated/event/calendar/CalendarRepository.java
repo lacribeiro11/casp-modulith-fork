@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.calendar;
+package casp.web.backend.deprecated.event.calendar;
 
 import casp.web.backend.common.EntityStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -8,6 +8,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 public interface CalendarRepository extends MongoRepository<Calendar, UUID>, QuerydslPredicateExecutor<Calendar>, CalendarCustomRepository {
 
     void deleteAllByBaseEventId(UUID baseEventId);

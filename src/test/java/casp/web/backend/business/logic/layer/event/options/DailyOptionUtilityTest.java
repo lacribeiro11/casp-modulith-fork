@@ -2,8 +2,8 @@ package casp.web.backend.business.logic.layer.event.options;
 
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.event.calendar.Calendar;
 import casp.web.backend.data.access.layer.event.types.Event;
+import casp.web.backend.deprecated.event.calendar.Calendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

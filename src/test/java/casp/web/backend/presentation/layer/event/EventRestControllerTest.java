@@ -2,12 +2,12 @@ package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.data.access.layer.event.calendar.CalendarRepository;
 import casp.web.backend.data.access.layer.event.participants.BaseParticipantRepository;
 import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
 import casp.web.backend.data.access.layer.event.types.Event;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.types.EventDto;
 import org.junit.jupiter.api.BeforeEach;

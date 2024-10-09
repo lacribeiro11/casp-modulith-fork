@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.calendar;
+package casp.web.backend.deprecated.event.calendar;
 
 import casp.web.backend.common.EntityStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,10 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Component
 class CalendarCustomRepositoryImpl implements CalendarCustomRepository {
     private static final QCalendar CALENDAR = QCalendar.calendar;
