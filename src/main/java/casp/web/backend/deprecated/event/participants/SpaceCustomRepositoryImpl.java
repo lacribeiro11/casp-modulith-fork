@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.participants;
+package casp.web.backend.deprecated.event.participants;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.EntityStatus;
@@ -14,6 +14,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Component
 class SpaceCustomRepositoryImpl implements SpaceCustomRepository {
     private static final QSpace SPACE = QSpace.space;

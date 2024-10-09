@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.participants;
+package casp.web.backend.deprecated.event.participants;
 
 import casp.web.backend.configuration.Payment;
 import casp.web.backend.configuration.PaymentConstraint;
@@ -15,6 +15,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @PaymentConstraint
 @QueryEntity
 @Document(BaseParticipant.COLLECTION)

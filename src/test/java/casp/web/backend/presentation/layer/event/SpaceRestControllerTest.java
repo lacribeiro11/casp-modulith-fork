@@ -1,10 +1,10 @@
 package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.event.participants.BaseParticipantRepository;
-import casp.web.backend.data.access.layer.event.participants.Space;
 import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
+import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.participants.SpaceReadDto;
 import casp.web.backend.presentation.layer.dtos.event.participants.SpaceWriteDto;

@@ -1,11 +1,6 @@
 package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.data.access.layer.event.participants.BaseParticipantRepository;
-import casp.web.backend.data.access.layer.event.participants.CoTrainer;
-import casp.web.backend.data.access.layer.event.participants.EventParticipant;
-import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
-import casp.web.backend.data.access.layer.event.participants.Space;
 import casp.web.backend.data.access.layer.event.types.BaseEventRepository;
 import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.data.access.layer.event.types.Event;
@@ -16,6 +11,11 @@ import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
 import casp.web.backend.deprecated.event.calendar.Calendar;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
+import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
+import casp.web.backend.deprecated.event.participants.CoTrainer;
+import casp.web.backend.deprecated.event.participants.EventParticipant;
+import casp.web.backend.deprecated.event.participants.ExamParticipant;
+import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.calendar.CalendarDto;
 import casp.web.backend.presentation.layer.dtos.event.types.CourseDto;

@@ -2,6 +2,8 @@ package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
+import casp.web.backend.deprecated.event.participants.Space;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

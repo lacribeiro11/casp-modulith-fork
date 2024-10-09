@@ -1,12 +1,12 @@
 package casp.web.backend.data.access.layer.event;
 
-import casp.web.backend.data.access.layer.event.participants.CoTrainer;
-import casp.web.backend.data.access.layer.event.participants.EventParticipant;
-import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
-import casp.web.backend.data.access.layer.event.participants.Space;
 import casp.web.backend.data.access.layer.event.types.Course;
 import casp.web.backend.data.access.layer.event.types.Event;
 import casp.web.backend.data.access.layer.event.types.Exam;
+import casp.web.backend.deprecated.event.participants.CoTrainer;
+import casp.web.backend.deprecated.event.participants.EventParticipant;
+import casp.web.backend.deprecated.event.participants.ExamParticipant;
+import casp.web.backend.deprecated.event.participants.Space;
 
 public final class TypesRegex {
     public static final String BASE_EVENT_TYPES_REGEX = "^" + Event.EVENT_TYPE

@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.event.participants.Space;
+import casp.web.backend.deprecated.event.participants.Space;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

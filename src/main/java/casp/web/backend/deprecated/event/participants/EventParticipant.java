@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.participants;
+package casp.web.backend.deprecated.event.participants;
 
 import casp.web.backend.data.access.layer.event.types.BaseEvent;
 import casp.web.backend.data.access.layer.member.Member;
@@ -8,6 +8,10 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity
 @Document(BaseParticipant.COLLECTION)
 @TypeAlias(EventParticipant.PARTICIPANT_TYPE)

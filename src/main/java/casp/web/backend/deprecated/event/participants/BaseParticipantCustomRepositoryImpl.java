@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.participants;
+package casp.web.backend.deprecated.event.participants;
 
 import casp.web.backend.common.EntityStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,6 +11,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated It will be removed in #3.
+ */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Component
 class BaseParticipantCustomRepositoryImpl implements BaseParticipantCustomRepository {
     private static final QBaseParticipant BASE_PARTICIPANT = QBaseParticipant.baseParticipant;

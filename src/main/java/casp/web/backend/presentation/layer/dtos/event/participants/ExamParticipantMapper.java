@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
+import casp.web.backend.deprecated.event.participants.ExamParticipant;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

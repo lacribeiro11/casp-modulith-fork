@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.data.access.layer.event.participants.CoTrainer;
+import casp.web.backend.deprecated.event.participants.CoTrainer;
 import casp.web.backend.presentation.layer.dtos.member.SimpleMemberDto;
 
 public class CoTrainerDto extends BaseParticipantDto {

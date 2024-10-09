@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.participants;
+package casp.web.backend.deprecated.event.participants;
 
 
 import casp.web.backend.common.BaseDocument;
@@ -16,8 +16,9 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 /**
- * This class isn't abstract for the same reason as {@link BaseEvent}
+ * @deprecated It will be removed in #3.
  */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity
 @Document(BaseParticipant.COLLECTION)
 public class BaseParticipant extends BaseDocument {
