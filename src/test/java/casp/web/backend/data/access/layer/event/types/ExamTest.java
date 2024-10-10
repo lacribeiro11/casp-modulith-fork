@@ -1,4 +1,4 @@
-package casp.web.backend.datav2.event.types;
+package casp.web.backend.data.access.layer.event.types;
 
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.event.participants.ExamParticipant;

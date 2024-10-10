@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.StringJoiner;
 
 /**
- * @deprecated It will be removed in #3.
+ * @deprecated use {@link casp.web.backend.data.access.layer.event.types.Course} instead. It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity

@@ -1,4 +1,4 @@
-package casp.web.backend.datav2.event.types;
+package casp.web.backend.data.access.layer.event.types;
 
 
 import casp.web.backend.common.BaseDocument;
@@ -7,7 +7,7 @@ import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.event.calendar.CalendarEntry;
-import casp.web.backend.deprecated.event.options.BaseEventOption;
+import casp.web.backend.data.access.layer.event.options.BaseEventOption;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseEvent extends BaseDocument {
+abstract class BaseEvent extends BaseDocument {
     @NotNull
     BaseEventType eventType;
 
