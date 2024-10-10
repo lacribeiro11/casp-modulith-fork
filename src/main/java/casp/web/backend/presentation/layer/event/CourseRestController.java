@@ -59,4 +59,14 @@ class CourseRestController {
     ResponseEntity<Set<String>> getSpacesEmail(final @PathVariable UUID id) {
         return ResponseEntity.ok(courseFacade.getSpacesEmail(id));
     }
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    @PostMapping("/migrate-data")
+    ResponseEntity<Void> migrateDataToV2() {
+        courseFacade.migrateDataToV2();
+        return ResponseEntity.noContent().build();
+    }
 }

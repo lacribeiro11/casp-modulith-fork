@@ -95,6 +95,13 @@ class CourseFacadeImplTest {
         assertThat(spacesEmail).containsExactly(dogHasHandler.getMember().getEmail());
     }
 
+    @Test
+    void migrateDataToV2() {
+        courseFacade.migrateDataToV2();
+
+        verify(courseService).migrateDataToV2();
+    }
+
     @Nested
     class Save {
         @Captor

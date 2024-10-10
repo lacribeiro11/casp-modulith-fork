@@ -12,12 +12,14 @@ import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Course;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.types.CourseDto;
+import casp.web.backend.presentation.layer.event.facades.CourseFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +34,7 @@ import static casp.web.backend.presentation.layer.dtos.event.types.CourseMapper.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,6 +60,8 @@ class CourseRestControllerTest {
     private DogRepository dogRepository;
     @Autowired
     private DogHasHandlerRepository dogHasHandlerRepository;
+    @SpyBean
+    private CourseFacade courseFacade;
 
     private DogHasHandler dogHasHandler;
 
@@ -88,6 +93,14 @@ class CourseRestControllerTest {
         mockMvc.perform(get(COURSE_URL_PREFIX + "/spaces-email/{id}", course.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").value(dogHasHandler.getMember().getEmail()));
+    }
+
+    @Test
+    void migrateDataToV2() throws Exception {
+        mockMvc.perform(post(COURSE_URL_PREFIX + "/migrate-data"))
+                .andExpect(status().isNoContent());
+
+        verify(courseFacade).migrateDataToV2();
     }
 
     @Nested

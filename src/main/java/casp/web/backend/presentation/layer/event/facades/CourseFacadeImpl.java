@@ -85,6 +85,11 @@ class CourseFacadeImpl implements CourseFacade {
     }
 
     @Override
+    public void migrateDataToV2() {
+        courseService.migrateDataToV2();
+    }
+
+    @Override
     public Set<String> getSpacesEmail(final UUID id) {
         return spaceService.getActiveParticipantsIfMembersOrDogHasHandlerAreActive(id)
                 .stream()

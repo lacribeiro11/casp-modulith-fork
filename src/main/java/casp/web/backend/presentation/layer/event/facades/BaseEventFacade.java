@@ -24,4 +24,10 @@ interface BaseEventFacade<D extends BaseEventDto<?>> {
     void deleteById(UUID id);
 
     Page<D> getAllByYear(int year, Pageable pageable);
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    void migrateDataToV2();
 }
