@@ -46,4 +46,10 @@ public interface BaseEventService<E extends BaseEvent> {
      * @param memberId the id of the member
      */
     void activateBaseEventsByMemberId(UUID memberId);
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    void migrateDataToV2();
 }

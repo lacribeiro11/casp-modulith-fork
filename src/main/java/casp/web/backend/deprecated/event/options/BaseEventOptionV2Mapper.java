@@ -5,6 +5,7 @@ import casp.web.backend.data.access.layer.event.options.WeeklyEventOption;
 import casp.web.backend.data.access.layer.event.options.WeeklyEventOptionRecurrence;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 @Deprecated(forRemoval = true, since = "0.0.0")
 @Mapper
 public interface BaseEventOptionV2Mapper {
+    BaseEventOptionV2Mapper BASE_EVENT_OPTION_V2_MAPPER = Mappers.getMapper(BaseEventOptionV2Mapper.class);
+
     WeeklyEventOptionRecurrence toWeeklyEventOptionRecurrence(casp.web.backend.deprecated.event.options.WeeklyEventOptionRecurrence weeklyEventOptionRecurrence);
 
     List<WeeklyEventOptionRecurrence> toWeeklyEventOptionRecurrenceList(List<casp.web.backend.deprecated.event.options.WeeklyEventOptionRecurrence> weeklyEventOptionRecurrenceList);

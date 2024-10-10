@@ -24,7 +24,6 @@ public class WeeklyEventOption extends BaseEventOption {
     }
 
     public List<WeeklyEventOptionRecurrence> getOccurrences() {
-        occurrences.sort(WeeklyEventOptionRecurrence::compareTo);
         return occurrences;
     }
 

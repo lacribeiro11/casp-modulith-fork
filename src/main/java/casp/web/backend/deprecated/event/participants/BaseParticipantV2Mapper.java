@@ -6,6 +6,7 @@ import casp.web.backend.data.access.layer.event.participants.ExamParticipant;
 import casp.web.backend.data.access.layer.event.participants.Space;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 /**
  * @deprecated It will be removed in #3.
@@ -13,6 +14,8 @@ import org.mapstruct.Mapping;
 @Deprecated(forRemoval = true, since = "0.0.0")
 @Mapper
 public interface BaseParticipantV2Mapper {
+    BaseParticipantV2Mapper BASE_PARTICIPANT_V2_MAPPER = Mappers.getMapper(BaseParticipantV2Mapper.class);
+
     @Mapping(target = "participantType", ignore = true)
     CoTrainer toCoTrainer(casp.web.backend.deprecated.event.participants.CoTrainer coTrainer);
 

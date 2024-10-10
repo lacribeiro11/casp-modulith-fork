@@ -17,4 +17,6 @@ public interface BaseParticipantRepository extends MongoRepository<BaseParticipa
     Set<BaseParticipant> findAllByBaseEventIdAndEntityStatusAndParticipantType(UUID baseEventId, EntityStatus entityStatus, String participantType);
 
     Set<BaseParticipant> findAllByBaseEventIdAndEntityStatusNotAndParticipantType(UUID baseEventId, EntityStatus entityStatus, String participantType);
+
+    Set<BaseParticipant> findAllByBaseEventIdAndParticipantType(UUID baseEventId, String participantType);
 }
