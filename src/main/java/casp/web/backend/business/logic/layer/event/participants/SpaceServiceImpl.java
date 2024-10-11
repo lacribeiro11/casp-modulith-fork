@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
+// FIXME to be deleted and its functionality moved to CourseService
 @Service
 class SpaceServiceImpl implements SpaceService {
     private final DogHasHandlerOldRepository dogHasHandlerOldRepository;

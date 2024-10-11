@@ -8,6 +8,7 @@ import casp.web.backend.deprecated.event.types.BaseEvent;
 import java.util.Set;
 import java.util.UUID;
 
+// FIXME: To be deleted and its functionality moved to BaseEvent
 abstract class BaseParticipantServiceImpl<P extends BaseParticipant, E extends BaseEvent> implements BaseParticipantService<P, E> {
     protected final BaseParticipantRepository baseParticipantRepository;
     protected final String participantType;
