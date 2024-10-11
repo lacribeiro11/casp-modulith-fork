@@ -3,17 +3,22 @@ package casp.web.backend.business.logic.layer.dog;
 import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantObserver;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.dog.Dog;
+import casp.web.backend.data.access.layer.dog.DogHasHandlerV2Repository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
+import casp.web.backend.data.access.layer.dog.Grade;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +47,10 @@ class DogHasHandlerServiceImplTest {
     private MemberRepository memberRepository;
     @Mock
     private BaseParticipantObserver baseParticipantObserver;
+    @Mock
+    private MemberReferenceRepository memberReferenceRepository;
+    @Mock
+    private DogHasHandlerV2Repository dogHasHandlerV2Repository;
 
     @InjectMocks
     private DogHasHandlerServiceImpl dogHasHandlerService;
@@ -111,22 +121,6 @@ class DogHasHandlerServiceImplTest {
     }
 
     @Test
-    void migrateDataToV2() {
-        var mockedDogHasHandler = mock(DogHasHandler.class);
-        when(mockedDogHasHandler.getDogId()).thenReturn(dogId);
-        when(mockedDogHasHandler.getMemberId()).thenReturn(memberId);
-        when(dogHasHandlerRepository.findAll()).thenReturn(List.of(mockedDogHasHandler));
-        when(dogRepository.findById(dogId)).thenReturn(Optional.of(dog));
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-
-        dogHasHandlerService.migrateDataToV2();
-
-        verify(mockedDogHasHandler).setMember(member);
-        verify(mockedDogHasHandler).setDog(dog);
-        verify(dogHasHandlerRepository).save(mockedDogHasHandler);
-    }
-
-    @Test
     void deactivateDogHasHandlersByMemberId() {
         when(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE)).thenReturn(Set.of(dogHasHandler));
 
@@ -144,6 +138,82 @@ class DogHasHandlerServiceImplTest {
 
         verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(dogHasHandler.getId());
         assertSame(EntityStatus.ACTIVE, dogHasHandler.getEntityStatus());
+    }
+
+    @Nested
+    class MigrateDataToV2 {
+        @Captor
+        private ArgumentCaptor<Set<casp.web.backend.data.access.layer.dog.DogHasHandler>> dogHasHandlerV2Captor;
+        private MemberReference memberReference;
+        private DogHasHandler dogHasHandlerV1;
+
+        @BeforeEach
+        void setUp() {
+            dogHasHandlerV1 = mock(DogHasHandler.class);
+            when(dogHasHandlerV1.getDogId()).thenReturn(dogId);
+            when(dogHasHandlerRepository.findAll()).thenReturn(List.of(dogHasHandlerV1));
+        }
+
+        private void dogAndMemberMocked() {
+            when(dogHasHandlerV1.getMemberId()).thenReturn(memberId);
+            memberReference = mock(MemberReference.class);
+            when(dogRepository.findById(dogId)).thenReturn(Optional.of(dog));
+            when(memberReferenceRepository.findById(memberId)).thenReturn(Optional.of(memberReference));
+        }
+
+        @Test
+        void dogAndMemberFound() {
+            dogAndMemberMocked();
+
+            dogHasHandlerService.migrateDataToV2();
+
+            verify(dogHasHandlerV2Repository).saveAll(dogHasHandlerV2Captor.capture());
+
+            assertThat(dogHasHandlerV2Captor.getValue())
+                    .singleElement()
+                    .satisfies(dh -> {
+                        assertSame(memberReference, dh.getMember());
+                        assertSame(dog, dh.getDog());
+                    });
+        }
+
+        @Test
+        void mapCard() {
+            dogAndMemberMocked();
+            var grade = mock(Grade.class);
+            when(dogHasHandlerV1.getGrades()).thenReturn(Set.of(grade));
+
+            dogHasHandlerService.migrateDataToV2();
+
+            verify(dogHasHandlerV2Repository).saveAll(dogHasHandlerV2Captor.capture());
+
+            assertThat(dogHasHandlerV2Captor.getValue())
+                    .singleElement()
+                    .satisfies(dh -> assertThat(dh.getGrades()).containsExactly(grade));
+        }
+
+        @Test
+        void dogNotFound() {
+            when(dogRepository.findById(dogId)).thenReturn(Optional.empty());
+
+            dogHasHandlerService.migrateDataToV2();
+
+            verifyNoInteractions(memberReferenceRepository);
+            verify(dogHasHandlerV2Repository).saveAll(dogHasHandlerV2Captor.capture());
+            assertThat(dogHasHandlerV2Captor.getValue()).isEmpty();
+        }
+
+        @Test
+        void memberNotFound() {
+            when(dogHasHandlerV1.getMemberId()).thenReturn(memberId);
+            when(dogRepository.findById(dogId)).thenReturn(Optional.of(dog));
+            when(memberReferenceRepository.findById(memberId)).thenReturn(Optional.empty());
+
+            dogHasHandlerService.migrateDataToV2();
+
+            verify(dogHasHandlerV2Repository).saveAll(dogHasHandlerV2Captor.capture());
+            assertThat(dogHasHandlerV2Captor.getValue()).isEmpty();
+        }
     }
 
     @Nested

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * @deprecated It will be removed in #3.
  */
+@Deprecated(forRemoval = true, since = "0.0.0")
 @Component
 class DogHasHandlerCustomRepositoryImpl implements DogHasHandlerCustomRepository {
     private static final QMember MEMBER = QMember.member;

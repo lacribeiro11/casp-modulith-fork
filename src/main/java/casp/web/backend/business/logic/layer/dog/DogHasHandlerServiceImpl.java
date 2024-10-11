@@ -2,12 +2,15 @@ package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantObserver;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.dog.Dog;
+import casp.web.backend.data.access.layer.dog.DogHasHandlerV2Repository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static casp.web.backend.deprecated.dog.DogHasHandlerV2Mapper.DOG_HAS_HANDLER_V2_MAPPER;
+
 @Service
 class DogHasHandlerServiceImpl implements DogHasHandlerService {
     private static final Logger LOG = LoggerFactory.getLogger(DogHasHandlerServiceImpl.class);
@@ -27,16 +32,29 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final BaseParticipantObserver baseParticipantObserver;
+    private final MemberReferenceRepository memberReferenceRepository;
+    private final DogHasHandlerV2Repository dogHasHandlerV2Repository;
 
     @Autowired
     DogHasHandlerServiceImpl(final DogHasHandlerRepository dogHasHandlerRepository,
                              final MemberRepository memberRepository,
                              final DogRepository dogRepository,
-                             final BaseParticipantObserver baseParticipantObserver) {
+                             final BaseParticipantObserver baseParticipantObserver,
+                             final MemberReferenceRepository memberReferenceRepository,
+                             final DogHasHandlerV2Repository dogHasHandlerV2Repository) {
         this.dogHasHandlerRepository = dogHasHandlerRepository;
         this.memberRepository = memberRepository;
         this.dogRepository = dogRepository;
         this.baseParticipantObserver = baseParticipantObserver;
+        this.memberReferenceRepository = memberReferenceRepository;
+        this.dogHasHandlerV2Repository = dogHasHandlerV2Repository;
+    }
+
+    private static casp.web.backend.data.access.layer.dog.DogHasHandler mapToDogHasHandlerV2(final DogHasHandler dh, final Dog dog, final MemberReference member) {
+        var dogHasHandler = DOG_HAS_HANDLER_V2_MAPPER.toDogHasHandler(dh);
+        dogHasHandler.setDog(dog);
+        dogHasHandler.setMember(member);
+        return dogHasHandler;
     }
 
     @Override
@@ -143,11 +161,17 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
 
     @Override
     public void migrateDataToV2() {
-        dogHasHandlerRepository.findAll().forEach(dh -> {
-            dogRepository.findById(dh.getDogId()).ifPresent(dh::setDog);
-            memberRepository.findById(dh.getMemberId()).ifPresent(dh::setMember);
-            dogHasHandlerRepository.save(dh);
-        });
+        var dogHasHandlerSet = dogHasHandlerRepository.findAll()
+                .stream()
+                .flatMap(dh -> dogRepository.findById(dh.getDogId())
+                        .flatMap(dog -> findMemberAndMapToDogHasHandlerV2(dh, dog)).stream())
+                .collect(Collectors.toSet());
+
+        dogHasHandlerV2Repository.saveAll(dogHasHandlerSet);
+    }
+
+    private Optional<casp.web.backend.data.access.layer.dog.DogHasHandler> findMemberAndMapToDogHasHandlerV2(final DogHasHandler dh, final Dog dog) {
+        return memberReferenceRepository.findById(dh.getMemberId()).map(memberReference -> mapToDogHasHandlerV2(dh, dog, memberReference));
     }
 
     private Set<DogHasHandler> setMissingMembersAndDogs(final Set<DogHasHandler> dogHasHandlers) {
