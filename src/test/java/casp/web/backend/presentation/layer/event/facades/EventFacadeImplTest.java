@@ -79,6 +79,13 @@ class EventFacadeImplTest {
                 .satisfies(eventDto -> assertEquals(event.getId(), eventDto.getId()));
     }
 
+    @Test
+    void migrateDataToV2() {
+        eventFacade.migrateDataToV2();
+
+        verify(eventService).migrateDataToV2();
+    }
+
     @Nested
     class Save {
         @Captor

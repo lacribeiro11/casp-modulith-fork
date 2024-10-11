@@ -53,4 +53,14 @@ class EventRestController {
     ResponseEntity<Page<EventDto>> getAllByYear(final @RequestParam @Positive int year, final @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(eventFacade.getAllByYear(year, pageable));
     }
+
+    /**
+     * @deprecated It will be removed in #3.
+     */
+    @Deprecated(forRemoval = true, since = "0.0.0")
+    @PostMapping("/migrate-data")
+    ResponseEntity<Void> migrateDataToV2() {
+        eventFacade.migrateDataToV2();
+        return ResponseEntity.noContent().build();
+    }
 }

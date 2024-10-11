@@ -10,12 +10,14 @@ import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Event;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.types.EventDto;
+import casp.web.backend.presentation.layer.event.facades.EventFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,6 +32,7 @@ import static casp.web.backend.presentation.layer.dtos.event.types.EventMapper.E
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,6 +55,8 @@ class EventRestControllerTest {
     private CalendarRepository calendarRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @SpyBean
+    private EventFacade eventFacade;
 
     private Member member;
 
@@ -66,6 +71,13 @@ class EventRestControllerTest {
         memberRepository.save(member);
     }
 
+    @Test
+    void migrateDataToV2() throws Exception {
+        mockMvc.perform(post(EVENT_URL_PREFIX + "/migrate-data"))
+                .andExpect(status().isNoContent());
+
+        verify(eventFacade).migrateDataToV2();
+    }
     @Nested
     class Save {
         @Test

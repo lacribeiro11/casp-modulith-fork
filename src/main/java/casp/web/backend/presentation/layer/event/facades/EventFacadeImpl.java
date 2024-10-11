@@ -76,6 +76,11 @@ class EventFacadeImpl implements EventFacade {
         return EVENT_MAPPER.toDtoPage(eventPage);
     }
 
+    @Override
+    public void migrateDataToV2() {
+        eventService.migrateDataToV2();
+    }
+
     private void setEventParticipants(final EventDto eventDto) {
         var coTrainerDtoSet = eventParticipantService.getActiveParticipantsIfMembersOrDogHasHandlerAreActive(eventDto.getId())
                 .stream()
