@@ -76,6 +76,11 @@ class ExamFacadeImpl implements ExamFacade {
         return EXAM_MAPPER.toDtoPage(examPage);
     }
 
+    @Override
+    public void migrateDataToV2() {
+        examService.migrateDataToV2();
+    }
+
     private void setExamParticipants(final ExamDto examDto) {
         var examParticipantDtoSet = examParticipantService.getActiveParticipantsIfMembersOrDogHasHandlerAreActive(examDto.getId())
                 .stream()

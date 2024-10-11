@@ -78,6 +78,13 @@ class ExamFacadeImplTest {
                 .satisfies(examDto -> assertEquals(exam.getId(), examDto.getId()));
     }
 
+    @Test
+    void migrateDataToV2() {
+        examFacade.migrateDataToV2();
+
+        verify(examService).migrateDataToV2();
+    }
+
     @Nested
     class Save {
         @Captor

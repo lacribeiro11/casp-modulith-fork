@@ -11,12 +11,14 @@ import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Exam;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.event.types.ExamDto;
+import casp.web.backend.presentation.layer.event.facades.ExamFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,6 +33,7 @@ import static casp.web.backend.presentation.layer.dtos.event.types.ExamMapper.EX
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,6 +58,8 @@ class ExamRestControllerTest {
     private MemberRepository memberRepository;
     @Autowired
     private DogHasHandlerRepository dogHasHandlerRepository;
+    @SpyBean
+    private ExamFacade examFacade;
 
     private DogHasHandler dogHasHandler;
 
@@ -68,6 +73,14 @@ class ExamRestControllerTest {
         dogHasHandler = TestFixture.createDogHasHandler();
         memberRepository.save(dogHasHandler.getMember());
         dogHasHandlerRepository.save(dogHasHandler);
+    }
+
+    @Test
+    void migrateDataToV2() throws Exception {
+        mockMvc.perform(post(EXAM_URL_PREFIX + "/migrate-data"))
+                .andExpect(status().isNoContent());
+
+        verify(examFacade).migrateDataToV2();
     }
 
     @Nested
