@@ -3,7 +3,11 @@ package casp.web.backend.business.logic.layer.event.types;
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantService;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.MemberReference;
+import casp.web.backend.data.access.layer.event.options.BaseEventOption;
+import casp.web.backend.data.access.layer.event.types.MemberReferenceRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
+import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
@@ -11,29 +15,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.deprecated.event.calendar.CalendarV2Mapper.CALENDAR_V2_MAPPER;
+import static casp.web.backend.deprecated.event.options.BaseEventOptionV2Mapper.BASE_EVENT_OPTION_V2_MAPPER;
+
 abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipant> implements BaseEventService<E> {
     private static final Logger LOG = LoggerFactory.getLogger(BaseEventServiceImpl.class);
+    private static final Sort SORT = Sort.by("eventFrom").ascending().and(Sort.by("eventTo").ascending());
     protected final CalendarService calendarService;
     protected final BaseParticipantService<P, E> participantService;
     protected final BaseEventRepository eventRepository;
     protected final MemberRepository memberRepository;
     protected final String eventType;
+    private final MemberReferenceRepository memberReferenceRepository;
+    private final CalendarRepository calendarRepository;
 
     protected BaseEventServiceImpl(final CalendarService calendarService,
                                    final BaseParticipantService<P, E> participantService,
                                    final BaseEventRepository eventRepository,
                                    final MemberRepository memberRepository,
-                                   final String eventType) {
+                                   final String eventType,
+                                   final MemberReferenceRepository memberReferenceRepository,
+                                   final CalendarRepository calendarRepository) {
         this.calendarService = calendarService;
         this.participantService = participantService;
         this.eventRepository = eventRepository;
         this.memberRepository = memberRepository;
         this.eventType = eventType;
+        this.memberReferenceRepository = memberReferenceRepository;
+        this.calendarRepository = calendarRepository;
+    }
+
+    protected static Optional<BaseEventOption> mapToBaseEventOptionV2(final BaseEvent baseEvent) {
+        if (null != baseEvent.getDailyOption()) {
+            return Optional.of(BASE_EVENT_OPTION_V2_MAPPER.toDailyEventOption(baseEvent.getDailyOption()));
+        } else if (null != baseEvent.getWeeklyOption()) {
+            return Optional.of(BASE_EVENT_OPTION_V2_MAPPER.toWeeklyEventOption(baseEvent.getWeeklyOption()));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -125,5 +151,15 @@ abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipa
     private void setMemberIfNull(final E baseEvent) {
         memberRepository.findByIdAndEntityStatus(baseEvent.getMemberId(), EntityStatus.ACTIVE)
                 .ifPresent(baseEvent::setMember);
+    }
+
+    protected Optional<MemberReference> findMemberReference(final UUID memberId) {
+        return memberReferenceRepository.findById(memberId);
+    }
+
+    protected <T extends casp.web.backend.data.access.layer.event.types.BaseEvent> void mapToCalendarEntries(final UUID id, final T baseEvent) {
+        var calendarList = calendarRepository.findAllByBaseEventId(id, SORT);
+        baseEvent.setLocation(calendarList.getFirst().getLocation());
+        baseEvent.setCalendarEntries(CALENDAR_V2_MAPPER.toCalendarEntryList(calendarList));
     }
 }

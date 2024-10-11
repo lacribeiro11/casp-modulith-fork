@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class BaseEvent extends BaseDocument {
+public abstract class BaseEvent extends BaseDocument {
     @NotNull
     BaseEventType eventType;
 
