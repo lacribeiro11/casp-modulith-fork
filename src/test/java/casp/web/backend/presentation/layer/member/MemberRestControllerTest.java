@@ -175,12 +175,6 @@ class MemberRestControllerTest {
         return mockMvc.perform(post(MEMBER_URL_PREFIX + "/{id}/deactivate", memberId));
     }
 
-    private void assertCardDtoSet(final MemberDto memberDto) {
-        assertThat(memberDto.getCardDtoSet())
-                .singleElement()
-                .satisfies(cardDto -> assertEquals(card.getId(), cardDto.getId()));
-    }
-
     private void assertDogHasHandlerDtoSet(final MemberDto memberDto) {
         assertThat(memberDto.getDogHasHandlerDtoSet())
                 .singleElement()
@@ -257,7 +251,6 @@ class MemberRestControllerTest {
             assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
                 assertSame(EntityStatus.ACTIVE, dto.getEntityStatus());
                 assertEquals(john, dto);
-                assertCardDtoSet(dto);
                 assertDogHasHandlerDtoSet(dto);
             });
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.ACTIVE, dh.getEntityStatus()));
@@ -289,7 +282,6 @@ class MemberRestControllerTest {
 
             assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
                 assertSame(EntityStatus.INACTIVE, dto.getEntityStatus());
-                assertThat(dto.getCardDtoSet()).isEmpty();
             });
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.INACTIVE, dh.getEntityStatus()));
             assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.INACTIVE, p.getEntityStatus()));
@@ -307,7 +299,7 @@ class MemberRestControllerTest {
     }
 
     @Nested
-    class deleteMethod {
+    class DeleteMember {
         @Test
         void cascadeDelete() throws Exception {
             deleteMember(john.getId())
@@ -345,7 +337,6 @@ class MemberRestControllerTest {
             assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
                 assertSame(EntityStatus.ACTIVE, dto.getEntityStatus());
                 assertEquals(john, dto);
-                assertCardDtoSet(dto);
                 assertDogHasHandlerDtoSet(dto);
             });
 
@@ -385,7 +376,6 @@ class MemberRestControllerTest {
 
             var memberDto = MvcMapper.toObject(mvcResult, MemberDto.class);
             assertThat(memberDto).isEqualTo(john);
-            assertCardDtoSet(memberDto);
             assertDogHasHandlerDtoSet(memberDto);
         }
 
