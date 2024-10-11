@@ -30,6 +30,7 @@ import static casp.web.backend.deprecated.member.MemberV2Mapper.MEMBER_V2_MAPPER
  * @author iris_e
  */
 
+// FIXME It will also need a facade
 @Service
 class MemberServiceImpl implements MemberService {
     private static final Logger LOG = LoggerFactory.getLogger(MemberServiceImpl.class);

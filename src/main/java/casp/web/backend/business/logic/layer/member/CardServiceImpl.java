@@ -20,6 +20,7 @@ import java.util.UUID;
  * @author michaelsvoboda
  */
 @Service
+// FIXME to be deleted and moved to MemberService
 class CardServiceImpl implements CardService {
     private static final Logger LOG = LoggerFactory.getLogger(CardServiceImpl.class);
 
