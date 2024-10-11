@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.event.types;
+package casp.web.backend.deprecated.reference;
 
 import casp.web.backend.common.DogHasHandlerReference;
 import org.springframework.data.mongodb.repository.MongoRepository;
