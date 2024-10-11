@@ -3,7 +3,6 @@
 ## Changes
 
 ### card-rest-controller
-
 * **POST** /card
   * The cards are saved when the member is saved. **POST** /member
 * **GET** /card/{id}
@@ -12,6 +11,10 @@
   * Delete the cards in the member and save the member. **POST** /member
 * **GET** /card/by-member-id/{memberId}
   * When the member is retrieved, it comes with its cards. **GET** /member/{id}
+
+### MemberDto
+* `casp.web.backend.presentation.layer.dtos.member.MemberDto.cardDtoSet` is obsolete.
+  * Use `casp.web.backend.data.access.layer.member.Member.cards` instead
 
 ## Findings
 
