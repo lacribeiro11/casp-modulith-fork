@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.participants.SpaceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataMongoTest
 class SpaceCustomRepositoryImplTest {
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @Autowired
     private SpaceRepository spaceRepository;
     private Space space;
@@ -22,10 +22,10 @@ class SpaceCustomRepositoryImplTest {
     @BeforeEach
     void setUp() {
         spaceRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
 
         space = TestFixture.createSpace();
-        dogHasHandlerRepository.save(space.getDogHasHandler());
+        dogHasHandlerOldRepository.save(space.getDogHasHandler());
         spaceRepository.save(space);
     }
 

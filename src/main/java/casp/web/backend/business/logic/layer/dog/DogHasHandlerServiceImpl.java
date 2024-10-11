@@ -4,12 +4,12 @@ import casp.web.backend.business.logic.layer.event.participants.BaseParticipantO
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.dog.DogHasHandlerV2Repository;
+import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,26 +28,26 @@ import static casp.web.backend.deprecated.dog.DogHasHandlerV2Mapper.DOG_HAS_HAND
 class DogHasHandlerServiceImpl implements DogHasHandlerService {
     private static final Logger LOG = LoggerFactory.getLogger(DogHasHandlerServiceImpl.class);
 
-    private final DogHasHandlerRepository dogHasHandlerRepository;
+    private final DogHasHandlerOldRepository dogHasHandlerOldRepository;
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final BaseParticipantObserver baseParticipantObserver;
     private final MemberReferenceRepository memberReferenceRepository;
-    private final DogHasHandlerV2Repository dogHasHandlerV2Repository;
+    private final DogHasHandlerRepository dogHasHandlerRepository;
 
     @Autowired
-    DogHasHandlerServiceImpl(final DogHasHandlerRepository dogHasHandlerRepository,
+    DogHasHandlerServiceImpl(final DogHasHandlerOldRepository dogHasHandlerOldRepository,
                              final MemberRepository memberRepository,
                              final DogRepository dogRepository,
                              final BaseParticipantObserver baseParticipantObserver,
                              final MemberReferenceRepository memberReferenceRepository,
-                             final DogHasHandlerV2Repository dogHasHandlerV2Repository) {
-        this.dogHasHandlerRepository = dogHasHandlerRepository;
+                             final DogHasHandlerRepository dogHasHandlerRepository) {
+        this.dogHasHandlerOldRepository = dogHasHandlerOldRepository;
         this.memberRepository = memberRepository;
         this.dogRepository = dogRepository;
         this.baseParticipantObserver = baseParticipantObserver;
         this.memberReferenceRepository = memberReferenceRepository;
-        this.dogHasHandlerV2Repository = dogHasHandlerV2Repository;
+        this.dogHasHandlerRepository = dogHasHandlerRepository;
     }
 
     private static casp.web.backend.data.access.layer.dog.DogHasHandler mapToDogHasHandlerV2(final DogHasHandler dh, final Dog dog, final MemberReference member) {
@@ -57,15 +57,17 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         return dogHasHandler;
     }
 
+    // FIXME DogHasHandlerV2 will come already with dog and Member, it will be set on a facade
     @Override
     public DogHasHandler saveDogHasHandler(final DogHasHandler dogHasHandler) {
         setDogAndMember(dogHasHandler);
-        return dogHasHandlerRepository.save(dogHasHandler);
+        return dogHasHandlerOldRepository.save(dogHasHandler);
     }
 
+    // FIXME it will search by a DogHasHandler that is active, but also the dog and the member must be active
     @Override
     public DogHasHandler getDogHasHandlerById(final UUID id) {
-        var dogHasHandler = dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE).orElseThrow(() -> {
+        var dogHasHandler = dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE).orElseThrow(() -> {
             var msg = "DogHasHandler with id %s not found or it isn't active".formatted(id);
             LOG.error(msg);
             return new NoSuchElementException(msg);
@@ -73,15 +75,16 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         return setDogAndMember(dogHasHandler);
     }
 
+    // FIXME change only the repository
     @Override
     public void deleteDogHasHandlersByMemberId(final UUID memberId) {
-        dogHasHandlerRepository.findAllByMemberIdAndEntityStatusIsNot(memberId, EntityStatus.DELETED)
+        dogHasHandlerOldRepository.findAllByMemberIdAndEntityStatusIsNot(memberId, EntityStatus.DELETED)
                 .forEach(this::deleteDogHasHandler);
     }
 
     @Override
     public void deleteDogHasHandlersByDogId(final UUID dogId) {
-        dogHasHandlerRepository.findAllByDogIdAndEntityStatusNot(dogId, EntityStatus.DELETED)
+        dogHasHandlerOldRepository.findAllByDogIdAndEntityStatusNot(dogId, EntityStatus.DELETED)
                 .forEach(this::deleteDogHasHandler);
     }
 
@@ -92,6 +95,7 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
                 .collect(Collectors.toSet());
     }
 
+    // FIXME change the type to MemberReference
     @Override
     public Set<Member> getMembersByDogId(final UUID dogId) {
         return getDogHasHandlersByDogId(dogId).stream()
@@ -99,41 +103,49 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
                 .collect(Collectors.toSet());
     }
 
+    // FIXME change the type to V2, no need to set members and dogs
     @Override
     public Set<DogHasHandler> getDogHasHandlersByMemberId(final UUID memberId) {
-        return setMissingMembersAndDogs(dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE));
+        return setMissingMembersAndDogs(dogHasHandlerOldRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE));
     }
 
+    // FIXME change the type to V2, no need to set members and dogs
     @Override
     public Set<DogHasHandler> getDogHasHandlersByDogId(final UUID dogId) {
-        return setMissingMembersAndDogs(dogHasHandlerRepository.findAllByDogIdAndEntityStatus(dogId, EntityStatus.ACTIVE));
+        return setMissingMembersAndDogs(dogHasHandlerOldRepository.findAllByDogIdAndEntityStatus(dogId, EntityStatus.ACTIVE));
     }
 
+    // FIXME change the type to V2, no need to set members and dogs
     @Override
     public Set<DogHasHandler> searchByName(final String name) {
-        return setMissingMembersAndDogs(dogHasHandlerRepository.findAllByMemberNameOrDogName(name));
+        return setMissingMembersAndDogs(dogHasHandlerOldRepository.findAllByMemberNameOrDogName(name));
     }
 
+    // FIXME this must be a page
     @Override
     public Set<DogHasHandler> getAllDogHasHandler() {
-        return dogHasHandlerRepository.findAllByEntityStatus(EntityStatus.ACTIVE);
+        return dogHasHandlerOldRepository.findAllByEntityStatus(EntityStatus.ACTIVE);
     }
 
+    // FIXME change the type to V2
     @Override
     public Set<DogHasHandler> getDogHasHandlersByIds(final Set<UUID> handlerIds) {
-        return dogHasHandlerRepository.findAllByEntityStatusAndIdIn(EntityStatus.ACTIVE, handlerIds);
+        return dogHasHandlerOldRepository.findAllByEntityStatusAndIdIn(EntityStatus.ACTIVE, handlerIds);
     }
 
+    // FIXME to be deleted
     @Override
     public Set<UUID> getDogHasHandlerIdsByMemberId(final UUID memberId) {
         return getDogHasHandlersByMemberId(memberId).stream().map(DogHasHandler::getId).collect(Collectors.toSet());
     }
 
+    // FIXME to be deleted
     @Override
     public Set<UUID> getDogHasHandlerIdsByDogId(final UUID dogId) {
         return getDogHasHandlersByDogId(dogId).stream().map(DogHasHandler::getId).collect(Collectors.toSet());
     }
 
+    // FIXME use this casp.web.backend.business.logic.layer.dog.DogHasHandlerServiceImpl.getDogHasHandlersByIds and map to emails
     @Override
     public Set<String> getMembersEmailByIds(final Set<UUID> handlerIds) {
         return getDogHasHandlersByIds(handlerIds).stream()
@@ -153,7 +165,7 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
 
     @Override
     public void activateDogHasHandlersByMemberId(final UUID memberId) {
-        dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.INACTIVE).forEach(dh -> {
+        dogHasHandlerOldRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.INACTIVE).forEach(dh -> {
             baseParticipantObserver.activateParticipantsByMemberOrHandlerId(dh.getId());
             saveItWithNewStatus(dh, EntityStatus.ACTIVE);
         });
@@ -161,13 +173,13 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
 
     @Override
     public void migrateDataToV2() {
-        var dogHasHandlerSet = dogHasHandlerRepository.findAll()
+        var dogHasHandlerSet = dogHasHandlerOldRepository.findAll()
                 .stream()
                 .flatMap(dh -> dogRepository.findById(dh.getDogId())
                         .flatMap(dog -> findMemberAndMapToDogHasHandlerV2(dh, dog)).stream())
                 .collect(Collectors.toSet());
 
-        dogHasHandlerV2Repository.saveAll(dogHasHandlerSet);
+        dogHasHandlerRepository.saveAll(dogHasHandlerSet);
     }
 
     private Optional<casp.web.backend.data.access.layer.dog.DogHasHandler> findMemberAndMapToDogHasHandlerV2(final DogHasHandler dh, final Dog dog) {
@@ -181,7 +193,7 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
 
     private void saveItWithNewStatus(final DogHasHandler dh, final EntityStatus entityStatus) {
         dh.setEntityStatus(entityStatus);
-        dogHasHandlerRepository.save(dh);
+        dogHasHandlerOldRepository.save(dh);
     }
 
     private void deleteDogHasHandler(final DogHasHandler dh) {

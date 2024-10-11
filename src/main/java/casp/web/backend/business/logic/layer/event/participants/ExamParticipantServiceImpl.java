@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.ExamParticipant;
 import casp.web.backend.deprecated.event.types.Exam;
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 
 @Service
 class ExamParticipantServiceImpl extends BaseParticipantServiceImpl<ExamParticipant, Exam> implements ExamParticipantService {
-    private final DogHasHandlerRepository dogHasHandlerRepository;
+    private final DogHasHandlerOldRepository dogHasHandlerOldRepository;
 
     @Autowired
-    ExamParticipantServiceImpl(final BaseParticipantRepository baseParticipantRepository, final DogHasHandlerRepository dogHasHandlerRepository) {
+    ExamParticipantServiceImpl(final BaseParticipantRepository baseParticipantRepository, final DogHasHandlerOldRepository dogHasHandlerOldRepository) {
         super(baseParticipantRepository, ExamParticipant.PARTICIPANT_TYPE);
-        this.dogHasHandlerRepository = dogHasHandlerRepository;
+        this.dogHasHandlerOldRepository = dogHasHandlerOldRepository;
     }
 
     @Override
@@ -52,6 +52,6 @@ class ExamParticipantServiceImpl extends BaseParticipantServiceImpl<ExamParticip
     }
 
     private Optional<DogHasHandler> findDogHasHandler(final UUID dogHasHandlerId) {
-        return dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(dogHasHandlerId, EntityStatus.ACTIVE);
+        return dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(dogHasHandlerId, EntityStatus.ACTIVE);
     }
 }

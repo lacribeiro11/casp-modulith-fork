@@ -4,7 +4,7 @@ import casp.web.backend.TestFixture;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.calendar.Calendar;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
@@ -62,7 +62,7 @@ class CalendarRestControllerTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
 
     private List<Calendar> calendarList;
     private CoTrainer coTrainer;
@@ -78,7 +78,7 @@ class CalendarRestControllerTest {
         calendarRepository.deleteAll();
         baseParticipantRepository.deleteAll();
         baseEventRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
         memberRepository.deleteAll();
 
         member = TestFixture.createMember();
@@ -86,7 +86,7 @@ class CalendarRestControllerTest {
         dogHasHandler = TestFixture.createDogHasHandler();
         dogHasHandler.setMember(member);
         dogHasHandler.setMemberId(member.getId());
-        dogHasHandler = dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandler = dogHasHandlerOldRepository.save(dogHasHandler);
         coTrainer = TestFixture.createCoTrainer();
         coTrainer.setMemberOrHandlerId(member.getId());
         var course = (Course) coTrainer.getBaseEvent();

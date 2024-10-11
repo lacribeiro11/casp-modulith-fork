@@ -3,7 +3,7 @@ package casp.web.backend.business.logic.layer.event.participants;
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.ExamParticipant;
@@ -35,7 +35,7 @@ class ExamParticipantServiceImplTest {
     @Mock
     private BaseParticipantRepository baseParticipantRepository;
     @Mock
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
 
     @InjectMocks
     private ExamParticipantServiceImpl examParticipantService;
@@ -118,7 +118,7 @@ class ExamParticipantServiceImplTest {
     }
 
     private Optional<DogHasHandler> findDogHasHandler(final UUID id) {
-        return dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE);
+        return dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE);
     }
 
     @Nested

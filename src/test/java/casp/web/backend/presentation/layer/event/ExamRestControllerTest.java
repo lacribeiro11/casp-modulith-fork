@@ -4,7 +4,7 @@ import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
@@ -57,7 +57,7 @@ class ExamRestControllerTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @SpyBean
     private ExamFacade examFacade;
 
@@ -72,7 +72,7 @@ class ExamRestControllerTest {
 
         dogHasHandler = TestFixture.createDogHasHandler();
         memberRepository.save(dogHasHandler.getMember());
-        dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandlerOldRepository.save(dogHasHandler);
     }
 
     @Test

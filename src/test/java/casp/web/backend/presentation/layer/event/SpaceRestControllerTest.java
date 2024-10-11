@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
@@ -41,14 +41,14 @@ class SpaceRestControllerTest {
     @Autowired
     private BaseParticipantRepository baseParticipantRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     private Space space;
 
     @BeforeEach
     void setUp() {
         baseParticipantRepository.deleteAll();
         baseEventRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
 
         var dogHasHandler = TestFixture.createDogHasHandler();
         space = TestFixture.createSpace();
@@ -57,7 +57,7 @@ class SpaceRestControllerTest {
 
         baseParticipantRepository.save(space);
         baseEventRepository.save(space.getBaseEvent());
-        dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandlerOldRepository.save(dogHasHandler);
     }
 
     @Test

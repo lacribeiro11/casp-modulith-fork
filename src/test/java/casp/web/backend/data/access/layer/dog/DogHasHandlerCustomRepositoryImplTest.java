@@ -4,7 +4,7 @@ package casp.web.backend.data.access.layer.dog;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DogHasHandlerCustomRepositoryImplTest {
 
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @Autowired
     private DogRepository dogRepository;
     @Autowired
@@ -28,7 +28,7 @@ class DogHasHandlerCustomRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
         dogRepository.deleteAll();
         memberRepository.deleteAll();
 
@@ -44,30 +44,30 @@ class DogHasHandlerCustomRepositoryImplTest {
         dogHasHandler = new DogHasHandler();
         dogHasHandler.setDogId(dog.getId());
         dogHasHandler.setMemberId(member.getId());
-        dogHasHandler = dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandler = dogHasHandlerOldRepository.save(dogHasHandler);
     }
 
     @Test
     void findDogHasHandlerByDogName() {
-        assertThat(dogHasHandlerRepository.findAllByMemberNameOrDogName(dog.getName()))
+        assertThat(dogHasHandlerOldRepository.findAllByMemberNameOrDogName(dog.getName()))
                 .containsExactly(dogHasHandler);
     }
 
     @Test
     void findDogHasHandlerByMemberFirstName() {
-        assertThat(dogHasHandlerRepository.findAllByMemberNameOrDogName(member.getFirstName()))
+        assertThat(dogHasHandlerOldRepository.findAllByMemberNameOrDogName(member.getFirstName()))
                 .containsExactly(dogHasHandler);
     }
 
     @Test
     void findDogHasHandlerByMemberLastName() {
-        assertThat(dogHasHandlerRepository.findAllByMemberNameOrDogName(member.getLastName()))
+        assertThat(dogHasHandlerOldRepository.findAllByMemberNameOrDogName(member.getLastName()))
                 .containsExactly(dogHasHandler);
     }
 
     @Test
     void findDogHasHandlerByNullValue() {
-        assertThat(dogHasHandlerRepository.findAllByMemberNameOrDogName(null))
+        assertThat(dogHasHandlerOldRepository.findAllByMemberNameOrDogName(null))
                 .containsExactly(dogHasHandler);
     }
 }

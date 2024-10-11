@@ -12,7 +12,7 @@ import java.util.UUID;
  * @deprecated It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
-public interface DogHasHandlerRepository extends MongoRepository<DogHasHandler, UUID>, QuerydslPredicateExecutor<DogHasHandler>, DogHasHandlerCustomRepository {
+public interface DogHasHandlerOldRepository extends MongoRepository<DogHasHandler, UUID>, QuerydslPredicateExecutor<DogHasHandler>, DogHasHandlerCustomRepository {
 
     Set<DogHasHandler> findAllByDogIdAndEntityStatus(UUID dogId, EntityStatus entityStatus);
 

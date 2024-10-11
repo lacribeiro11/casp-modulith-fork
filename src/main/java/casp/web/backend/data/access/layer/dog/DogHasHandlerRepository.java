@@ -4,5 +4,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.UUID;
 
-public interface DogHasHandlerV2Repository extends MongoRepository<DogHasHandler, UUID> {
+public interface DogHasHandlerRepository extends MongoRepository<DogHasHandler, UUID> {
 }

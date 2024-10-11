@@ -4,7 +4,7 @@ import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.RestResponsePage;
@@ -50,7 +50,7 @@ class DogRestControllerTest {
     @Autowired
     private DogRepository dogRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @Autowired
     private BaseParticipantRepository baseParticipantRepository;
     @Autowired
@@ -63,7 +63,7 @@ class DogRestControllerTest {
     @BeforeEach
     void setUp() {
         baseParticipantRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
         dogRepository.deleteAll();
         memberRepository.deleteAll();
 
@@ -107,7 +107,7 @@ class DogRestControllerTest {
 
         var dogHasHandler = TestFixture.createDogHasHandler(dog, member);
         dogHasHandler.setEntityStatus(entityStatus);
-        dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandlerOldRepository.save(dogHasHandler);
         var space = TestFixture.createSpace();
         space.setMemberOrHandlerId(dogHasHandler.getId());
         space.setEntityStatus(entityStatus);
@@ -151,7 +151,7 @@ class DogRestControllerTest {
 
             getDogById(charlie.getId()).andExpect(status().isBadRequest());
 
-            var dogHasHandlerList = dogHasHandlerRepository.findAll()
+            var dogHasHandlerList = dogHasHandlerOldRepository.findAll()
                     .stream()
                     .filter(dh -> charlie.getId().equals(dh.getDogId()))
                     .toList();

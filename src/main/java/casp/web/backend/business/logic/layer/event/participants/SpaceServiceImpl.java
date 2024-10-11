@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.event.participants;
 
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.participants.SpaceRepository;
 import casp.web.backend.deprecated.event.types.Course;
@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 
 @Service
 class SpaceServiceImpl implements SpaceService {
-    private final DogHasHandlerRepository dogHasHandlerRepository;
+    private final DogHasHandlerOldRepository dogHasHandlerOldRepository;
     private final SpaceRepository spaceRepository;
 
     @Autowired
-    SpaceServiceImpl(final DogHasHandlerRepository dogHasHandlerRepository, final SpaceRepository spaceRepository) {
-        this.dogHasHandlerRepository = dogHasHandlerRepository;
+    SpaceServiceImpl(final DogHasHandlerOldRepository dogHasHandlerOldRepository, final SpaceRepository spaceRepository) {
+        this.dogHasHandlerOldRepository = dogHasHandlerOldRepository;
         this.spaceRepository = spaceRepository;
     }
 
@@ -114,7 +114,7 @@ class SpaceServiceImpl implements SpaceService {
     }
 
     private Optional<DogHasHandler> findDogHasHandler(final UUID dogHasHandlerId) {
-        return dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(dogHasHandlerId, EntityStatus.ACTIVE);
+        return dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(dogHasHandlerId, EntityStatus.ACTIVE);
     }
 
     private void saveItWithStatus(final Space space, final EntityStatus entityStatus) {

@@ -5,7 +5,7 @@ import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
@@ -59,7 +59,7 @@ class CourseRestControllerTest {
     @Autowired
     private DogRepository dogRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @SpyBean
     private CourseFacade courseFacade;
 
@@ -70,14 +70,14 @@ class CourseRestControllerTest {
         calendarRepository.deleteAll();
         baseParticipantRepository.deleteAll();
         baseEventRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
         memberRepository.deleteAll();
         dogRepository.deleteAll();
 
         dogHasHandler = TestFixture.createDogHasHandler();
         memberRepository.save(dogHasHandler.getMember());
         dogRepository.save(dogHasHandler.getDog());
-        dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandlerOldRepository.save(dogHasHandler);
     }
 
     @Test

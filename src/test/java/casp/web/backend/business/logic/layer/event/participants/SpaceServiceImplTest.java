@@ -3,7 +3,7 @@ package casp.web.backend.business.logic.layer.event.participants;
 import casp.web.backend.TestFixture;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.deprecated.dog.DogHasHandler;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.participants.SpaceRepository;
@@ -35,7 +35,7 @@ class SpaceServiceImplTest {
     @Mock
     private SpaceRepository spaceRepository;
     @Mock
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
 
     @InjectMocks
     private SpaceServiceImpl spaceService;
@@ -139,7 +139,7 @@ class SpaceServiceImplTest {
     }
 
     private Optional<DogHasHandler> findDogHasHandler(final UUID id) {
-        return dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE);
+        return dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(id, EntityStatus.ACTIVE);
     }
 
     @Nested
@@ -154,7 +154,7 @@ class SpaceServiceImplTest {
         @Test
         void setDogHasHandler() {
             var dogHasHandler = TestFixture.createDogHasHandler();
-            when(dogHasHandlerRepository.findDogHasHandlerByIdAndEntityStatus(space.getMemberOrHandlerId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dogHasHandler));
+            when(dogHasHandlerOldRepository.findDogHasHandlerByIdAndEntityStatus(space.getMemberOrHandlerId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dogHasHandler));
 
             spaceService.saveParticipant(space);
 

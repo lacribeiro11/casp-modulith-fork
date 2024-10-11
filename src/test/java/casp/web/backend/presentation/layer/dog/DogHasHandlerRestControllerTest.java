@@ -5,7 +5,7 @@ import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
-import casp.web.backend.deprecated.dog.DogHasHandlerRepository;
+import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.dog.DogDto;
@@ -53,7 +53,7 @@ class DogHasHandlerRestControllerTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private DogHasHandlerRepository dogHasHandlerRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @Autowired
     private DogRepository dogRepository;
     @Autowired
@@ -69,7 +69,7 @@ class DogHasHandlerRestControllerTest {
     @BeforeEach
     void setUp() {
         baseParticipantRepository.deleteAll();
-        dogHasHandlerRepository.deleteAll();
+        dogHasHandlerOldRepository.deleteAll();
         memberRepository.deleteAll();
         dogRepository.deleteAll();
 
@@ -81,7 +81,7 @@ class DogHasHandlerRestControllerTest {
 
         member = MEMBER_MAPPER.toDto(memberRepository.save(memberDocument));
         dog = DOG_MAPPER.toDto(dogRepository.save(dogDocument));
-        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandlerRepository.save(dogHasHandlerDocument));
+        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandlerOldRepository.save(dogHasHandlerDocument));
         baseParticipantRepository.save(space);
     }
 
@@ -138,7 +138,7 @@ class DogHasHandlerRestControllerTest {
         mockMvc.perform(delete(DOG_HAS_HANDLER_URL_PREFIX + "/by-dog-id/{dogId}", dog.getId()))
                 .andExpect(status().isNoContent());
 
-        assertThat(dogHasHandlerRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
+        assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
         assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
     }
 
@@ -147,7 +147,7 @@ class DogHasHandlerRestControllerTest {
         mockMvc.perform(delete(DOG_HAS_HANDLER_URL_PREFIX + "/by-member-id/{memberId}", member.getId()))
                 .andExpect(status().isNoContent());
 
-        assertThat(dogHasHandlerRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
+        assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
         assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
     }
 
