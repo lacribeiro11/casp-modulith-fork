@@ -3,6 +3,7 @@ package casp.web.backend.business.logic.layer.event.types;
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.CoTrainerService;
 import casp.web.backend.business.logic.layer.event.participants.SpaceService;
+import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.event.types.CourseV2Repository;
 import casp.web.backend.data.access.layer.event.types.DogHasHandlerReferenceRepository;
@@ -18,7 +19,6 @@ import casp.web.backend.deprecated.event.types.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,7 +29,6 @@ import static casp.web.backend.deprecated.event.types.BaseEventV2Mapper.BASE_EVE
 @Service
 class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements CourseService {
     private final CoTrainerService coTrainerService;
-    private final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
     private final CourseV2Repository courseV2Repository;
     private final BaseParticipantRepository baseParticipantRepository;
 
@@ -44,9 +43,8 @@ class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements C
                       final MemberReferenceRepository memberReferenceRepository,
                       final CourseV2Repository courseV2Repository,
                       final BaseParticipantRepository baseParticipantRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Course.EVENT_TYPE, memberReferenceRepository, calendarRepository);
+        super(calendarService, participantService, eventRepository, memberRepository, Course.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
         this.coTrainerService = coTrainerService;
-        this.dogHasHandlerReferenceRepository = dogHasHandlerReferenceRepository;
         this.courseV2Repository = courseV2Repository;
         this.baseParticipantRepository = baseParticipantRepository;
     }
@@ -122,16 +120,15 @@ class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements C
     private Set<casp.web.backend.data.access.layer.event.participants.Space> mapSpaces(final Course course) {
         return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), Space.PARTICIPANT_TYPE)
                 .stream()
-                .flatMap(s -> mapSpace((Space) s).stream())
+                .flatMap(s -> findDogHasHandlerReference(s.getMemberOrHandlerId())
+                        .map(dh -> mapSpace((Space) s, dh))
+                        .stream())
                 .collect(Collectors.toSet());
     }
 
-    private Optional<casp.web.backend.data.access.layer.event.participants.Space> mapSpace(final Space space) {
-        return dogHasHandlerReferenceRepository.findById(space.getMemberOrHandlerId())
-                .map(dh -> {
-                    var spaceV2 = BASE_PARTICIPANT_V2_MAPPER.toSpace(space);
-                    spaceV2.setDogHasHandler(dh);
-                    return spaceV2;
-                });
+    private casp.web.backend.data.access.layer.event.participants.Space mapSpace(final Space space, final DogHasHandlerReference dogHasHandler) {
+        var spaceV2 = BASE_PARTICIPANT_V2_MAPPER.toSpace(space);
+        spaceV2.setDogHasHandler(dogHasHandler);
+        return spaceV2;
     }
 }

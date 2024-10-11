@@ -218,10 +218,6 @@ class CourseServiceImplTest {
         @Test
         void dogHasHandlerForSpaceNotFound() {
             findCourseMemberAndCalendar();
-            var spaceDogHasHandler = mock(DogHasHandlerReference.class, Answers.RETURNS_DEEP_STUBS);
-            when(spaceDogHasHandler.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(spaceDogHasHandler.getMember().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(spaceDogHasHandler.getDog().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
             var space = TestFixture.createSpace();
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), Space.PARTICIPANT_TYPE)).thenReturn(Set.of(space));
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), CoTrainer.PARTICIPANT_TYPE)).thenReturn(Set.of());
@@ -252,8 +248,6 @@ class CourseServiceImplTest {
         @Test
         void memberForCoTrainerNotFound() {
             findCourseMemberAndCalendar();
-            var coTrainerMember = mock(MemberReference.class, Answers.RETURNS_DEEP_STUBS);
-            when(coTrainerMember.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
             var coTrainer = TestFixture.createCoTrainer();
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), Space.PARTICIPANT_TYPE)).thenReturn(Set.of());
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), CoTrainer.PARTICIPANT_TYPE)).thenReturn(Set.of(coTrainer));

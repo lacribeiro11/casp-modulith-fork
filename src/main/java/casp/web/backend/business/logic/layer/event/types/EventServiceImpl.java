@@ -3,6 +3,7 @@ package casp.web.backend.business.logic.layer.event.types;
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.EventParticipantService;
 import casp.web.backend.common.MemberReference;
+import casp.web.backend.data.access.layer.event.types.DogHasHandlerReferenceRepository;
 import casp.web.backend.data.access.layer.event.types.EventV2Repository;
 import casp.web.backend.data.access.layer.event.types.MemberReferenceRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
@@ -34,8 +35,9 @@ class EventServiceImpl extends BaseEventServiceImpl<Event, EventParticipant> imp
                      final EventV2Repository eventV2Repository,
                      final MemberReferenceRepository memberReferenceRepository,
                      final CalendarRepository calendarRepository,
-                     final BaseParticipantRepository participantRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Event.EVENT_TYPE, memberReferenceRepository, calendarRepository);
+                     final BaseParticipantRepository participantRepository,
+                     final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository) {
+        super(calendarService, participantService, eventRepository, memberRepository, Event.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
         this.eventV2Repository = eventV2Repository;
         this.participantRepository = participantRepository;
     }

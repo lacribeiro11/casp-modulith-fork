@@ -2,6 +2,7 @@ package casp.web.backend.business.logic.layer.event.types;
 
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.ExamParticipantService;
+import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.event.types.DogHasHandlerReferenceRepository;
 import casp.web.backend.data.access.layer.event.types.ExamV2Repository;
@@ -15,7 +16,6 @@ import casp.web.backend.deprecated.event.types.Exam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +27,6 @@ class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implem
 
     private final ExamV2Repository examV2Repository;
     private final BaseParticipantRepository baseParticipantRepository;
-    private final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
 
     @Autowired
     ExamServiceImpl(final CalendarService calendarService,
@@ -39,10 +38,9 @@ class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implem
                     final ExamV2Repository examV2Repository,
                     final BaseParticipantRepository baseParticipantRepository,
                     final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Exam.EVENT_TYPE, memberReferenceRepository, calendarRepository);
+        super(calendarService, participantService, eventRepository, memberRepository, Exam.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
         this.examV2Repository = examV2Repository;
         this.baseParticipantRepository = baseParticipantRepository;
-        this.dogHasHandlerReferenceRepository = dogHasHandlerReferenceRepository;
     }
 
     @Override
@@ -68,16 +66,15 @@ class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implem
     private Set<casp.web.backend.data.access.layer.event.participants.ExamParticipant> mapParticipants(final Exam exam) {
         return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(exam.getId(), ExamParticipant.PARTICIPANT_TYPE)
                 .stream()
-                .flatMap(p -> mapParticipant((ExamParticipant) p).stream())
+                .flatMap(p -> findDogHasHandlerReference(p.getMemberOrHandlerId())
+                        .map(dh -> mapParticipant((ExamParticipant) p, dh))
+                        .stream())
                 .collect(Collectors.toSet());
     }
 
-    private Optional<casp.web.backend.data.access.layer.event.participants.ExamParticipant> mapParticipant(final ExamParticipant participant) {
-        return dogHasHandlerReferenceRepository.findById(participant.getMemberOrHandlerId())
-                .map(dh -> {
-                    var examParticipantV2 = BASE_PARTICIPANT_V2_MAPPER.toExamParticipant(participant);
-                    examParticipantV2.setDogHasHandler(dh);
-                    return examParticipantV2;
-                });
+    private casp.web.backend.data.access.layer.event.participants.ExamParticipant mapParticipant(final ExamParticipant participant, final DogHasHandlerReference dogHasHandler) {
+        var examParticipantV2 = BASE_PARTICIPANT_V2_MAPPER.toExamParticipant(participant);
+        examParticipantV2.setDogHasHandler(dogHasHandler);
+        return examParticipantV2;
     }
 }

@@ -215,7 +215,7 @@ class EventServiceImplTest {
 
         @Test
         void participant() {
-            findCourseMemberAndCalendar();
+            findEventMemberAndCalendar();
             var member = mock(MemberReference.class, Answers.RETURNS_DEEP_STUBS);
             when(member.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
             var eventParticipant = TestFixture.createEventParticipant();
@@ -230,9 +230,7 @@ class EventServiceImplTest {
 
         @Test
         void participantNotFound() {
-            findCourseMemberAndCalendar();
-            var member = mock(MemberReference.class, Answers.RETURNS_DEEP_STUBS);
-            when(member.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
+            findEventMemberAndCalendar();
             var eventParticipant = TestFixture.createEventParticipant();
             when(participantRepository.findAllByBaseEventIdAndParticipantType(event.getId(), EventParticipant.PARTICIPANT_TYPE)).thenReturn(Set.of(eventParticipant));
             when(memberReferenceRepository.findById(eventParticipant.getMemberOrHandlerId())).thenReturn(Optional.empty());
@@ -245,7 +243,7 @@ class EventServiceImplTest {
 
         @Test
         void daily() {
-            findCourseMemberAndCalendar();
+            findEventMemberAndCalendar();
             event.setDailyOption(TestFixture.createDailyEventOption());
 
             eventService.migrateDataToV2();
@@ -256,7 +254,7 @@ class EventServiceImplTest {
 
         @Test
         void weekly() {
-            findCourseMemberAndCalendar();
+            findEventMemberAndCalendar();
             event.setWeeklyOption(TestFixture.createWeeklyEventOption());
 
             eventService.migrateDataToV2();
@@ -265,7 +263,7 @@ class EventServiceImplTest {
             assertSame(BaseEventOptionType.WEEKLY, eventV2.getBaseEventOption().getOptionType());
         }
 
-        private void findCourseMemberAndCalendar() {
+        private void findEventMemberAndCalendar() {
             when(memberReferenceRepository.findById(event.getMemberId())).thenReturn(Optional.of(eventMember));
             calendar = TestFixture.createCalendarEntry();
             when(calendarRepository.findAllByBaseEventId(event.getId(), SORT)).thenReturn(List.of(calendar));

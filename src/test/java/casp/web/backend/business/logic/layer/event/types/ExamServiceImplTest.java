@@ -63,6 +63,16 @@ class ExamServiceImplTest {
     private BaseEventRepository eventRepository;
     @Mock
     private MemberRepository memberRepository;
+    @Mock
+    private ExamV2Repository examV2Repository;
+    @Mock
+    private MemberReferenceRepository memberReferenceRepository;
+    @Mock
+    private CalendarRepository calendarRepository;
+    @Mock
+    private BaseParticipantRepository participantRepository;
+    @Mock
+    private DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
     @InjectMocks
     private ExamServiceImpl examService;
 
@@ -177,16 +187,7 @@ class ExamServiceImplTest {
     @Nested
     class MigrateDataToV2 {
         private static final Sort SORT = Sort.by("eventFrom").ascending().and(Sort.by("eventTo").ascending());
-        @Mock
-        private ExamV2Repository examV2Repository;
-        @Mock
-        private MemberReferenceRepository memberReferenceRepository;
-        @Mock
-        private CalendarRepository calendarRepository;
-        @Mock
-        private BaseParticipantRepository participantRepository;
-        @Mock
-        private DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
+
         @Captor
         private ArgumentCaptor<casp.web.backend.data.access.layer.event.types.Exam> examV2Captor;
         @Mock
