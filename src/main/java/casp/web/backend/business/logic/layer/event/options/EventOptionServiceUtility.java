@@ -6,6 +6,7 @@ import casp.web.backend.deprecated.event.types.BaseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+// FIXME map to CalendarEntry without location and remove the name service
 public final class EventOptionServiceUtility {
 
     private EventOptionServiceUtility() {
