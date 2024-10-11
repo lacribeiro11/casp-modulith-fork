@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
+// FIXME to be delete. Move to BaseEventService
 @Service
 class CalendarServiceImpl implements CalendarService {
     private static final Logger LOG = LoggerFactory.getLogger(CalendarServiceImpl.class);
