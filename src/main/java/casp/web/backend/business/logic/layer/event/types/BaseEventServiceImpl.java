@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import static casp.web.backend.deprecated.event.calendar.CalendarV2Mapper.CALENDAR_V2_MAPPER;
 import static casp.web.backend.deprecated.event.options.BaseEventOptionV2Mapper.BASE_EVENT_OPTION_V2_MAPPER;
 
+// FIXME it will be its own service, but not reachable from outside of the package
 abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipant> implements BaseEventService<E> {
     private static final Logger LOG = LoggerFactory.getLogger(BaseEventServiceImpl.class);
     private static final Sort SORT = Sort.by("eventFrom").ascending().and(Sort.by("eventTo").ascending());
