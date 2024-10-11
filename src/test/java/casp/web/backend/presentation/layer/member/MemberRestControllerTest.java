@@ -190,6 +190,13 @@ class MemberRestControllerTest {
                 });
     }
 
+    private ResultActions performPost(final MemberDto memberDto) throws Exception {
+        return mockMvc.perform(post(MEMBER_URL_PREFIX)
+                .content(MvcMapper.toString(memberDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
     @Nested
     class GetMembersByFirstNameAndLastName {
         private static final String URL = MEMBER_URL_PREFIX + "/search-members-by-firstname-and-lastname";
@@ -366,13 +373,6 @@ class MemberRestControllerTest {
                     .satisfies(e -> assertThat(e.getMessage())
                             .contains("NotBlank.lastName", "NotBlank.firstName", "NotNull.email"));
         }
-
-        private ResultActions performPost(final MemberDto memberDto) throws Exception {
-            return mockMvc.perform(post(MEMBER_URL_PREFIX)
-                    .content(MvcMapper.toString(memberDto))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON));
-        }
     }
 
     @Nested
@@ -395,6 +395,58 @@ class MemberRestControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message")
                             .value(MEMBER_NOT_FOUND_MESSAGE.formatted(inactive.getId(), EntityStatus.ACTIVE)));
+        }
+    }
+
+    @Nested
+    class ChangesOfCardRestController {
+
+        private Member johnDomain;
+
+        private static casp.web.backend.data.access.layer.member.Card createCard(final int balance) {
+            var cardV2 = new casp.web.backend.data.access.layer.member.Card();
+            cardV2.setCode(UUID.randomUUID().toString());
+            cardV2.setBalance(balance);
+            return cardV2;
+        }
+
+        private static void assertCard(final casp.web.backend.data.access.layer.member.Card expectedCard, final casp.web.backend.data.access.layer.member.Card actualCard) {
+            assertEquals(expectedCard.getCode(), actualCard.getCode());
+            assertEquals(expectedCard.getBalance(), actualCard.getBalance());
+        }
+
+        @BeforeEach
+        void setUp() {
+            johnDomain = memberRepository.findById(john.getId()).orElseThrow();
+            johnDomain.setCards(Set.of(createCard(30), createCard(20)));
+            johnDomain = memberRepository.save(johnDomain);
+        }
+
+        @Test
+        void saveCard() throws Exception {
+            var johnDto = MEMBER_MAPPER.toDto(johnDomain);
+            var cardV2 = createCard(10);
+            johnDto.setCards(Set.of(cardV2));
+
+            var mvcResult = performPost(johnDto)
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var actualCards = MvcMapper.toObject(mvcResult, MemberDto.class).getCards();
+            assertThat(actualCards).singleElement().satisfies(card -> assertCard(cardV2, card));
+        }
+
+        @Test
+        void getCards() throws Exception {
+            var mvcResult = getMemberById(johnDomain.getId())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var actualCards = MvcMapper.toObject(mvcResult, MemberDto.class).getCards();
+            assertThat(actualCards)
+                    .hasSize(2)
+                    .allSatisfy(actualCard -> assertThat(johnDomain.getCards())
+                            .anySatisfy(expectedCard -> assertCard(expectedCard, actualCard)));
         }
     }
 }
