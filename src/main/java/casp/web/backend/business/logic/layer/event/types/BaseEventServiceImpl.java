@@ -11,6 +11,7 @@ import casp.web.backend.data.access.layer.event.types.MemberReferenceRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
+import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static casp.web.backend.deprecated.event.calendar.CalendarV2Mapper.CALENDAR_V2_MAPPER;
 import static casp.web.backend.deprecated.event.options.BaseEventOptionV2Mapper.BASE_EVENT_OPTION_V2_MAPPER;
@@ -38,6 +40,7 @@ abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipa
     private final MemberReferenceRepository memberReferenceRepository;
     private final CalendarRepository calendarRepository;
     private final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
+    private final BaseParticipantRepository baseParticipantRepository;
 
     protected BaseEventServiceImpl(final CalendarService calendarService,
                                    final BaseParticipantService<P, E> participantService,
@@ -46,7 +49,8 @@ abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipa
                                    final String eventType,
                                    final MemberReferenceRepository memberReferenceRepository,
                                    final CalendarRepository calendarRepository,
-                                   final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository) {
+                                   final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository,
+                                   final BaseParticipantRepository baseParticipantRepository) {
         this.calendarService = calendarService;
         this.participantService = participantService;
         this.eventRepository = eventRepository;
@@ -55,6 +59,7 @@ abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipa
         this.memberReferenceRepository = memberReferenceRepository;
         this.calendarRepository = calendarRepository;
         this.dogHasHandlerReferenceRepository = dogHasHandlerReferenceRepository;
+        this.baseParticipantRepository = baseParticipantRepository;
     }
 
     protected static Optional<BaseEventOption> mapToBaseEventOptionV2(final BaseEvent baseEvent) {
@@ -170,5 +175,10 @@ abstract class BaseEventServiceImpl<E extends BaseEvent, P extends BaseParticipa
 
     protected Optional<DogHasHandlerReference> findDogHasHandlerReference(final UUID id) {
         return dogHasHandlerReferenceRepository.findById(id);
+    }
+
+    protected Stream<BaseParticipant> findBaseParticipants(final UUID id, final String participantType) {
+        return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(id, participantType)
+                .stream();
     }
 }

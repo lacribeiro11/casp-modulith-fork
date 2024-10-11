@@ -25,7 +25,6 @@ import static casp.web.backend.deprecated.event.types.BaseEventV2Mapper.BASE_EVE
 class EventServiceImpl extends BaseEventServiceImpl<Event, EventParticipant> implements EventService {
 
     private final EventV2Repository eventV2Repository;
-    private final BaseParticipantRepository participantRepository;
 
     @Autowired
     EventServiceImpl(final CalendarService calendarService,
@@ -37,9 +36,8 @@ class EventServiceImpl extends BaseEventServiceImpl<Event, EventParticipant> imp
                      final CalendarRepository calendarRepository,
                      final BaseParticipantRepository participantRepository,
                      final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Event.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
+        super(calendarService, participantService, eventRepository, memberRepository, Event.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository, participantRepository);
         this.eventV2Repository = eventV2Repository;
-        this.participantRepository = participantRepository;
     }
 
     @Override
@@ -63,8 +61,7 @@ class EventServiceImpl extends BaseEventServiceImpl<Event, EventParticipant> imp
     }
 
     private Set<casp.web.backend.data.access.layer.event.participants.EventParticipant> mapToParticipantsV2(final Event event) {
-        return participantRepository.findAllByBaseEventIdAndParticipantType(event.getId(), EventParticipant.PARTICIPANT_TYPE)
-                .stream()
+        return findBaseParticipants(event.getId(), EventParticipant.PARTICIPANT_TYPE)
                 .flatMap(p -> findMemberReference(p.getMemberOrHandlerId())
                         .map(m -> findMemberAndMapToParticipantV2((EventParticipant) p, m))
                         .stream()

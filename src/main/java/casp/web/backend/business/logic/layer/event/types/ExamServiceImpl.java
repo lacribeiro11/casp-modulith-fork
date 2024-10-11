@@ -26,7 +26,6 @@ import static casp.web.backend.deprecated.event.types.BaseEventV2Mapper.BASE_EVE
 class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implements ExamService {
 
     private final ExamV2Repository examV2Repository;
-    private final BaseParticipantRepository baseParticipantRepository;
 
     @Autowired
     ExamServiceImpl(final CalendarService calendarService,
@@ -38,9 +37,8 @@ class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implem
                     final ExamV2Repository examV2Repository,
                     final BaseParticipantRepository baseParticipantRepository,
                     final DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Exam.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
+        super(calendarService, participantService, eventRepository, memberRepository, Exam.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository, baseParticipantRepository);
         this.examV2Repository = examV2Repository;
-        this.baseParticipantRepository = baseParticipantRepository;
     }
 
     @Override
@@ -64,8 +62,7 @@ class ExamServiceImpl extends BaseEventServiceImpl<Exam, ExamParticipant> implem
     }
 
     private Set<casp.web.backend.data.access.layer.event.participants.ExamParticipant> mapParticipants(final Exam exam) {
-        return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(exam.getId(), ExamParticipant.PARTICIPANT_TYPE)
-                .stream()
+        return findBaseParticipants(exam.getId(), ExamParticipant.PARTICIPANT_TYPE)
                 .flatMap(p -> findDogHasHandlerReference(p.getMemberOrHandlerId())
                         .map(dh -> mapParticipant((ExamParticipant) p, dh))
                         .stream())

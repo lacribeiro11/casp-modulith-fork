@@ -30,7 +30,6 @@ import static casp.web.backend.deprecated.event.types.BaseEventV2Mapper.BASE_EVE
 class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements CourseService {
     private final CoTrainerService coTrainerService;
     private final CourseV2Repository courseV2Repository;
-    private final BaseParticipantRepository baseParticipantRepository;
 
     @Autowired
     CourseServiceImpl(final CalendarService calendarService,
@@ -43,10 +42,9 @@ class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements C
                       final MemberReferenceRepository memberReferenceRepository,
                       final CourseV2Repository courseV2Repository,
                       final BaseParticipantRepository baseParticipantRepository) {
-        super(calendarService, participantService, eventRepository, memberRepository, Course.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository);
+        super(calendarService, participantService, eventRepository, memberRepository, Course.EVENT_TYPE, memberReferenceRepository, calendarRepository, dogHasHandlerReferenceRepository, baseParticipantRepository);
         this.coTrainerService = coTrainerService;
         this.courseV2Repository = courseV2Repository;
-        this.baseParticipantRepository = baseParticipantRepository;
     }
 
     @Override
@@ -103,8 +101,7 @@ class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements C
     }
 
     private Set<casp.web.backend.data.access.layer.event.participants.CoTrainer> mapCoTrainers(final Course course) {
-        return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), CoTrainer.PARTICIPANT_TYPE)
-                .stream()
+        return findBaseParticipants(course.getId(), CoTrainer.PARTICIPANT_TYPE)
                 .flatMap(ct -> findMemberReference(ct.getMemberOrHandlerId())
                         .map(m -> mapCoTrainer((CoTrainer) ct, m))
                         .stream())
@@ -118,8 +115,7 @@ class CourseServiceImpl extends BaseEventServiceImpl<Course, Space> implements C
     }
 
     private Set<casp.web.backend.data.access.layer.event.participants.Space> mapSpaces(final Course course) {
-        return baseParticipantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), Space.PARTICIPANT_TYPE)
-                .stream()
+        return findBaseParticipants(course.getId(), Space.PARTICIPANT_TYPE)
                 .flatMap(s -> findDogHasHandlerReference(s.getMemberOrHandlerId())
                         .map(dh -> mapSpace((Space) s, dh))
                         .stream())
