@@ -1,7 +1,6 @@
 package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
-import casp.web.backend.business.logic.layer.member.CardService;
 import casp.web.backend.business.logic.layer.member.MemberService;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
@@ -37,15 +36,12 @@ import static casp.web.backend.presentation.layer.dtos.member.MemberMapper.MEMBE
 class MemberRestController {
 
     private final MemberService memberService;
-    private final CardService cardService;
     private final DogHasHandlerService dogHasHandlerService;
 
     @Autowired
     MemberRestController(final MemberService memberService,
-                         final CardService cardService,
                          final DogHasHandlerService dogHasHandlerService) {
         this.memberService = memberService;
-        this.cardService = cardService;
         this.dogHasHandlerService = dogHasHandlerService;
     }
 

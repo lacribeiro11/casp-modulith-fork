@@ -24,13 +24,6 @@ import java.util.stream.Collectors;
 
 import static casp.web.backend.deprecated.member.MemberV2Mapper.MEMBER_V2_MAPPER;
 
-/**
- * Member Service
- *
- * @author iris_e
- */
-
-// FIXME It will also need a facade
 @Service
 class MemberServiceImpl implements MemberService {
     private static final Logger LOG = LoggerFactory.getLogger(MemberServiceImpl.class);
@@ -38,7 +31,6 @@ class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final DogHasHandlerService dogHasHandlerService;
-    private final CardService cardService;
     private final BaseParticipantObserver baseParticipantObserver;
     private final BaseEventObserver baseEventObserver;
     private final CardRepository cardRepository;
@@ -46,13 +38,11 @@ class MemberServiceImpl implements MemberService {
     @Autowired
     MemberServiceImpl(final MemberRepository memberRepository,
                       final DogHasHandlerService dogHasHandlerService,
-                      final CardService cardService,
                       final BaseParticipantObserver baseParticipantObserver,
                       final BaseEventObserver baseEventObserver,
                       final CardRepository cardRepository) {
         this.memberRepository = memberRepository;
         this.dogHasHandlerService = dogHasHandlerService;
-        this.cardService = cardService;
         this.baseParticipantObserver = baseParticipantObserver;
         this.baseEventObserver = baseEventObserver;
         this.cardRepository = cardRepository;
@@ -95,7 +85,6 @@ class MemberServiceImpl implements MemberService {
     public void deleteMemberById(final UUID id) {
         var member = getMemberById(id);
         dogHasHandlerService.deleteDogHasHandlersByMemberId(id);
-        cardService.deleteCardsByMemberId(id);
         baseParticipantObserver.deleteParticipantsByMemberOrHandlerId(id);
         baseEventObserver.deleteBaseEventsByMemberId(id);
         member.setEmail(EMAIL_FORMAT_IF_DELETED.formatted(member.getEmail(), id));
@@ -107,7 +96,6 @@ class MemberServiceImpl implements MemberService {
     public Member deactivateMember(final UUID id) {
         var member = getMemberById(id);
         dogHasHandlerService.deactivateDogHasHandlersByMemberId(id);
-        cardService.deactivateCardsByMemberId(id);
         baseParticipantObserver.deactivateParticipantsByMemberOrHandlerId(id);
         baseEventObserver.deactivateBaseEventsByMemberId(id);
         member.setEntityStatus(EntityStatus.INACTIVE);
@@ -118,7 +106,6 @@ class MemberServiceImpl implements MemberService {
     public void activateMember(final UUID id) {
         var member = memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.INACTIVE);
         dogHasHandlerService.activateDogHasHandlersByMemberId(id);
-        cardService.activateCardsByMemberId(id);
         baseParticipantObserver.activateParticipantsByMemberOrHandlerId(id);
         baseEventObserver.activateBaseEventsByMemberId(id);
         member.setEntityStatus(EntityStatus.ACTIVE);

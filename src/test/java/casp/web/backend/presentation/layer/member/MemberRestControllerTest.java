@@ -10,8 +10,6 @@ import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
-import casp.web.backend.deprecated.member.Card;
-import casp.web.backend.deprecated.member.CardRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.RestResponsePage;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
@@ -63,8 +61,6 @@ class MemberRestControllerTest {
     @Autowired
     private BaseEventRepository baseEventRepository;
     @Autowired
-    private CardRepository cardRepository;
-    @Autowired
     private DogRepository dogRepository;
 
     @SpyBean
@@ -73,12 +69,10 @@ class MemberRestControllerTest {
     private MemberDto john;
     private MemberDto zephyr;
     private Member inactive;
-    private Card card;
     private DogHasHandlerDto dogHasHandler;
 
     @BeforeEach
     void setUp() {
-        cardRepository.deleteAll();
         baseParticipantRepository.deleteAll();
         baseEventRepository.deleteAll();
         dogHasHandlerOldRepository.deleteAll();
@@ -105,8 +99,6 @@ class MemberRestControllerTest {
         var course = coTrainer.getBaseEvent();
         course.setMember(johnDocument);
         course.setMemberId(johnDocument.getId());
-        card = TestFixture.createCard(johnDocument);
-        cardRepository.save(card);
         baseEventRepository.saveAll(Set.of(event, course));
         baseParticipantRepository.saveAll(Set.of(eventParticipant, coTrainer));
     }
@@ -255,7 +247,6 @@ class MemberRestControllerTest {
             });
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.ACTIVE, dh.getEntityStatus()));
             assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.ACTIVE, p.getEntityStatus()));
-            assertThat(cardRepository.findAll()).allSatisfy(c -> assertSame(EntityStatus.ACTIVE, c.getEntityStatus()));
             assertThat(baseEventRepository.findAll()).allSatisfy(e -> assertSame(EntityStatus.ACTIVE, e.getEntityStatus()));
         }
 
@@ -285,7 +276,6 @@ class MemberRestControllerTest {
             });
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.INACTIVE, dh.getEntityStatus()));
             assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.INACTIVE, p.getEntityStatus()));
-            assertThat(cardRepository.findAll()).allSatisfy(c -> assertSame(EntityStatus.INACTIVE, c.getEntityStatus()));
             assertThat(baseEventRepository.findAll()).allSatisfy(e -> assertSame(EntityStatus.INACTIVE, e.getEntityStatus()));
         }
 
@@ -308,7 +298,6 @@ class MemberRestControllerTest {
             getMemberById(john.getId()).andExpect(status().isBadRequest());
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
             assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
-            assertThat(cardRepository.findAll()).allSatisfy(c -> assertSame(EntityStatus.DELETED, c.getEntityStatus()));
             assertThat(baseEventRepository.findAll()).allSatisfy(e -> assertSame(EntityStatus.DELETED, e.getEntityStatus()));
         }
 

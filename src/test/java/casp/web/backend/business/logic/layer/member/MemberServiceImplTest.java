@@ -52,8 +52,6 @@ class MemberServiceImplTest {
     @Mock
     private DogHasHandlerService dogHasHandlerService;
     @Mock
-    private CardService cardService;
-    @Mock
     private BaseParticipantObserver baseParticipantObserver;
     @Mock
     private BaseEventObserver baseEventObserver;
@@ -123,7 +121,6 @@ class MemberServiceImplTest {
         assertSame(EntityStatus.INACTIVE, memberService.deactivateMember(member.getId()).getEntityStatus());
 
         verify(dogHasHandlerService).deactivateDogHasHandlersByMemberId(member.getId());
-        verify(cardService).deactivateCardsByMemberId(member.getId());
         verify(baseParticipantObserver).deactivateParticipantsByMemberOrHandlerId(member.getId());
         verify(baseEventObserver).deactivateBaseEventsByMemberId(member.getId());
     }
@@ -137,7 +134,6 @@ class MemberServiceImplTest {
         verify(member).setEntityStatus(EntityStatus.ACTIVE);
         verify(memberRepository).save(member);
         verify(dogHasHandlerService).activateDogHasHandlersByMemberId(member.getId());
-        verify(cardService).activateCardsByMemberId(member.getId());
         verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(member.getId());
         verify(baseEventObserver).activateBaseEventsByMemberId(member.getId());
     }
@@ -233,7 +229,7 @@ class MemberServiceImplTest {
 
             assertThrows(NoSuchElementException.class, () -> memberService.deleteMemberById(memberId));
 
-            verifyNoInteractions(dogHasHandlerService, cardService, baseParticipantObserver, baseEventObserver);
+            verifyNoInteractions(dogHasHandlerService, baseParticipantObserver, baseEventObserver);
 
         }
 
@@ -244,7 +240,6 @@ class MemberServiceImplTest {
             memberService.deleteMemberById(member.getId());
 
             verify(dogHasHandlerService).deleteDogHasHandlersByMemberId(member.getId());
-            verify(cardService).deleteCardsByMemberId(member.getId());
             verify(baseParticipantObserver).deleteParticipantsByMemberOrHandlerId(member.getId());
             verify(baseEventObserver).deleteBaseEventsByMemberId(member.getId());
             verify(member).setEntityStatus(EntityStatus.DELETED);

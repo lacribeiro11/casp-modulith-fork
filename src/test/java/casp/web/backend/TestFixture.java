@@ -16,7 +16,6 @@ import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.Course;
 import casp.web.backend.deprecated.event.types.Event;
 import casp.web.backend.deprecated.event.types.Exam;
-import casp.web.backend.deprecated.member.Card;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -189,19 +188,6 @@ public final class TestFixture {
         weeklyEventOption.setEndRecurrence(LocalDate.MAX);
         weeklyEventOption.setOccurrences(List.of(createWeeklyEventOptionRecurrence()));
         return weeklyEventOption;
-    }
-
-    public static Card createCard() {
-        var member = createMember();
-        return createCard(member);
-    }
-
-    public static Card createCard(final Member member) {
-        var card = new Card();
-        card.setCode("code");
-        card.setMemberId(member.getId());
-        card.setMember(member);
-        return card;
     }
 
     public static MembershipFee createMembershipFee() {
