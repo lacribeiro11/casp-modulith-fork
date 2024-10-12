@@ -19,5 +19,7 @@ public interface DogRepository extends MongoRepository<Dog, UUID>, QuerydslPredi
 
     Optional<Dog> findDogByIdAndEntityStatus(UUID id, EntityStatus entityStatus);
 
+    Optional<Dog> findDogByChipNumberAndEntityStatus(String chipNumber, EntityStatus entityStatus);
+
     Page<Dog> findAllByEntityStatus(EntityStatus entityStatus, Pageable pageable);
 }

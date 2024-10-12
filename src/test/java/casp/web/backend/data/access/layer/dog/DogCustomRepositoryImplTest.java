@@ -62,34 +62,29 @@ class DogCustomRepositoryImplTest {
 
     @Nested
     class FindAllByChipNumberOrDogNameOrOwnerName {
-        @Test
-        void findDogByChipNumber() {
-            assertThat(dogRepository.findAllByChipNumberOrDogNameOrOwnerName(bonsai.getChipNumber(), null, null))
-                    .containsExactly(bonsai);
-        }
 
         @Test
         void findDogByDogName() {
-            assertThat(dogRepository.findAllByChipNumberOrDogNameOrOwnerName(null, bonsai.getName(), null))
+            assertThat(dogRepository.findAllByNameOrOwnerName(bonsai.getName(), null, Pageable.unpaged()))
                     .containsExactly(bonsai);
         }
 
         @Test
         void findDogByDogNameAndOwnerName() {
-            assertThat(dogRepository.findAllByChipNumberOrDogNameOrOwnerName(null, bonsai.getName(), bonsai.getOwnerName()))
+            assertThat(dogRepository.findAllByNameOrOwnerName(bonsai.getName(), bonsai.getOwnerName(), Pageable.unpaged()))
                     .containsExactly(bonsai);
         }
 
         @Test
         void findDogsByOwnerName() {
-            assertThat(dogRepository.findAllByChipNumberOrDogNameOrOwnerName(null, null, bonsai.getOwnerName()))
-                    .containsExactly(bonsai, charlie);
+            assertThat(dogRepository.findAllByNameOrOwnerName(null, bonsai.getOwnerName(), Pageable.unpaged()).getContent())
+                    .containsExactlyInAnyOrder(bonsai, charlie);
         }
 
         @Test
         void findDogsWithoutParameters() {
-            assertThat(dogRepository.findAllByChipNumberOrDogNameOrOwnerName(null, null, null))
-                    .containsExactly(bonsai, charlie);
+            assertThat(dogRepository.findAllByNameOrOwnerName(null, null, Pageable.unpaged()).stream())
+                    .containsExactlyInAnyOrder(bonsai, charlie);
         }
     }
 }

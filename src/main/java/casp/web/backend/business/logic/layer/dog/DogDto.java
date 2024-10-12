@@ -1,4 +1,4 @@
-package casp.web.backend.presentation.layer.dtos.dog;
+package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.data.access.layer.dog.Dog;
 
@@ -13,10 +13,6 @@ public class DogDto extends Dog {
     }
 
     public void setDogHasHandlerSet(final Set<DogHasHandlerDto> dogHasHandlerSet) {
-        dogHasHandlerSet.forEach(dh -> {
-            dh.setDog(null);
-            dh.setDogId(null);
-        });
         this.dogHasHandlerSet = dogHasHandlerSet;
     }
 }

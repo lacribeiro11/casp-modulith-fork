@@ -21,6 +21,15 @@
     * `casp.web.backend.data.access.layer.dog.DogHasHandler.dog.id` is `dogId`
     * `casp.web.backend.data.access.layer.dog.DogHasHandler.dog.name` is `dogName`
 
+### DogDto
+
+* `casp.web.backend.presentation.layer.dtos.dog.DogDto.dogHasHandlerDtoSet` is type
+  `casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto`
+  * `casp.web.backend.presentation.layer.dtos.member.DogHasHandlerDto` contains
+    * `casp.web.backend.data.access.layer.dog.DogHasHandler.id`
+    * `casp.web.backend.data.access.layer.dog.DogHasHandler.member.id` is `memberId`
+    * `casp.web.backend.data.access.layer.dog.DogHasHandler.member.firstName` is `firstName`
+    * `casp.web.backend.data.access.layer.dog.DogHasHandler.member.firstName` is `firstName`
 ## Findings
 ### @Transactional
 * Cannot be used, it throws the following error: 

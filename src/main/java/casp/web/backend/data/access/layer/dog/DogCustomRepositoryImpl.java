@@ -10,8 +10,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuery;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 class DogCustomRepositoryImpl implements DogCustomRepository {
     private final QDog dog;
@@ -24,21 +22,16 @@ class DogCustomRepositoryImpl implements DogCustomRepository {
     }
 
     @Override
-    public List<Dog> findAllByChipNumberOrDogNameOrOwnerName(final String chipNumber, final String dogName, final String ownerName) {
+    public Page<Dog> findAllByNameOrOwnerName(final String dogName, final String ownerName, final Pageable pageable) {
         var expression = dog.entityStatus.eq(EntityStatus.ACTIVE);
-        if (StringUtils.isNotBlank(chipNumber)) {
-            expression = expression.and(dog.chipNumber.equalsIgnoreCase(chipNumber));
-        } else {
-            if (StringUtils.isNotBlank(dogName)) {
-                expression = expression.and(dog.name.equalsIgnoreCase(dogName));
-            }
-            if (StringUtils.isNotBlank(ownerName)) {
-                expression = expression.and(dog.ownerName.equalsIgnoreCase(ownerName));
-            }
+        if (StringUtils.isNotBlank(dogName)) {
+            expression = expression.and(dog.name.equalsIgnoreCase(dogName));
+        }
+        if (StringUtils.isNotBlank(ownerName)) {
+            expression = expression.and(dog.ownerName.equalsIgnoreCase(ownerName));
         }
         return createQuery().where(expression)
-                .orderBy(dog.name.asc(), dog.ownerName.asc())
-                .fetch();
+                .fetchPage(pageable);
     }
 
     @Override

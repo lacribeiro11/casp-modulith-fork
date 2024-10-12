@@ -5,7 +5,7 @@ import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface DogService {
@@ -16,23 +16,15 @@ public interface DogService {
      * @param id of the Dog
      * @return a Dog with the given id, or throws an exception if not found
      */
-    Dog getDogById(UUID id);
+    DogDto getDogById(UUID id);
 
-    void saveDog(Dog dog);
+    DogDto saveDog(Dog dog);
 
     void deleteDogById(UUID id);
 
-    /**
-     * Get all dogs that match the given criteria:
-     * 1. Either ownerName and name are empty or chip number is empty.
-     * 2. If chip number is empty, ownerName and name should not be empty.
-     *
-     * @param chipNumber the chip number of the dog
-     * @param name       the name of the dog
-     * @param ownerName  the name of the owner
-     * @return a list of dogs that match the given criteria, or an empty list if none found.
-     */
-    List<Dog> getDogsByOwnerNameAndDogsNameOrChipNumber(@Nullable String chipNumber, @Nullable String name, @Nullable String ownerName);
+    Optional<Dog> getDogByChipNumber(String chipNumber);
+
+    Page<Dog> getDogsByNameOrOwnerName(String name, String ownerName, Pageable pageable);
 
     Page<Dog> getDogs(Pageable pageable);
 
@@ -42,5 +34,5 @@ public interface DogService {
      *
      * @return a page of dogs that were not checked.
      */
-    Page<Dog> getDogsThatWereNotChecked(final @Nullable Pageable pageable);
+    Page<Dog> getDogsThatWereNotChecked(@Nullable Pageable pageable);
 }

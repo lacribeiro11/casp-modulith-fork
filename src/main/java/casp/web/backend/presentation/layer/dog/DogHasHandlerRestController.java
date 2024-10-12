@@ -1,8 +1,8 @@
 package casp.web.backend.presentation.layer.dog;
 
+import casp.web.backend.business.logic.layer.dog.DogDto;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.business.logic.layer.member.MemberDto;
-import casp.web.backend.presentation.layer.dtos.dog.DogDto;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.business.logic.layer.dog.DogMapper.DOG_MAPPER;
 import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
 import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.dog.DogMapper.DOG_MAPPER;
 
 @RestController
 @RequestMapping("/dog-has-handler")
