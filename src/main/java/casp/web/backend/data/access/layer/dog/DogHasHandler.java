@@ -1,6 +1,7 @@
 package casp.web.backend.data.access.layer.dog;
 
 import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.DogReference;
 import casp.web.backend.common.MemberReference;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class DogHasHandler extends BaseDocument {
     @Valid
     @NotNull
     @DBRef
-    private Dog dog;
+    private DogReference dog;
 
     @NotNull
     @Valid
@@ -38,11 +39,11 @@ public class DogHasHandler extends BaseDocument {
         this.member = member;
     }
 
-    public Dog getDog() {
+    public DogReference getDog() {
         return dog;
     }
 
-    public void setDog(Dog dog) {
+    public void setDog(DogReference dog) {
         this.dog = dog;
     }
 

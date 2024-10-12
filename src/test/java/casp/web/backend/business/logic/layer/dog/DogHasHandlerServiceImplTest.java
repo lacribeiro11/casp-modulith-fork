@@ -173,7 +173,7 @@ class DogHasHandlerServiceImplTest {
                     .singleElement()
                     .satisfies(dh -> {
                         assertSame(memberReference, dh.getMember());
-                        assertSame(dog, dh.getDog());
+                        assertSame(dog.getId(), dh.getDog().getId());
                     });
         }
 

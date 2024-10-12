@@ -52,7 +52,7 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
 
     private static casp.web.backend.data.access.layer.dog.DogHasHandler mapToDogHasHandlerV2(final DogHasHandler dh, final Dog dog, final MemberReference member) {
         var dogHasHandler = DOG_HAS_HANDLER_V2_MAPPER.toDogHasHandler(dh);
-        dogHasHandler.setDog(dog);
+        dogHasHandler.setDog(DOG_HAS_HANDLER_V2_MAPPER.toDogReference(dog));
         dogHasHandler.setMember(member);
         return dogHasHandler;
     }
