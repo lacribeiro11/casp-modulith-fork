@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.dtos.event.types;
 
+import casp.web.backend.common.BaseMapper;
 import casp.web.backend.deprecated.event.types.BaseEvent;
-import casp.web.backend.presentation.layer.dtos.BaseMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.MappingTarget;
 

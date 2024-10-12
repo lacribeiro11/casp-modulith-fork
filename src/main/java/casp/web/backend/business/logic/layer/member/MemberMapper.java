@@ -1,8 +1,8 @@
 package casp.web.backend.business.logic.layer.member;
 
+import casp.web.backend.common.BaseMapper;
 import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.data.access.layer.member.Member;
-import casp.web.backend.presentation.layer.dtos.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

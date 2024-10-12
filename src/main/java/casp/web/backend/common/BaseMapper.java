@@ -1,6 +1,5 @@
-package casp.web.backend.presentation.layer.dtos;
+package casp.web.backend.common;
 
-import casp.web.backend.common.BaseDocument;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
