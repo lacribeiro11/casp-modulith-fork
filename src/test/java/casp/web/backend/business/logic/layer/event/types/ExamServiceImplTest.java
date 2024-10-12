@@ -6,6 +6,7 @@ import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.ExamParticipantService;
 import casp.web.backend.common.BaseEventOptionType;
 import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.event.types.ExamV2Repository;
@@ -17,7 +18,6 @@ import casp.web.backend.deprecated.event.participants.ExamParticipant;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Exam;
-import casp.web.backend.deprecated.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -224,9 +224,7 @@ class ExamServiceImplTest {
         void participants() {
             findExamMemberAndCalendar();
             var participantDogHasHandler = mock(DogHasHandlerReference.class, Answers.RETURNS_DEEP_STUBS);
-            when(participantDogHasHandler.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(participantDogHasHandler.getMember().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(participantDogHasHandler.getDog().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
+            when(participantDogHasHandler.isActive()).thenReturn(true);
             var examParticipant = TestFixture.createExamParticipant();
             when(participantRepository.findAllByBaseEventIdAndParticipantType(exam.getId(), ExamParticipant.PARTICIPANT_TYPE)).thenReturn(Set.of(examParticipant));
             when(dogHasHandlerReferenceRepository.findById(examParticipant.getMemberOrHandlerId())).thenReturn(Optional.of(participantDogHasHandler));

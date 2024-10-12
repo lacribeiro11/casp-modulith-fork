@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
@@ -18,7 +17,6 @@ public class DogReference {
     private UUID id;
 
     @NotNull
-    @Indexed
     private EntityStatus entityStatus;
 
     @NotBlank

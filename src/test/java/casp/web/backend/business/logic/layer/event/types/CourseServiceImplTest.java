@@ -7,6 +7,7 @@ import casp.web.backend.business.logic.layer.event.participants.CoTrainerService
 import casp.web.backend.business.logic.layer.event.participants.SpaceService;
 import casp.web.backend.common.BaseEventOptionType;
 import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.MemberReference;
 import casp.web.backend.data.access.layer.event.types.CourseV2Repository;
@@ -19,7 +20,6 @@ import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Course;
-import casp.web.backend.deprecated.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -201,9 +201,7 @@ class CourseServiceImplTest {
         void spaces() {
             findCourseMemberAndCalendar();
             var spaceDogHasHandler = mock(DogHasHandlerReference.class, Answers.RETURNS_DEEP_STUBS);
-            when(spaceDogHasHandler.getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(spaceDogHasHandler.getMember().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
-            when(spaceDogHasHandler.getDog().getEntityStatus()).thenReturn(EntityStatus.ACTIVE);
+            when(spaceDogHasHandler.isActive()).thenReturn(true);
             var space = TestFixture.createSpace();
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), Space.PARTICIPANT_TYPE)).thenReturn(Set.of(space));
             when(participantRepository.findAllByBaseEventIdAndParticipantType(course.getId(), CoTrainer.PARTICIPANT_TYPE)).thenReturn(Set.of());

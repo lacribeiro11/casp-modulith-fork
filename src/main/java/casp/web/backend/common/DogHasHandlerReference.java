@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,7 +18,6 @@ public class DogHasHandlerReference {
     private UUID id;
 
     @NotNull
-    @Indexed
     private EntityStatus entityStatus;
 
     @Valid
@@ -62,6 +60,12 @@ public class DogHasHandlerReference {
 
     public void setDog(DogReference dog) {
         this.dog = dog;
+    }
+
+    public boolean isActive() {
+        return entityStatus == EntityStatus.ACTIVE
+                && member.getEntityStatus() == EntityStatus.ACTIVE
+                && dog.getEntityStatus() == EntityStatus.ACTIVE;
     }
 
     @Override

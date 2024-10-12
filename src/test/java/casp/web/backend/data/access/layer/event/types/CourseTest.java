@@ -26,14 +26,6 @@ class CourseTest {
         return coTrainer;
     }
 
-    private static Space mockSpace(final EntityStatus memberEntityStatus, final EntityStatus dogEntityStatus, final EntityStatus dogHasHandlerStatus) {
-        var space = mock(Space.class, Answers.RETURNS_DEEP_STUBS);
-        when(space.getDogHasHandler().getMember().getEntityStatus()).thenReturn(memberEntityStatus);
-        when(space.getDogHasHandler().getDog().getEntityStatus()).thenReturn(dogEntityStatus);
-        when(space.getDogHasHandler().getEntityStatus()).thenReturn(dogHasHandlerStatus);
-        return space;
-    }
-
     @BeforeEach
     void setUp() {
         course = new Course();
@@ -53,14 +45,11 @@ class CourseTest {
 
     @Test
     void getSpaces() {
-        var active = mockSpace(EntityStatus.ACTIVE, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var dogInactive = mockSpace(EntityStatus.ACTIVE, EntityStatus.INACTIVE, EntityStatus.ACTIVE);
-        var memberInactive = mockSpace(EntityStatus.INACTIVE, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var dogHasHandlerInactive = mockSpace(EntityStatus.ACTIVE, EntityStatus.ACTIVE, EntityStatus.INACTIVE);
-        var dogDeleted = mockSpace(EntityStatus.DELETED, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var memberDeleted = mockSpace(EntityStatus.ACTIVE, EntityStatus.DELETED, EntityStatus.ACTIVE);
-        var dogHasHandlerDeleted = mockSpace(EntityStatus.ACTIVE, EntityStatus.ACTIVE, EntityStatus.DELETED);
-        var spaceSet = Set.of(active, dogInactive, memberInactive, dogHasHandlerInactive, dogDeleted, memberDeleted, dogHasHandlerDeleted);
+        var active = mock(Space.class, Answers.RETURNS_DEEP_STUBS);
+        var inactive = mock(Space.class, Answers.RETURNS_DEEP_STUBS);
+        when(active.getDogHasHandler().isActive()).thenReturn(true);
+        when(inactive.getDogHasHandler().isActive()).thenReturn(false);
+        var spaceSet = Set.of(active, inactive);
         course.setSpaces(spaceSet);
 
         assertThat(course.getSpaces())
@@ -70,12 +59,11 @@ class CourseTest {
 
     @Test
     void getSpaceListSize() {
-        var active = mockSpace(EntityStatus.ACTIVE, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var dogInactive = mockSpace(EntityStatus.ACTIVE, EntityStatus.INACTIVE, EntityStatus.ACTIVE);
-        var memberInactive = mockSpace(EntityStatus.INACTIVE, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var dogDeleted = mockSpace(EntityStatus.DELETED, EntityStatus.ACTIVE, EntityStatus.ACTIVE);
-        var memberDeleted = mockSpace(EntityStatus.ACTIVE, EntityStatus.DELETED, EntityStatus.ACTIVE);
-        var spaceSet = Set.of(active, dogInactive, memberInactive, dogDeleted, memberDeleted);
+        var active = mock(Space.class, Answers.RETURNS_DEEP_STUBS);
+        var inactive = mock(Space.class, Answers.RETURNS_DEEP_STUBS);
+        when(active.getDogHasHandler().isActive()).thenReturn(true);
+        when(inactive.getDogHasHandler().isActive()).thenReturn(false);
+        var spaceSet = Set.of(active, inactive);
         course.setSpaces(spaceSet);
 
         assertEquals(1, course.getSpaceListSize());

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
@@ -19,7 +18,6 @@ public class MemberReference {
     private UUID id;
 
     @NotNull
-    @Indexed
     private EntityStatus entityStatus;
 
     @NotBlank

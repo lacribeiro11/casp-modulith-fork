@@ -56,9 +56,7 @@ public abstract class BaseEvent extends BaseDocument {
     }
 
     static boolean isDogHasHandlerActive(final DogHasHandlerReference dogHasHandler) {
-        return EntityStatus.ACTIVE == dogHasHandler.getEntityStatus()
-                && isMemberActive(dogHasHandler.getMember())
-                && EntityStatus.ACTIVE == dogHasHandler.getDog().getEntityStatus();
+        return dogHasHandler.isActive();
     }
 
     public String getName() {
