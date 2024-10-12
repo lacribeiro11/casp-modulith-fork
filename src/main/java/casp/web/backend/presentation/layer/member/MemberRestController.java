@@ -1,10 +1,10 @@
 package casp.web.backend.presentation.layer.member;
 
-import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
+import casp.web.backend.business.logic.layer.member.MemberDto;
 import casp.web.backend.business.logic.layer.member.MemberService;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
-import casp.web.backend.presentation.layer.dtos.member.MemberDto;
+import casp.web.backend.data.access.layer.member.Member;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -27,83 +27,69 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.member.MemberMapper.MEMBER_MAPPER;
-
 @RestController
-@RequestMapping("/member")
+@RequestMapping("member")
 @Validated
 class MemberRestController {
 
     private final MemberService memberService;
-    private final DogHasHandlerService dogHasHandlerService;
 
     @Autowired
-    MemberRestController(final MemberService memberService,
-                         final DogHasHandlerService dogHasHandlerService) {
+    MemberRestController(final MemberService memberService) {
         this.memberService = memberService;
-        this.dogHasHandlerService = dogHasHandlerService;
     }
 
     @GetMapping
-    ResponseEntity<Page<MemberDto>> getMembers(final @RequestParam EntityStatus entityStatus,
-                                               final @ParameterObject Pageable pageable) {
-        var memberPage = memberService.getMembersByEntityStatus(entityStatus, pageable);
-        return ResponseEntity.ok(MEMBER_MAPPER.toDtoPage(memberPage));
+    ResponseEntity<Page<Member>> getMembers(final @RequestParam EntityStatus entityStatus,
+                                            final @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(memberService.getMembersByEntityStatus(entityStatus, pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     ResponseEntity<MemberDto> getMemberById(final @PathVariable UUID id) {
-        var memberDto = MEMBER_MAPPER.toDto(memberService.getMemberById(id));
-        var dogHasHandlerDtoSet = DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlerService.getDogHasHandlersByMemberId(id));
-        memberDto.setDogHasHandlerDtoSet(dogHasHandlerDtoSet);
-        return ResponseEntity.ok(memberDto);
+        return ResponseEntity.ok(memberService.getMemberById(id));
     }
 
-    @GetMapping("/search-members-by-firstname-and-lastname")
-    ResponseEntity<List<MemberDto>> getMemberByFirstNameAndLastName(final @RequestParam @NotBlank String firstName,
-                                                                    final @RequestParam @NotBlank String lastName) {
-        var members = memberService.getMembersByFirstNameAndLastName(firstName, lastName);
-        return ResponseEntity.ok(MEMBER_MAPPER.toDtoList(members));
+    @GetMapping("search-members-by-firstname-and-lastname")
+    ResponseEntity<Page<Member>> getMemberByFirstNameAndLastName(final @RequestParam @NotBlank String firstName,
+                                                                 final @RequestParam @NotBlank String lastName,
+                                                                 final @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(memberService.getMembersByFirstNameAndLastName(firstName, lastName, pageable));
     }
 
     @PostMapping
-    ResponseEntity<MemberDto> saveMember(final @RequestBody @Valid MemberDto memberDto) {
-        var member = MEMBER_MAPPER.toDocument(memberDto);
-        memberService.saveMember(member);
-        return getMemberById(member.getId());
+    ResponseEntity<MemberDto> saveMember(final @RequestBody @Valid Member member) {
+        return ResponseEntity.ok(memberService.saveMember(member));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     ResponseEntity<Void> deleteMember(final @PathVariable UUID id) {
         memberService.deleteMemberById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/deactivate")
-    ResponseEntity<MemberDto> deactivateMember(final @PathVariable UUID id) {
-        return ResponseEntity.ok(MEMBER_MAPPER.toDto(memberService.deactivateMember(id)));
+    @PostMapping("{id}/deactivate")
+    ResponseEntity<Member> deactivateMember(final @PathVariable UUID id) {
+        return ResponseEntity.ok(memberService.deactivateMember(id));
     }
 
-    @PostMapping("/{id}/activate")
+    @PostMapping("{id}/activate")
     ResponseEntity<MemberDto> activateMember(final @PathVariable UUID id) {
-        memberService.activateMember(id);
-        return getMemberById(id);
+        return ResponseEntity.ok(memberService.activateMember(id));
     }
 
-    @GetMapping("/search-members-by-name")
-    ResponseEntity<Page<MemberDto>> searchMembersByFirstNameOrLastName(final @RequestParam(required = false, defaultValue = "") String name,
-                                                                       final @ParameterObject Pageable pageable) {
-        var memberPage = memberService.getMembersByName(name, pageable);
-        return ResponseEntity.ok(MEMBER_MAPPER.toDtoPage(memberPage));
+    @GetMapping("search-members-by-name")
+    ResponseEntity<Page<Member>> searchMembersByFirstNameOrLastName(final @RequestParam(required = false, defaultValue = "") String name,
+                                                                    final @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(memberService.getMembersByName(name, pageable));
     }
 
-    @GetMapping("/roles")
+    @GetMapping("roles")
     ResponseEntity<List<Role>> getMemberRoles() {
-        return ResponseEntity.ok(memberService.getAllAvailableRoles());
+        return ResponseEntity.ok(Role.getAllRolesSorted());
     }
 
-    @GetMapping("/emails-by-ids")
+    @GetMapping("emails-by-ids")
     ResponseEntity<Set<String>> getMembersEmailByIds(final @RequestParam @Size(min = 1) Set<UUID> membersId) {
         return ResponseEntity.ok(memberService.getMembersEmailByIds(membersId));
     }
@@ -112,7 +98,7 @@ class MemberRestController {
      * @deprecated It will be removed in #3.
      */
     @Deprecated(forRemoval = true, since = "0.0.0")
-    @PostMapping("/migrate-data")
+    @PostMapping("migrate-data")
     ResponseEntity<Void> migrateDataToV2() {
         memberService.migrateDataToV2();
         return ResponseEntity.noContent().build();

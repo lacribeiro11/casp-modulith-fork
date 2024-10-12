@@ -200,6 +200,9 @@
                         <exclude>**/*Event.class</exclude>
                         <exclude>**/*Exam.class</exclude>
                         <exclude>**/*Member.class</exclude>
+                        <exclude>**/member/*MemberDto.class</exclude>
+                        <exclude>**/member/*DogHasHandlerDto.class</exclude>
+                        <exclude>**/member/*MemberMapper*.class</exclude>
                         <exclude>**/*MembershipFee.class</exclude>
                         <exclude>**/*Card.class</exclude>
                     </excludes>

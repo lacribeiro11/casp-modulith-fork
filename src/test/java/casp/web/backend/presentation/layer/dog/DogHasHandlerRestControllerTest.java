@@ -2,6 +2,7 @@ package casp.web.backend.presentation.layer.dog;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
+import casp.web.backend.business.logic.layer.member.MemberDto;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
@@ -10,7 +11,6 @@ import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.dtos.dog.DogDto;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
-import casp.web.backend.presentation.layer.dtos.member.MemberDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -26,9 +26,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
 import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
 import static casp.web.backend.presentation.layer.dtos.dog.DogMapper.DOG_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.member.MemberMapper.MEMBER_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;

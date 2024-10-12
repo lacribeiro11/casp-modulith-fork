@@ -1,6 +1,7 @@
 package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.TestFixture;
+import casp.web.backend.business.logic.layer.member.MemberDto;
 import casp.web.backend.business.logic.layer.member.MemberService;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
@@ -13,11 +14,12 @@ import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.RestResponsePage;
 import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
-import casp.web.backend.presentation.layer.dtos.member.MemberDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +32,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
 import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.member.MemberMapper.MEMBER_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -168,17 +170,17 @@ class MemberRestControllerTest {
     }
 
     private void assertDogHasHandlerDtoSet(final MemberDto memberDto) {
-        assertThat(memberDto.getDogHasHandlerDtoSet())
+        assertThat(memberDto.getDogHasHandlerSet())
                 .singleElement()
                 .satisfies(dh -> {
                     assertEquals(dh.getId(), dogHasHandler.getId());
-                    assertEquals(dh.getDog().getId(), dogHasHandler.getDog().getId());
+                    assertEquals(dh.getDogId(), dogHasHandler.getDog().getId());
                 });
     }
 
-    private ResultActions performPost(final MemberDto memberDto) throws Exception {
+    private ResultActions performPost(final Member member) throws Exception {
         return mockMvc.perform(post(MEMBER_URL_PREFIX)
-                .content(MvcMapper.toString(memberDto))
+                .content(MvcMapper.toString(member))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
     }
@@ -189,13 +191,14 @@ class MemberRestControllerTest {
 
         @Test
         void validRequest() throws Exception {
-            TypeReference<List<MemberDto>> typeReference = new TypeReference<>() {
+            TypeReference<RestResponsePage<Member>> typeReference = new TypeReference<>() {
             };
             var mvcResult = performGet(john.getFirstName(), john.getLastName())
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(MvcMapper.toObject(mvcResult, typeReference)).containsExactly(john);
+            var membersPage = MvcMapper.toObject(mvcResult, typeReference);
+            assertThat(membersPage.getContent()).containsExactly(MEMBER_MAPPER.toDocument(john));
         }
 
         @Test
@@ -256,6 +259,8 @@ class MemberRestControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message")
                             .value(MEMBER_NOT_FOUND_MESSAGE.formatted(john.getId(), EntityStatus.INACTIVE)));
+
+            verify(memberService).activateMember(john.getId());
         }
 
         private ResultActions activateMember(final UUID memberId) throws Exception {
@@ -285,6 +290,8 @@ class MemberRestControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message")
                             .value(MEMBER_NOT_FOUND_MESSAGE.formatted(inactive.getId(), EntityStatus.ACTIVE)));
+
+            verify(memberService).deactivateMember(inactive.getId());
         }
     }
 
@@ -307,6 +314,8 @@ class MemberRestControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message")
                             .value(MEMBER_NOT_FOUND_MESSAGE.formatted(inactive.getId(), EntityStatus.ACTIVE)));
+
+            verify(memberService).deleteMemberById(inactive.getId());
         }
 
         private ResultActions deleteMember(final UUID memberId) throws Exception {
@@ -316,10 +325,13 @@ class MemberRestControllerTest {
 
     @Nested
     class SaveMember {
+        @Captor
+        private ArgumentCaptor<Member> memberCaptor;
+
         @Test
         void memberIsAlwaysAsActiveSaved() throws Exception {
             john.setEntityStatus(EntityStatus.DELETED);
-            var mvcResult = performPost(john)
+            var mvcResult = performPost(MEMBER_MAPPER.toDocument(john))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -336,9 +348,12 @@ class MemberRestControllerTest {
             var member = TestFixture.createMember();
             member.setEmail(john.getEmail());
 
-            performPost(MEMBER_MAPPER.toDto(member))
+            performPost(member)
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("Member with email %s already exists.".formatted(john.getEmail())));
+
+            verify(memberService).saveMember(memberCaptor.capture());
+            assertEquals(member.getId(), memberCaptor.getValue().getId());
         }
 
         @Test
@@ -374,6 +389,8 @@ class MemberRestControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message")
                             .value(MEMBER_NOT_FOUND_MESSAGE.formatted(inactive.getId(), EntityStatus.ACTIVE)));
+
+            verify(memberService).getMemberById(inactive.getId());
         }
     }
 

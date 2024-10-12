@@ -4,8 +4,9 @@ import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantObserver;
 import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
+import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
-import casp.web.backend.common.Role;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.types.Event;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -30,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -55,6 +58,8 @@ class MemberServiceImplTest {
     private BaseParticipantObserver baseParticipantObserver;
     @Mock
     private BaseEventObserver baseEventObserver;
+    @Mock
+    private DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
 
     @Captor
     private ArgumentCaptor<Member> memberCaptor;
@@ -73,14 +78,11 @@ class MemberServiceImplTest {
 
     @Test
     void getMembersByFirstNameOrLastName() {
-        when(memberRepository.findAllByFirstNameAndLastName(member.getFirstName(), member.getLastName())).thenReturn(List.of(member));
+        var page = new PageImpl<>(List.of(member));
+        var pageable = Pageable.unpaged();
+        when(memberRepository.findAllByFirstNameAndLastName(member.getFirstName(), member.getLastName(), pageable)).thenReturn(page);
 
-        assertThat(memberService.getMembersByFirstNameAndLastName(member.getFirstName(), member.getLastName())).containsExactly(member);
-    }
-
-    @Test
-    void getAllAvailableRoles() {
-        assertThat(memberService.getAllAvailableRoles()).containsExactlyElementsOf(Role.getAllRolesSorted());
+        assertThat(memberService.getMembersByFirstNameAndLastName(member.getFirstName(), member.getLastName(), pageable)).containsExactly(member);
     }
 
     @Test
@@ -107,13 +109,6 @@ class MemberServiceImplTest {
     }
 
     @Test
-    void getMemberById() {
-        when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
-
-        assertSame(member, memberService.getMemberById(member.getId()));
-    }
-
-    @Test
     void deactivateMember() {
         when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
         when(memberRepository.save(member)).thenAnswer(i -> i.getArgument(0));
@@ -128,6 +123,7 @@ class MemberServiceImplTest {
     @Test
     void activateMember() {
         when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.INACTIVE)).thenReturn(member);
+        when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
 
         memberService.activateMember(member.getId());
 
@@ -159,6 +155,39 @@ class MemberServiceImplTest {
         assertThat(memberV2.getCards())
                 .singleElement()
                 .satisfies(cardV2 -> assertEquals(card.getCode(), cardV2.getCode()));
+    }
+
+    @Nested
+    class GetMemberById {
+        @BeforeEach
+        void setUp() {
+            when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
+        }
+
+        @Test
+        void memberIsCorrectlyMapped() {
+            var memberDto = memberService.getMemberById(member.getId());
+
+            assertThat(memberDto)
+                    .usingRecursiveAssertion()
+                    .isEqualTo(MEMBER_MAPPER.toDto(member));
+        }
+
+        @Test
+        void dogHasHandlerIsCorrectlyMapped() {
+            var dogHasHandlerReference = mock(DogHasHandlerReference.class, Answers.RETURNS_DEEP_STUBS);
+            when(dogHasHandlerReference.getId()).thenReturn(UUID.randomUUID());
+            when(dogHasHandlerReference.getDog().getId()).thenReturn(UUID.randomUUID());
+            when(dogHasHandlerReference.getDog().getName()).thenReturn("Bonsai");
+            when(dogHasHandlerReferenceRepository.findAllByMemberId(member.getId())).thenReturn(Set.of(dogHasHandlerReference));
+
+            var memberDto = memberService.getMemberById(member.getId());
+
+            assertThat(memberDto.getDogHasHandlerSet())
+                    .singleElement()
+                    .usingRecursiveAssertion()
+                    .isEqualTo(MEMBER_MAPPER.toDogHasHandlerDto(dogHasHandlerReference));
+        }
     }
 
     @Nested
@@ -207,6 +236,8 @@ class MemberServiceImplTest {
     class SaveMember {
         @Test
         void emailDoesNotExists() {
+            when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
+
             memberService.saveMember(member);
 
             verify(memberRepository).save(member);

@@ -1,7 +1,6 @@
 package casp.web.backend.data.access.layer.member;
 
 import casp.web.backend.common.EntityStatus;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuer
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +22,6 @@ import java.util.UUID;
 class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private static final Logger LOG = LoggerFactory.getLogger(MemberCustomRepositoryImpl.class);
     private static final QMember MEMBER = QMember.member;
-    private static final OrderSpecifier<?>[] DEFAULT_ORDER = {MEMBER.lastName.asc(), MEMBER.firstName.asc()};
     private static final String SPLIT_WORDS_WITH_SPACE = " ";
     private final MongoOperations mongoOperations;
 
@@ -46,7 +43,7 @@ class MemberCustomRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public List<Member> findAllByFirstNameAndLastName(final String firstName, final String lastName) {
+    public Page<Member> findAllByFirstNameAndLastName(final String firstName, final String lastName, final Pageable pageable) {
         var expression = MEMBER.entityStatus.eq(EntityStatus.ACTIVE);
         if (ObjectUtils.isNotEmpty(firstName)) {
             expression = expression.and(MEMBER.firstName.equalsIgnoreCase(firstName));
@@ -55,8 +52,7 @@ class MemberCustomRepositoryImpl implements MemberCustomRepository {
             expression = expression.and(MEMBER.lastName.equalsIgnoreCase(lastName));
         }
         return createQuery().where(expression)
-                .orderBy(DEFAULT_ORDER)
-                .fetch();
+                .fetchPage(pageable);
     }
 
     @Override
