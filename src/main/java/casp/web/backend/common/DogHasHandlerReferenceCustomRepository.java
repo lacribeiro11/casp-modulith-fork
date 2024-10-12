@@ -12,4 +12,13 @@ public interface DogHasHandlerReferenceCustomRepository {
      * @return a set of {@link DogHasHandlerReference} from the respective {@link MemberReference}
      */
     Set<DogHasHandlerReference> findAllByMemberId(UUID memberId);
+
+    /**
+     * Find all {@link DogHasHandlerReference} by dog id.
+     * The {@link DogHasHandlerReference} must be active. This means that both the {@link MemberReference} and the {@link DogReference} must be active.
+     *
+     * @param dogId the dog id
+     * @return a set of {@link DogHasHandlerReference} from the respective {@link MemberReference}
+     */
+    Set<DogHasHandlerReference> findAllByDogId(UUID dogId);
 }

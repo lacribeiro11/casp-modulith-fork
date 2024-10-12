@@ -1,5 +1,6 @@
 package casp.web.backend.common;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuery;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @Component
 class DogHasHandlerReferenceCustomRepositoryImpl implements DogHasHandlerReferenceCustomRepository {
     private static final QDogHasHandlerReference DOG_HAS_HANDLER_REFERENCE = QDogHasHandlerReference.dogHasHandlerReference;
+    private static final BooleanExpression DOG_HAS_HANDLER_IS_ACTIVE = DOG_HAS_HANDLER_REFERENCE.entityStatus.eq(EntityStatus.ACTIVE);
     private final MongoOperations mongoOperations;
 
     @Autowired
@@ -21,16 +23,25 @@ class DogHasHandlerReferenceCustomRepositoryImpl implements DogHasHandlerReferen
 
     @Override
     public Set<DogHasHandlerReference> findAllByMemberId(final UUID memberId) {
-        var dogHasHandlerIsActive = DOG_HAS_HANDLER_REFERENCE.entityStatus.eq(EntityStatus.ACTIVE);
         var memberCriteria = DOG_HAS_HANDLER_REFERENCE.member.id.eq(memberId);
-        return query()
-                .where(memberCriteria.and(dogHasHandlerIsActive))
-                .stream()
-                .filter(DogHasHandlerReference::isActive)
-                .collect(Collectors.toSet());
+        return findAllByCriteria(memberCriteria);
+    }
+
+    @Override
+    public Set<DogHasHandlerReference> findAllByDogId(final UUID dogId) {
+        var dogCriteria = DOG_HAS_HANDLER_REFERENCE.dog.id.eq(dogId);
+        return findAllByCriteria(dogCriteria);
     }
 
     private SpringDataMongodbQuery<DogHasHandlerReference> query() {
         return new SpringDataMongodbQuery<>(mongoOperations, DogHasHandlerReference.class);
+    }
+
+    private Set<DogHasHandlerReference> findAllByCriteria(final BooleanExpression criteria) {
+        return query()
+                .where(criteria.and(DOG_HAS_HANDLER_IS_ACTIVE))
+                .stream()
+                .filter(DogHasHandlerReference::isActive)
+                .collect(Collectors.toSet());
     }
 }

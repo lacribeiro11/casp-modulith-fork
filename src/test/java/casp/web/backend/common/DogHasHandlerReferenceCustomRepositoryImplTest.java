@@ -90,4 +90,49 @@ class DogHasHandlerReferenceCustomRepositoryImplTest {
                     .isEmpty();
         }
     }
+
+    @Nested
+    class FindAllByDogId {
+        @Test
+        void memberDogAndDogHasHandlerAreActive() {
+            var actualDogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
+
+            assertThat(actualDogHasHandlerSet)
+                    .singleElement()
+                    .satisfies(a -> assertEquals(dogHasHandler.getId(), a.getId()));
+        }
+
+        @Test
+        void memberIsNotActiveDogAndDogHasHandlerAreActive() {
+            member.setEntityStatus(EntityStatus.INACTIVE);
+            memberRepository.save(member);
+
+            var actualDogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
+
+            assertThat(actualDogHasHandlerSet)
+                    .isEmpty();
+        }
+
+        @Test
+        void dogIsNotActiveMemberAndDogHasHandlerAreActive() {
+            dog.setEntityStatus(EntityStatus.INACTIVE);
+            dogRepository.save(dog);
+
+            var actualDogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
+
+            assertThat(actualDogHasHandlerSet)
+                    .isEmpty();
+        }
+
+        @Test
+        void dogHasHandlerIsNotActiveMemberAndDogAreActive() {
+            dogHasHandler.setEntityStatus(EntityStatus.INACTIVE);
+            dogHasHandlerRepository.save(dogHasHandler);
+
+            var actualDogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
+
+            assertThat(actualDogHasHandlerSet)
+                    .isEmpty();
+        }
+    }
 }
