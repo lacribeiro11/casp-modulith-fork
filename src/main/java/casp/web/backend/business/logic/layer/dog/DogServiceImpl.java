@@ -36,16 +36,17 @@ class DogServiceImpl implements DogService {
 
     @Override
     public DogDto getDogById(final UUID id) {
-        var dogDto = DOG_MAPPER.toTarget(getActiveDog(id));
-        var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(id);
-        dogDto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerSet));
-        return dogDto;
+        return mapToDogDto(getActiveDog(id));
     }
 
     @Override
-    public DogDto saveDog(final Dog dog) {
-        dogRepository.save(dog);
-        return getDogById(dog.getId());
+    public DogDto saveDog(final DogDto dogDto) {
+        var dog = DOG_MAPPER.toSource(dogDto);
+        dogRepository.findById(dog.getId()).ifPresent(d -> {
+            dog.setCreatedBy(d.getCreatedBy());
+            dog.setCreated(d.getCreated());
+        });
+        return mapToDogDto(dogRepository.save(dog));
     }
 
     @Override
@@ -57,24 +58,25 @@ class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Optional<Dog> getDogByChipNumber(final String chipNumber) {
-        return dogRepository.findDogByChipNumberAndEntityStatus(chipNumber, EntityStatus.ACTIVE);
+    public Optional<DogDto> getDogByChipNumber(final String chipNumber) {
+        return dogRepository.findDogByChipNumberAndEntityStatus(chipNumber, EntityStatus.ACTIVE)
+                .map(this::mapToDogDto);
     }
 
     @Override
-    public Page<Dog> getDogsByNameOrOwnerName(final String name, final String ownerName, final Pageable pageable) {
-        return dogRepository.findAllByNameOrOwnerName(name, ownerName, pageable);
+    public Page<DogDto> getDogsByNameOrOwnerName(final String name, final String ownerName, final Pageable pageable) {
+        return DOG_MAPPER.toTargetPage(dogRepository.findAllByNameOrOwnerName(name, ownerName, pageable));
     }
 
     @Override
-    public Page<Dog> getDogs(final Pageable pageable) {
-        return dogRepository.findAllByEntityStatus(EntityStatus.ACTIVE, pageable);
+    public Page<DogDto> getDogs(final Pageable pageable) {
+        return DOG_MAPPER.toTargetPage(dogRepository.findAllByEntityStatus(EntityStatus.ACTIVE, pageable));
     }
 
     @Override
-    public Page<Dog> getDogsThatWereNotChecked(final Pageable pageable) {
+    public Page<DogDto> getDogsThatWereNotChecked(final Pageable pageable) {
         var pageRequest = pageable != null ? pageable : Pageable.unpaged();
-        return dogRepository.findAllByEuropeNetStateNotChecked(pageRequest);
+        return DOG_MAPPER.toTargetPage(dogRepository.findAllByEuropeNetStateNotChecked(pageRequest));
     }
 
     private Dog getActiveDog(final UUID id) {
@@ -83,5 +85,12 @@ class DogServiceImpl implements DogService {
             LOG.error(msg);
             return new NoSuchElementException(msg);
         });
+    }
+
+    private DogDto mapToDogDto(final Dog dog) {
+        var dogDto = DOG_MAPPER.toTarget(dog);
+        var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
+        dogDto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerSet(dogHasHandlerSet));
+        return dogDto;
     }
 }

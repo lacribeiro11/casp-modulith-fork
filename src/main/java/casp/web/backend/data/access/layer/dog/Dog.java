@@ -3,18 +3,15 @@ package casp.web.backend.data.access.layer.dog;
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.EuropeNetState;
 import casp.web.backend.common.Gender;
+import casp.web.backend.common.dog.DogRequiredFields;
 import com.querydsl.core.annotations.QueryEntity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
 @QueryEntity
 @Document
-public class Dog extends BaseDocument {
-
-    @NotBlank
+public class Dog extends BaseDocument implements DogRequiredFields {
     private String name;
 
     private String breederName;
@@ -25,7 +22,6 @@ public class Dog extends BaseDocument {
 
     private String pedigree;
 
-    @NotNull
     private Gender gender = Gender.FEMALE;
 
     private String chipNumber;
@@ -34,107 +30,128 @@ public class Dog extends BaseDocument {
 
     private float height;
 
-    @NotBlank
     private String ownerName;
 
-    @NotBlank
     private String ownerAddress;
 
-    @NotNull
     private EuropeNetState europeNetState = EuropeNetState.NOT_CHECKED;
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getBreederName() {
         return breederName;
     }
 
+    @Override
     public void setBreederName(String breederName) {
         this.breederName = breederName;
     }
 
+    @Override
     public String getBreedName() {
         return breedName;
     }
 
+    @Override
     public void setBreedName(String breedName) {
         this.breedName = breedName;
     }
 
+    @Override
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
+    @Override
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
+    @Override
     public String getPedigree() {
         return pedigree;
     }
 
+    @Override
     public void setPedigree(String pedigree) {
         this.pedigree = pedigree;
     }
 
+    @Override
     public Gender getGender() {
         return gender;
     }
 
+    @Override
     public void setGender(Gender gender) {
         this.gender = gender;
     }
 
+    @Override
     public String getChipNumber() {
         return chipNumber;
     }
 
+    @Override
     public void setChipNumber(String chipNumber) {
         this.chipNumber = chipNumber;
     }
 
+    @Override
     public LocalDate getRabiesDate() {
         return rabiesDate;
     }
 
+    @Override
     public void setRabiesDate(LocalDate rabiesDate) {
         this.rabiesDate = rabiesDate;
     }
 
+    @Override
     public float getHeight() {
         return height;
     }
 
+    @Override
     public void setHeight(float height) {
         this.height = height;
     }
 
+    @Override
     public String getOwnerName() {
         return ownerName;
     }
 
+    @Override
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
     }
 
+    @Override
     public String getOwnerAddress() {
         return ownerAddress;
     }
 
+    @Override
     public void setOwnerAddress(String ownerAddress) {
         this.ownerAddress = ownerAddress;
     }
 
+    @Override
     public EuropeNetState getEuropeNetState() {
         return europeNetState;
     }
 
+    @Override
     public void setEuropeNetState(EuropeNetState europeNetState) {
         this.europeNetState = europeNetState;
     }

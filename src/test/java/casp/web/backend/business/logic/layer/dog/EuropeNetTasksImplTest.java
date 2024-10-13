@@ -1,12 +1,15 @@
 package casp.web.backend.business.logic.layer.dog;
 
 
+import casp.web.backend.TestFixture;
 import casp.web.backend.common.EuropeNetState;
 import casp.web.backend.data.access.layer.dog.Dog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,8 +21,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+import static casp.web.backend.business.logic.layer.dog.DogMapper.DOG_MAPPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.spy;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -39,6 +43,8 @@ class EuropeNetTasksImplTest {
     private RestTemplateBuilder restTemplateBuilder;
     @Mock
     private ResponseEntity<String> responseEntity;
+    @Captor
+    private ArgumentCaptor<DogDto> dogCaptor;
 
     private Dog dog;
 
@@ -46,6 +52,7 @@ class EuropeNetTasksImplTest {
 
     @BeforeEach
     void setUp() {
+        dog = TestFixture.createDog();
         when(restTemplateBuilder.build()).thenReturn(restTemplate);
         europeNetTasks = new EuropeNetTasksImpl(dogService, restTemplateBuilder, EURO_PET_NET_API);
     }
@@ -61,7 +68,7 @@ class EuropeNetTasksImplTest {
 
     @Test
     void registerDogsManually() {
-        var expectedPage = new PageImpl<Dog>(List.of());
+        var expectedPage = new PageImpl<DogDto>(List.of());
         when(dogService.getDogsThatWereNotChecked(null)).thenReturn(new PageImpl<>(List.of()));
 
         var actualPage = europeNetTasks.registerDogsManually(null);
@@ -73,9 +80,8 @@ class EuropeNetTasksImplTest {
     class ScheduleChipNumbersCheckTask {
         @BeforeEach
         void setUp() {
-            dog = spy(new Dog());
             dog.setChipNumber("chipNumber");
-            var dogPage = new PageImpl<>(List.of(dog));
+            var dogPage = new PageImpl<>(List.of(DOG_MAPPER.toTarget(dog)));
             when(dogService.getDogsThatWereNotChecked(null)).thenReturn(dogPage);
         }
 
@@ -86,7 +92,8 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dog).setEuropeNetState(EuropeNetState.API_NOT_REACHABLE);
+            verify(dogService).saveDog(dogCaptor.capture());
+            assertSame(EuropeNetState.API_NOT_REACHABLE, dogCaptor.getValue().getEuropeNetState());
         }
 
         @Test
@@ -97,7 +104,8 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dog).setEuropeNetState(EuropeNetState.NOT_CHECKED);
+            verify(dogService).saveDog(dogCaptor.capture());
+            assertSame(EuropeNetState.NOT_CHECKED, dogCaptor.getValue().getEuropeNetState());
         }
 
         @Test
@@ -108,7 +116,8 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dog).setEuropeNetState(EuropeNetState.DOG_IS_REGISTERED);
+            verify(dogService).saveDog(dogCaptor.capture());
+            assertSame(EuropeNetState.DOG_IS_REGISTERED, dogCaptor.getValue().getEuropeNetState());
         }
 
         @Test
@@ -119,7 +128,8 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dog).setEuropeNetState(EuropeNetState.DOG_NOT_REGISTERED);
+            verify(dogService).saveDog(dogCaptor.capture());
+            assertSame(EuropeNetState.DOG_NOT_REGISTERED, dogCaptor.getValue().getEuropeNetState());
         }
 
         @Test
@@ -130,7 +140,8 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dog).setEuropeNetState(EuropeNetState.NOT_CHECKED);
+            verify(dogService).saveDog(dogCaptor.capture());
+            assertSame(EuropeNetState.NOT_CHECKED, dogCaptor.getValue().getEuropeNetState());
         }
 
         @Test
@@ -141,7 +152,7 @@ class EuropeNetTasksImplTest {
 
             europeNetTasks.scheduleChipNumbersCheckTask();
 
-            verify(dogService).saveDog(dog);
+            verify(dogService).saveDog(DOG_MAPPER.toTarget(dog));
         }
     }
 }

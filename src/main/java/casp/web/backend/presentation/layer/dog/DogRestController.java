@@ -1,9 +1,7 @@
 package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.business.logic.layer.dog.DogDto;
 import casp.web.backend.business.logic.layer.dog.DogService;
 import casp.web.backend.business.logic.layer.dog.EuropeNetTasks;
-import casp.web.backend.data.access.layer.dog.Dog;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
@@ -23,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+import static casp.web.backend.presentation.layer.dog.DogReadMapper.READ_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogWriteMapper.WRITE_MAPPER;
+
 @RestController
 @RequestMapping("dog")
 @Validated
@@ -38,18 +39,21 @@ class DogRestController {
     }
 
     @GetMapping("{id}")
-    ResponseEntity<DogDto> getDogById(final @PathVariable UUID id) {
-        return ResponseEntity.ok(dogService.getDogById(id));
+    ResponseEntity<DogRead> getDogById(final @PathVariable UUID id) {
+        var dogDto = dogService.getDogById(id);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(dogDto));
     }
 
     @GetMapping
-    ResponseEntity<Page<Dog>> getDogs(final @ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(dogService.getDogs(pageable));
+    ResponseEntity<Page<DogRead>> getDogs(final @ParameterObject Pageable pageable) {
+        var dogDtoPage = dogService.getDogs(pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(dogDtoPage));
     }
 
     @PostMapping
-    ResponseEntity<DogDto> saveDog(final @RequestBody @Valid Dog dog) {
-        return ResponseEntity.ok(dogService.saveDog(dog));
+    ResponseEntity<DogRead> saveDog(final @RequestBody @Valid DogWrite dogWrite) {
+        var dogDto = dogService.saveDog(WRITE_MAPPER.toSource(dogWrite));
+        return ResponseEntity.ok(READ_MAPPER.toTarget(dogDto));
     }
 
     @DeleteMapping("{id}")
@@ -59,19 +63,22 @@ class DogRestController {
     }
 
     @PostMapping("register")
-    ResponseEntity<Page<Dog>> register(final @ParameterObject @Nullable Pageable pageable) {
-        return ResponseEntity.ok(europeNetTasks.registerDogsManually(pageable));
+    ResponseEntity<Page<DogRead>> register(final @ParameterObject @Nullable Pageable pageable) {
+        var dogDtoPage = europeNetTasks.registerDogsManually(pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(dogDtoPage));
     }
 
     @GetMapping("by-chip-number/{chipNumber}")
-    ResponseEntity<Dog> getDogByChipNumber(final @PathVariable String chipNumber) {
-        return ResponseEntity.of(dogService.getDogByChipNumber(chipNumber));
+    ResponseEntity<DogRead> getDogByChipNumber(final @PathVariable String chipNumber) {
+        return ResponseEntity.of(dogService.getDogByChipNumber(chipNumber)
+                .map(READ_MAPPER::toTarget));
     }
 
     @GetMapping("by-dog-name-or-owner-name")
-    ResponseEntity<Page<Dog>> getDogsByNameOrOwnerName(final @RequestParam(required = false) String name,
-                                                       final @RequestParam(required = false) String ownerName,
-                                                       final @ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(dogService.getDogsByNameOrOwnerName(name, ownerName, pageable));
+    ResponseEntity<Page<DogRead>> getDogsByNameOrOwnerName(final @RequestParam(required = false) String name,
+                                                           final @RequestParam(required = false) String ownerName,
+                                                           final @ParameterObject Pageable pageable) {
+        var dogDtoPage = dogService.getDogsByNameOrOwnerName(name, ownerName, pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(dogDtoPage));
     }
 }

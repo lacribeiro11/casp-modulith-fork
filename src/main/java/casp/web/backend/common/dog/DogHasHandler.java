@@ -1,12 +1,18 @@
-package casp.web.backend.business.logic.layer.dog;
+package casp.web.backend.common.dog;
+
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class DogHasHandlerDto {
+public class DogHasHandler {
+    @NotNull
     private UUID id;
+    @NotNull
     private UUID memberId;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
 
     public UUID getId() {
@@ -44,7 +50,7 @@ public class DogHasHandlerDto {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DogHasHandlerDto that)) return false;
+        if (!(o instanceof DogHasHandler that)) return false;
         return Objects.equals(id, that.id);
     }
 

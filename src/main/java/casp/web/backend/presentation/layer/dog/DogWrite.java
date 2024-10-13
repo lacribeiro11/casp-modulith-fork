@@ -1,16 +1,13 @@
-package casp.web.backend.business.logic.layer.dog;
+package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.common.BaseDto;
+import casp.web.backend.common.BaseView;
 import casp.web.backend.common.EuropeNetState;
 import casp.web.backend.common.Gender;
-import casp.web.backend.common.dog.DogDtoRequiredFields;
-import casp.web.backend.common.dog.DogHasHandler;
+import casp.web.backend.common.dog.DogRequiredFields;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
-public class DogDto extends BaseDto implements DogDtoRequiredFields {
+public class DogWrite extends BaseView implements DogRequiredFields {
     private String name;
     private String breederName;
     private String breedName;
@@ -23,17 +20,6 @@ public class DogDto extends BaseDto implements DogDtoRequiredFields {
     private String ownerName;
     private String ownerAddress;
     private EuropeNetState europeNetState = EuropeNetState.NOT_CHECKED;
-    private Set<DogHasHandler> dogHasHandlerSet = new HashSet<>();
-
-    @Override
-    public Set<DogHasHandler> getDogHasHandlerSet() {
-        return dogHasHandlerSet;
-    }
-
-    @Override
-    public void setDogHasHandlerSet(final Set<DogHasHandler> dogHasHandlerSet) {
-        this.dogHasHandlerSet = dogHasHandlerSet;
-    }
 
     @Override
     public String getName() {

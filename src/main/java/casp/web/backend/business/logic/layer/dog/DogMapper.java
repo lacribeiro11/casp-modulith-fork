@@ -2,6 +2,7 @@ package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.common.BaseMapper;
 import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.Dog;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +18,7 @@ public interface DogMapper extends BaseMapper<Dog, DogDto> {
     @Mapping(target = "memberId", source = "dogHasHandler.member.id")
     @Mapping(target = "firstName", source = "dogHasHandler.member.firstName")
     @Mapping(target = "lastName", source = "dogHasHandler.member.lastName")
-    DogHasHandlerDto toDogHasHandlerDto(DogHasHandlerReference dogHasHandler);
+    DogHasHandler toDogHasHandler(DogHasHandlerReference dogHasHandler);
 
-    Set<DogHasHandlerDto> toDogHasHandlerDtoSet(Set<DogHasHandlerReference> dogHasHandlerSet);
+    Set<DogHasHandler> toDogHasHandlerSet(Set<DogHasHandlerReference> dogHasHandlerSet);
 }

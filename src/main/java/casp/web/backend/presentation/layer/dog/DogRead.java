@@ -1,6 +1,6 @@
-package casp.web.backend.business.logic.layer.dog;
+package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.common.BaseDto;
+import casp.web.backend.common.BaseView;
 import casp.web.backend.common.EuropeNetState;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.dog.DogDtoRequiredFields;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DogDto extends BaseDto implements DogDtoRequiredFields {
+public class DogRead extends BaseView implements DogDtoRequiredFields {
     private String name;
     private String breederName;
     private String breedName;

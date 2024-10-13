@@ -1,5 +1,6 @@
 package casp.web.backend.business.logic.layer.dog;
 
+import casp.web.backend.TestFixture;
 import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
@@ -10,13 +11,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,52 +45,69 @@ class DogServiceImplTest {
     @Mock
     private DogHasHandlerService dogHasHandlerService;
 
+    @Captor
+    private ArgumentCaptor<Dog> dogCaptor;
+
     @InjectMocks
     private DogServiceImpl dogService;
+    private Dog dog;
+    private DogDto dogDto;
 
-    @Test
-    void saveDog() {
-        var dog = new Dog();
-        when(dogRepository.findDogByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
-
-        var result = dogService.saveDog(dog);
-
-        assertEquals(DOG_MAPPER.toTarget(dog), result);
-        verify(dogRepository).save(dog);
+    @BeforeEach
+    void setUp() {
+        dog = TestFixture.createDog();
+        dogDto = DOG_MAPPER.toTarget(dog);
     }
 
     @Test
     void getDogs() {
-        var pageable = Pageable.ofSize(10);
-        when(dogRepository.findAllByEntityStatus(EntityStatus.ACTIVE, pageable))
-                .thenReturn(Page.empty());
+        when(dogRepository.findAllByEntityStatus(EntityStatus.ACTIVE, Pageable.unpaged())).thenReturn(new PageImpl<>(List.of(dog)));
 
-        var dogPage = dogService.getDogs(pageable);
+        var dogPage = dogService.getDogs(Pageable.unpaged());
 
-        assertThat(dogPage.stream().toList()).isEmpty();
+        assertThat(dogPage).containsExactly(dogDto);
     }
 
     @Test
     void getDogByChipNumber() {
-        var dog = new Dog();
         var chipNumber = UUID.randomUUID().toString();
         when(dogRepository.findDogByChipNumberAndEntityStatus(chipNumber, EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
 
-        assertThat(dogService.getDogByChipNumber(chipNumber))
-                .contains(dog);
+        assertThat(dogService.getDogByChipNumber(chipNumber)).usingRecursiveComparison().isEqualTo(Optional.of(dogDto));
     }
 
     @Test
     void getDogsByNameOrOwnerName() {
-        var ownerName = "ownerName";
-        var name = "name";
-        var dog = new Dog();
-        when(dogRepository.findAllByNameOrOwnerName(name, ownerName, Pageable.unpaged()))
-                .thenReturn(new PageImpl<>(List.of(dog)));
+        when(dogRepository.findAllByNameOrOwnerName(dog.getName(), dog.getOwnerName(), Pageable.unpaged())).thenReturn(new PageImpl<>(List.of(dog)));
 
-        var dogPage = dogService.getDogsByNameOrOwnerName(name, ownerName, Pageable.unpaged());
+        var dogPage = dogService.getDogsByNameOrOwnerName(dog.getName(), dog.getOwnerName(), Pageable.unpaged());
 
-        assertThat(dogPage.getContent()).containsExactly(dog);
+        assertThat(dogPage).containsExactly(dogDto);
+    }
+
+    @Nested
+    class SaveDog {
+        @Test
+        void createNewDog() {
+            when(dogRepository.findById(dog.getId())).thenReturn(Optional.empty());
+            when(dogRepository.save(dog)).thenAnswer(i -> i.getArgument(0));
+            var actualDogDto = dogService.saveDog(dogDto);
+
+            assertThat(actualDogDto).usingRecursiveAssertion().isEqualTo(dogDto);
+        }
+
+        @Test
+        void updateExistingDog() {
+            dog.setCreated(LocalDateTime.MIN);
+            dog.setCreatedBy("Bonsai");
+            when(dogRepository.findById(dog.getId())).thenReturn(Optional.of(dog));
+            when(dogRepository.save(dog)).thenAnswer(i -> i.getArgument(0));
+
+            dogService.saveDog(dogDto);
+
+            verify(dogRepository).save(dogCaptor.capture());
+            assertThat(dogCaptor.getValue()).usingRecursiveAssertion().isEqualTo(dog);
+        }
     }
 
     @Nested
@@ -104,12 +124,12 @@ class DogServiceImplTest {
 
         @Test
         void pageableIsNull() {
-            assertThat(dogService.getDogsThatWereNotChecked(null)).containsExactly(dog);
+            assertThat(dogService.getDogsThatWereNotChecked(null)).containsExactly(DOG_MAPPER.toTarget(dog));
         }
 
         @Test
         void pageableIsNotNull() {
-            assertThat(dogService.getDogsThatWereNotChecked(Pageable.unpaged())).containsExactly(dog);
+            assertThat(dogService.getDogsThatWereNotChecked(Pageable.unpaged())).containsExactly(DOG_MAPPER.toTarget(dog));
         }
     }
 
@@ -146,29 +166,20 @@ class DogServiceImplTest {
     @Nested
     class GetDogById {
 
-        private UUID id;
-        private Dog dog;
-
-        @BeforeEach
-        void setUp() {
-            id = UUID.randomUUID();
-            dog = new Dog();
-        }
-
         @Test
         void dogWasFound() {
-            when(dogRepository.findDogByIdAndEntityStatus(id, EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
+            when(dogRepository.findDogByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
 
-            var result = dogService.getDogById(id);
+            var result = dogService.getDogById(dog.getId());
 
             assertEquals(DOG_MAPPER.toTarget(dog), result);
         }
 
         @Test
         void dogWasNotFound() {
-            when(dogRepository.findDogByIdAndEntityStatus(id, EntityStatus.ACTIVE)).thenReturn(Optional.empty());
+            when(dogRepository.findDogByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.empty());
 
-            assertThrows(NoSuchElementException.class, () -> dogService.getDogById(id));
+            assertThrows(NoSuchElementException.class, () -> dogService.getDogById(dog.getId()));
         }
 
         @Test
@@ -178,15 +189,12 @@ class DogServiceImplTest {
             when(dogHasHandlerReference.getMember().getId()).thenReturn(UUID.randomUUID());
             when(dogHasHandlerReference.getMember().getFirstName()).thenReturn("Bonsai");
             when(dogHasHandlerReference.getMember().getLastName()).thenReturn("Yasmin");
-            when(dogHasHandlerReferenceRepository.findAllByDogId(id)).thenReturn(Set.of(dogHasHandlerReference));
-            when(dogRepository.findDogByIdAndEntityStatus(id, EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
+            when(dogHasHandlerReferenceRepository.findAllByDogId(dog.getId())).thenReturn(Set.of(dogHasHandlerReference));
+            when(dogRepository.findDogByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
 
-            var result = dogService.getDogById(id);
+            var result = dogService.getDogById(dog.getId());
 
-            assertThat(result.getDogHasHandlerSet())
-                    .singleElement()
-                    .usingRecursiveAssertion()
-                    .isEqualTo(DOG_MAPPER.toDogHasHandlerDto(dogHasHandlerReference));
+            assertThat(result.getDogHasHandlerSet()).singleElement().usingRecursiveAssertion().isEqualTo(DOG_MAPPER.toDogHasHandler(dogHasHandlerReference));
         }
     }
 }

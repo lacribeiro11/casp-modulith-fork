@@ -1,6 +1,5 @@
 package casp.web.backend.business.logic.layer.dog;
 
-import casp.web.backend.data.access.layer.dog.Dog;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,21 +17,22 @@ public interface DogService {
      */
     DogDto getDogById(UUID id);
 
-    DogDto saveDog(Dog dog);
+    DogDto saveDog(DogDto dogDto);
 
     void deleteDogById(UUID id);
 
-    Optional<Dog> getDogByChipNumber(String chipNumber);
+    Optional<DogDto> getDogByChipNumber(String chipNumber);
 
-    Page<Dog> getDogsByNameOrOwnerName(String name, String ownerName, Pageable pageable);
+    Page<DogDto> getDogsByNameOrOwnerName(String name, String ownerName, Pageable pageable);
 
-    Page<Dog> getDogs(Pageable pageable);
+    Page<DogDto> getDogs(Pageable pageable);
 
     /**
-     * Get all dogs that were not checked.
-     * A dog is not checked, if its EuropeNet state is not checked and its chip number isn't empty.
+     * Get dogs that were not checked.
+     * A dog is not checked, if its EuropeNet state is neither {@link casp.web.backend.common.EuropeNetState#DOG_IS_REGISTERED}
+     * nor {@link casp.web.backend.common.EuropeNetState#DOG_NOT_REGISTERED}  and its chip number isn't empty.
      *
      * @return a page of dogs that were not checked.
      */
-    Page<Dog> getDogsThatWereNotChecked(@Nullable Pageable pageable);
+    Page<DogDto> getDogsThatWereNotChecked(@Nullable Pageable pageable);
 }

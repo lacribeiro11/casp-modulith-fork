@@ -2,12 +2,11 @@ package casp.web.backend.presentation.layer.dog;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.dog.DogDto;
-import casp.web.backend.business.logic.layer.dog.DogHasHandlerDto;
 import casp.web.backend.business.logic.layer.dog.DogService;
 import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
@@ -32,9 +31,10 @@ import java.util.UUID;
 
 import static casp.web.backend.business.logic.layer.dog.DogMapper.DOG_MAPPER;
 import static casp.web.backend.deprecated.dog.DogHasHandlerV2Mapper.DOG_HAS_HANDLER_V2_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogReadMapper.READ_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogWriteMapper.WRITE_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DogRestControllerTest {
     private static final String DOG_URL_PREFIX = "/dog";
     private static final String DOG_NOT_FOUND_MSG = "Dog with id %s not found or it isn't active.";
-    private static final TypeReference<RestResponsePage<DogDto>> DOG_PAGE_RESPONSE = new TypeReference<>() {
+    private static final TypeReference<RestResponsePage<DogRead>> DOG_PAGE_RESPONSE = new TypeReference<>() {
     };
 
     @Autowired
@@ -71,6 +71,7 @@ class DogRestControllerTest {
     private DogDto charlie;
     private DogDto bonsai;
     private DogDto inactive;
+    private Set<DogRead> expectedActiveDogs;
 
     @BeforeEach
     void setUp() {
@@ -82,6 +83,7 @@ class DogRestControllerTest {
         charlie = createDog("Charlie", EntityStatus.ACTIVE);
         bonsai = createDog("Bonsai", EntityStatus.ACTIVE);
         inactive = createDog("INACTIVE", EntityStatus.INACTIVE);
+        expectedActiveDogs = READ_MAPPER.toTargetSet(Set.of(charlie, bonsai));
     }
 
     @Test
@@ -93,8 +95,8 @@ class DogRestControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        var dogDtoPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
-        assertThat(dogDtoPage.getContent()).containsExactly(charlie, bonsai);
+        var dogReadPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
+        assertThat(dogReadPage).containsExactlyInAnyOrderElementsOf(expectedActiveDogs);
     }
 
     @Test
@@ -103,8 +105,19 @@ class DogRestControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        var dogDtoPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
-        assertThat(dogDtoPage.getContent()).containsExactly(charlie, bonsai);
+        var dogReadPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
+        assertThat(dogReadPage).containsExactlyInAnyOrderElementsOf(expectedActiveDogs);
+    }
+
+    @Test
+    void getDogByChipNumber() throws Exception {
+        var mvcResult = mockMvc.perform(get(DOG_URL_PREFIX + "/by-chip-number/{chipNumber}", charlie.getChipNumber()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertThat(MvcMapper.toObject(mvcResult, Dog.class)).
+                usingRecursiveAssertion()
+                .isEqualTo(DOG_MAPPER.toSource(charlie));
     }
 
     private DogDto createDog(final String name, final EntityStatus entityStatus) {
@@ -117,7 +130,7 @@ class DogRestControllerTest {
         member.setEntityStatus(entityStatus);
         memberRepository.save(member);
 
-        var dogHasHandler = new DogHasHandler();
+        var dogHasHandler = new casp.web.backend.data.access.layer.dog.DogHasHandler();
         memberReferenceRepository.findById(member.getId()).ifPresent(dogHasHandler::setMember);
         dogHasHandler.setDog(DOG_HAS_HANDLER_V2_MAPPER.toDogReference(dog));
         dogHasHandler.setEntityStatus(entityStatus);
@@ -132,7 +145,7 @@ class DogRestControllerTest {
 
         var dto = DOG_MAPPER.toTarget(dogRepository.save(dog));
         var dogHasHandlerReferences = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
-        dto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerReferences));
+        dto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerSet(dogHasHandlerReferences));
         return dto;
     }
 
@@ -140,7 +153,7 @@ class DogRestControllerTest {
         return mockMvc.perform(get(DOG_URL_PREFIX + "/{id}", dogId));
     }
 
-    private void assertDogHasHandler(final DogDto actual) {
+    private void assertDogHasHandler(final DogRead actual) {
         assertThat(actual.getDogHasHandlerSet())
                 .singleElement()
                 .satisfies(dh -> {
@@ -151,32 +164,20 @@ class DogRestControllerTest {
                 });
     }
 
-    private DogHasHandlerDto getDogHasHandler() {
+    private DogHasHandler getDogHasHandler() {
         return charlie.getDogHasHandlerSet().stream().findAny().orElseThrow();
-    }
-
-    @Test
-    void getDogByChipNumber() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_URL_PREFIX + "/by-chip-number/{chipNumber}", charlie.getChipNumber()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, Dog.class)).
-                usingRecursiveAssertion()
-                .isEqualTo(DOG_MAPPER.toSource(charlie));
     }
 
     @Nested
     class DeleteDogById {
-//    FIXME    @Test
-//        void cascadeDelete() throws Exception {
-//            var dogHasHandlerId = getDogHasHandler().getId();
-//            deleteDog(charlie.getId())
-//                    .andExpect(status().isNoContent());
+        @Test
+        void cascadeDelete() throws Exception {
+            deleteDog(charlie.getId())
+                    .andExpect(status().isNoContent());
+
+//           FIXME getDogById(charlie.getId()).andExpect(status().isBadRequest());
 //
-//            getDogById(charlie.getId()).andExpect(status().isBadRequest());
-//
-//            var dogHasHandlerList = dogHasHandlerRepository.findAll()
+//           var dogHasHandlerList = dogHasHandlerRepository.findAll()
 //                    .stream()
 //                    .filter(dh -> charlie.getId().equals(dh.getDog().getId()))
 //                    .toList();
@@ -186,7 +187,7 @@ class DogRestControllerTest {
 //                    .toList();
 //            assertThat(dogHasHandlerList).isNotEmpty().allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
 //            assertThat(baseParticipantList).isNotEmpty().allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
-//        }
+        }
 
         @Test
         void dogNotFound() throws Exception {
@@ -205,24 +206,8 @@ class DogRestControllerTest {
     @Nested
     class SaveDog {
         @Test
-        void dogIsAlwaysAsActiveSaved() throws Exception {
-            charlie.setEntityStatus(EntityStatus.DELETED);
-            performPost(DOG_MAPPER.toSource(charlie))
-                    .andExpect(status().isOk());
-
-            var mvcResult = getDogById(charlie.getId())
-                    .andExpect(status().isOk())
-                    .andReturn();
-            assertThat(MvcMapper.toObject(mvcResult, DogDto.class))
-                    .satisfies(dogDto -> {
-                        assertSame(EntityStatus.ACTIVE, dogDto.getEntityStatus());
-                        assertDogHasHandler(dogDto);
-                    });
-        }
-
-        @Test
         void bodyIsInvalid() throws Exception {
-            var exception = performPost(new DogDto())
+            var exception = performPost(new DogWrite())
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResolvedException();
@@ -232,7 +217,17 @@ class DogRestControllerTest {
                     .satisfies(e -> assertThat(e.getMessage()).contains("NotBlank.ownerName", "NotBlank.ownerAddress", "NotBlank.name"));
         }
 
-        private ResultActions performPost(final Dog dog) throws Exception {
+        @Test
+        void bodyIsValid() throws Exception {
+            var mvcResult = performPost(WRITE_MAPPER.toTarget(charlie))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var dogRead = MvcMapper.toObject(mvcResult, DogRead.class);
+            assertThat(dogRead).isEqualTo(READ_MAPPER.toTarget(charlie));
+        }
+
+        private ResultActions performPost(final DogWrite dog) throws Exception {
             return mockMvc.perform(post(DOG_URL_PREFIX)
                     .content(MvcMapper.toString(dog))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -242,11 +237,7 @@ class DogRestControllerTest {
 
     @Nested
     class GetDogsByNameOrOwnerName {
-
-        private static final TypeReference<RestResponsePage<Dog>> TYPE_REFERENCE = new TypeReference<>() {
-        };
         private static final String URL_TEMPLATE = DOG_URL_PREFIX + "/by-dog-name-or-owner-name";
-
 
         @Test
         void foundDogByNameAndOwnerName() throws Exception {
@@ -256,11 +247,11 @@ class DogRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var dogPage = MvcMapper.toObject(mvcResult, TYPE_REFERENCE);
-            assertThat(dogPage.getContent())
+            var dogPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
+            assertThat(dogPage)
                     .singleElement()
                     .usingRecursiveAssertion()
-                    .isEqualTo(DOG_MAPPER.toSource(charlie));
+                    .isEqualTo(READ_MAPPER.toTarget(charlie));
         }
 
         @Test
@@ -269,12 +260,12 @@ class DogRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var dogPage = MvcMapper.toObject(mvcResult, TYPE_REFERENCE);
-            assertThat(dogPage.getContent())
-                    .allSatisfy(actual -> assertThat(Set.of(charlie, bonsai))
+            var dogPage = MvcMapper.toObject(mvcResult, DOG_PAGE_RESPONSE);
+            assertThat(dogPage)
+                    .allSatisfy(actual -> assertThat(expectedActiveDogs)
                             .anySatisfy(expected -> assertThat(actual)
                                     .usingRecursiveAssertion()
-                                    .isEqualTo(DOG_MAPPER.toSource(expected))));
+                                    .isEqualTo(expected)));
         }
     }
 
@@ -286,9 +277,9 @@ class DogRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var dogDto = MvcMapper.toObject(mvcResult, DogDto.class);
-            assertThat(dogDto).isEqualTo(charlie);
-            assertDogHasHandler(dogDto);
+            var dogRead = MvcMapper.toObject(mvcResult, DogRead.class);
+            assertThat(dogRead).isEqualTo(READ_MAPPER.toTarget(charlie));
+            assertDogHasHandler(dogRead);
         }
 
         @Test

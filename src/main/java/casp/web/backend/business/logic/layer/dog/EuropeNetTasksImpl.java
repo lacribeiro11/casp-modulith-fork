@@ -1,7 +1,6 @@
 package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.common.EuropeNetState;
-import casp.web.backend.data.access.layer.dog.Dog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ class EuropeNetTasksImpl implements EuropeNetTasks {
     }
 
     @Override
-    public Page<Dog> registerDogsManually(final Pageable pageRequest) {
+    public Page<DogDto> registerDogsManually(final Pageable pageRequest) {
         var dogPage = dogService.getDogsThatWereNotChecked(pageRequest);
         registerDogs(dogPage);
         return dogPage;
@@ -55,7 +54,7 @@ class EuropeNetTasksImpl implements EuropeNetTasks {
         registerDogs(dogPage);
     }
 
-    private void registerDogs(final Page<Dog> dogPage) {
+    private void registerDogs(final Page<DogDto> dogPage) {
         if (dogPage.isEmpty()) {
             LOG.info("No dogs to check");
             return;
