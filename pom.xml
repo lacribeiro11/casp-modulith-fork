@@ -176,7 +176,7 @@
                     <excludes>
                         <exclude>**/*Test*.class</exclude>
                         <exclude>**/AdminApplication.class</exclude>
-                        <exclude>**/common/*.class</exclude>
+                        <exclude>**/common/**/*.class</exclude>
                         <exclude>**/configuration/*.class</exclude>
                         <exclude>**/commons/**/*.class</exclude>
                         <exclude>**/dtos/**/*.class</exclude>
@@ -200,11 +200,11 @@
                         <exclude>**/*Event.class</exclude>
                         <exclude>**/*Exam.class</exclude>
                         <exclude>**/*Member.class</exclude>
-                        <exclude>**/member/*MemberDto.class</exclude>
-                        <exclude>**/member/*DogHasHandlerDto.class</exclude>
-                        <exclude>**/member/*MemberMapper*.class</exclude>
-                        <exclude>**/*MembershipFee.class</exclude>
-                        <exclude>**/*Card.class</exclude>
+                        <exclude>**/*Dto.class</exclude>
+                        <exclude>**/*Read.class</exclude>
+                        <exclude>**/*Write.class</exclude>
+                        <exclude>**/*Mapper.class</exclude>
+                        <exclude>**/*MapperImpl.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
