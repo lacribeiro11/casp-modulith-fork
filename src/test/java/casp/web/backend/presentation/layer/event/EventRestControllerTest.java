@@ -94,7 +94,7 @@ class EventRestControllerTest {
         @Test
         void valid() throws Exception {
             var event = TestFixture.createEvent();
-            var eventDto = EVENT_MAPPER.toDto(event);
+            var eventDto = EVENT_MAPPER.toTarget(event);
             eventDto.setMemberId(member.getId());
             eventDto.setMember(null);
             eventDto.setCalendarEntries(CALENDAR_MAPPER.toDtoList(List.of(TestFixture.createCalendarEntry())));

@@ -39,7 +39,7 @@ class ExamFacadeImpl implements ExamFacade {
     @Override
     public ExamDto mapDocumentToDto(final BaseEvent baseEvent) {
         if (baseEvent instanceof Exam exam) {
-            var examDto = EXAM_MAPPER.toDto(exam);
+            var examDto = EXAM_MAPPER.toTarget(exam);
             setExamParticipants(examDto);
             return examDto;
         } else {
@@ -51,7 +51,7 @@ class ExamFacadeImpl implements ExamFacade {
 
     @Override
     public void save(final ExamDto examDto) {
-        var exam = EXAM_MAPPER.toDocument(examDto);
+        var exam = EXAM_MAPPER.toSource(examDto);
 
         calendarService.replaceCalendarEntries(exam, CALENDAR_MAPPER.toDocumentList(examDto.getCalendarEntries()));
         examParticipantService.replaceParticipants(exam, examDto.getParticipantsIdToWrite());
@@ -73,7 +73,7 @@ class ExamFacadeImpl implements ExamFacade {
     @Override
     public Page<ExamDto> getAllByYear(final int year, final Pageable pageable) {
         var examPage = examService.getAllByYear(year, pageable);
-        return EXAM_MAPPER.toDtoPage(examPage);
+        return EXAM_MAPPER.toTargetPage(examPage);
     }
 
     @Override

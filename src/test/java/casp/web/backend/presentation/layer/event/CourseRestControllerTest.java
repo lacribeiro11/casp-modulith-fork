@@ -120,7 +120,7 @@ class CourseRestControllerTest {
         @Test
         void valid() throws Exception {
             var course = TestFixture.createCourse();
-            var courseDto = COURSE_MAPPER.toDto(course);
+            var courseDto = COURSE_MAPPER.toTarget(course);
             courseDto.setMemberId(dogHasHandler.getMemberId());
             courseDto.setMember(null);
             courseDto.setCalendarEntries(CALENDAR_MAPPER.toDtoList(List.of(TestFixture.createCalendarEntry())));

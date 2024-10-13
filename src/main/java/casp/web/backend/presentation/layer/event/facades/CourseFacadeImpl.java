@@ -45,7 +45,7 @@ class CourseFacadeImpl implements CourseFacade {
     @Override
     public CourseDto mapDocumentToDto(final BaseEvent baseEvent) {
         if (baseEvent instanceof Course course) {
-            var courseDto = COURSE_MAPPER.toDto(course);
+            var courseDto = COURSE_MAPPER.toTarget(course);
             setCoTrainers(courseDto);
             setSpaces(courseDto);
             return courseDto;
@@ -58,7 +58,7 @@ class CourseFacadeImpl implements CourseFacade {
 
     @Override
     public void save(final CourseDto courseDto) {
-        var course = COURSE_MAPPER.toDocument(courseDto);
+        var course = COURSE_MAPPER.toSource(courseDto);
 
         calendarService.replaceCalendarEntries(course, CALENDAR_MAPPER.toDocumentList(courseDto.getCalendarEntries()));
         spaceService.replaceParticipants(course, courseDto.getParticipantsIdToWrite());
@@ -81,7 +81,7 @@ class CourseFacadeImpl implements CourseFacade {
     @Override
     public Page<CourseDto> getAllByYear(final int year, final Pageable pageable) {
         var coursePage = courseService.getAllByYear(year, pageable);
-        return COURSE_MAPPER.toDtoPage(coursePage);
+        return COURSE_MAPPER.toTargetPage(coursePage);
     }
 
     @Override

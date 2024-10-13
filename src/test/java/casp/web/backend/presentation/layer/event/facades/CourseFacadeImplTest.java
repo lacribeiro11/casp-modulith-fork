@@ -117,7 +117,7 @@ class CourseFacadeImplTest {
         @BeforeEach
         void setUp() {
             course = TestFixture.createCourse();
-            courseDto = COURSE_MAPPER.toDto(course);
+            courseDto = COURSE_MAPPER.toTarget(course);
         }
 
         @Test

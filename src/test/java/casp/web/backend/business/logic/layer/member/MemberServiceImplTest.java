@@ -170,7 +170,7 @@ class MemberServiceImplTest {
 
             assertThat(memberDto)
                     .usingRecursiveAssertion()
-                    .isEqualTo(MEMBER_MAPPER.toDto(member));
+                    .isEqualTo(MEMBER_MAPPER.toTarget(member));
         }
 
         @Test

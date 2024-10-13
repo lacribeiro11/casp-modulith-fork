@@ -52,7 +52,7 @@ class DogServiceImplTest {
 
         var result = dogService.saveDog(dog);
 
-        assertEquals(DOG_MAPPER.toDto(dog), result);
+        assertEquals(DOG_MAPPER.toTarget(dog), result);
         verify(dogRepository).save(dog);
     }
 
@@ -161,7 +161,7 @@ class DogServiceImplTest {
 
             var result = dogService.getDogById(id);
 
-            assertEquals(DOG_MAPPER.toDto(dog), result);
+            assertEquals(DOG_MAPPER.toTarget(dog), result);
         }
 
         @Test

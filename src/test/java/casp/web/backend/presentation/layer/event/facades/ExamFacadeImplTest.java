@@ -100,7 +100,7 @@ class ExamFacadeImplTest {
         @BeforeEach
         void setUp() {
             exam = TestFixture.createExam();
-            examDto = EXAM_MAPPER.toDto(exam);
+            examDto = EXAM_MAPPER.toTarget(exam);
         }
 
         @Test

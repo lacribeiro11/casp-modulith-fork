@@ -101,7 +101,7 @@ class EventFacadeImplTest {
         @BeforeEach
         void setUp() {
             event = TestFixture.createEvent();
-            eventDto = EVENT_MAPPER.toDto(event);
+            eventDto = EVENT_MAPPER.toTarget(event);
         }
 
         @Test

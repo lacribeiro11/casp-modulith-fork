@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BaseEventMapper<E extends BaseEvent, D extends BaseEventDto<?>> extends BaseMapper<E, D> {
     @Override
-    D toDto(E document);
+    D toTarget(E document);
 
     @AfterMapping
     default void afterToDto(@MappingTarget D dto, E document) {

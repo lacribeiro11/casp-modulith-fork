@@ -36,7 +36,7 @@ class DogServiceImpl implements DogService {
 
     @Override
     public DogDto getDogById(final UUID id) {
-        var dogDto = DOG_MAPPER.toDto(getActiveDog(id));
+        var dogDto = DOG_MAPPER.toTarget(getActiveDog(id));
         var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByDogId(id);
         dogDto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerSet));
         return dogDto;

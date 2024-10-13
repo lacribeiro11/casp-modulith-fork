@@ -39,7 +39,7 @@ class EventFacadeImpl implements EventFacade {
     @Override
     public EventDto mapDocumentToDto(final BaseEvent baseEvent) {
         if (baseEvent instanceof Event event) {
-            var eventDto = EVENT_MAPPER.toDto(event);
+            var eventDto = EVENT_MAPPER.toTarget(event);
             setEventParticipants(eventDto);
             return eventDto;
         } else {
@@ -51,7 +51,7 @@ class EventFacadeImpl implements EventFacade {
 
     @Override
     public void save(final EventDto eventDto) {
-        var event = EVENT_MAPPER.toDocument(eventDto);
+        var event = EVENT_MAPPER.toSource(eventDto);
 
         calendarService.replaceCalendarEntries(event, CALENDAR_MAPPER.toDocumentList(eventDto.getCalendarEntries()));
         eventParticipantService.replaceParticipants(event, eventDto.getParticipantsIdToWrite());
@@ -73,7 +73,7 @@ class EventFacadeImpl implements EventFacade {
     @Override
     public Page<EventDto> getAllByYear(final int year, final Pageable pageable) {
         var eventPage = eventService.getAllByYear(year, pageable);
-        return EVENT_MAPPER.toDtoPage(eventPage);
+        return EVENT_MAPPER.toTargetPage(eventPage);
     }
 
     @Override

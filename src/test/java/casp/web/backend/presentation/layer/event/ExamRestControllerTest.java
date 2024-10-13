@@ -99,7 +99,7 @@ class ExamRestControllerTest {
         @Test
         void valid() throws Exception {
             var exam = TestFixture.createExam();
-            var examDto = EXAM_MAPPER.toDto(exam);
+            var examDto = EXAM_MAPPER.toTarget(exam);
             examDto.setMemberId(dogHasHandler.getMemberId());
             examDto.setMember(null);
             examDto.setCalendarEntries(CALENDAR_MAPPER.toDtoList(List.of(TestFixture.createCalendarEntry())));

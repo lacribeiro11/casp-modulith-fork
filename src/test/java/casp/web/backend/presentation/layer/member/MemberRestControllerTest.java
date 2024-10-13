@@ -82,15 +82,15 @@ class MemberRestControllerTest {
         dogRepository.deleteAll();
 
         var johnDocument = memberRepository.save(TestFixture.createMember());
-        john = MEMBER_MAPPER.toDto(johnDocument);
-        zephyr = MEMBER_MAPPER.toDto(memberRepository.save(TestFixture.createMember("Zephyr", "Starling")));
+        john = MEMBER_MAPPER.toTarget(johnDocument);
+        zephyr = MEMBER_MAPPER.toTarget(memberRepository.save(TestFixture.createMember("Zephyr", "Starling")));
         inactive = TestFixture.createMember("INACTIVE", "INACTIVE");
         inactive.setEntityStatus(EntityStatus.INACTIVE);
         memberRepository.save(inactive);
         var bonsaiDocument = TestFixture.createDog();
         dogRepository.save(bonsaiDocument);
         var hasHandler = TestFixture.createDogHasHandler(bonsaiDocument, johnDocument);
-        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandlerOldRepository.save(hasHandler));
+        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerOldRepository.save(hasHandler));
         var eventParticipant = TestFixture.createEventParticipant();
         eventParticipant.setMemberOrHandlerId(johnDocument.getId());
         var event = eventParticipant.getBaseEvent();
@@ -198,7 +198,7 @@ class MemberRestControllerTest {
                     .andReturn();
 
             var membersPage = MvcMapper.toObject(mvcResult, typeReference);
-            assertThat(membersPage.getContent()).containsExactly(MEMBER_MAPPER.toDocument(john));
+            assertThat(membersPage.getContent()).containsExactly(MEMBER_MAPPER.toSource(john));
         }
 
         @Test
@@ -331,7 +331,7 @@ class MemberRestControllerTest {
         @Test
         void memberIsAlwaysAsActiveSaved() throws Exception {
             john.setEntityStatus(EntityStatus.DELETED);
-            var mvcResult = performPost(MEMBER_MAPPER.toDocument(john))
+            var mvcResult = performPost(MEMBER_MAPPER.toSource(john))
                     .andExpect(status().isOk())
                     .andReturn();
 
@@ -420,7 +420,7 @@ class MemberRestControllerTest {
 
         @Test
         void saveCard() throws Exception {
-            var johnDto = MEMBER_MAPPER.toDto(johnDomain);
+            var johnDto = MEMBER_MAPPER.toTarget(johnDomain);
             var cardV2 = createCard(10);
             johnDto.setCards(Set.of(cardV2));
 

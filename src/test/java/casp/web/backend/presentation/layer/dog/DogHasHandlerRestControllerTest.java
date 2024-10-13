@@ -79,9 +79,9 @@ class DogHasHandlerRestControllerTest {
         var space = TestFixture.createSpace();
         space.setMemberOrHandlerId(dogHasHandlerDocument.getId());
 
-        member = MEMBER_MAPPER.toDto(memberRepository.save(memberDocument));
-        dog = DOG_MAPPER.toDto(dogRepository.save(dogDocument));
-        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandlerOldRepository.save(dogHasHandlerDocument));
+        member = MEMBER_MAPPER.toTarget(memberRepository.save(memberDocument));
+        dog = DOG_MAPPER.toTarget(dogRepository.save(dogDocument));
+        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerOldRepository.save(dogHasHandlerDocument));
         baseParticipantRepository.save(space);
     }
 

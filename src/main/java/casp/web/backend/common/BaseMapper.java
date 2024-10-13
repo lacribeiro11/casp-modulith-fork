@@ -3,23 +3,18 @@ package casp.web.backend.common;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Set;
 
 
-public interface BaseMapper<E extends BaseDocument, D> {
-    D toDto(E document);
+public interface BaseMapper<S, T> {
+    T toTarget(S source);
 
-    @Mapping(target = "entityStatus", ignore = true)
-    @Mapping(target = "id", conditionExpression = "java(null != dto.getId())")
-    @Mapping(target = "version", conditionExpression = "java(0 < dto.getVersion())")
-    E toDocument(D dto);
+    @Mapping(target = "id", conditionExpression = "java(null != source.getId())")
+    S toSource(T source);
 
-    List<D> toDtoList(List<E> documentList);
-
-    default Page<D> toDtoPage(Page<E> documentPage) {
-        return documentPage.map(this::toDto);
+    default Page<T> toTargetPage(Page<S> sourcePage) {
+        return sourcePage.map(this::toTarget);
     }
 
-    Set<D> toDtoSet(Set<E> documentSet);
+    Set<T> toTargetSet(Set<S> sourceSet);
 }

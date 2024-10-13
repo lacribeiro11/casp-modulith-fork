@@ -40,38 +40,38 @@ class DogHasHandlerRestController {
     @GetMapping("/{id}")
     ResponseEntity<DogHasHandlerDto> getDogHasHandlerById(final @PathVariable UUID id) {
         var dogHasHandler = dogHasHandlerService.getDogHasHandlerById(id);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandler));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandler));
     }
 
     @GetMapping("/by-dog-id/{dogId}")
     ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlerByDogId(final @PathVariable UUID dogId) {
         var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByDogId(dogId);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlers));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
     }
 
     @GetMapping("/by-member-id/{memberId}")
     ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlerByMemberId(final @PathVariable UUID memberId) {
         var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByMemberId(memberId);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlers));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
     }
 
 
     @GetMapping("/dogs-by-member-id/{memberId}")
     ResponseEntity<Set<DogDto>> getDogsByMemberId(final @PathVariable UUID memberId) {
         var dogSet = dogHasHandlerService.getDogsByMemberId(memberId);
-        return ResponseEntity.ok(DOG_MAPPER.toDtoSet(dogSet));
+        return ResponseEntity.ok(DOG_MAPPER.toTargetSet(dogSet));
     }
 
     @GetMapping("/members-by-dog-id/{dogId}")
     ResponseEntity<Set<MemberDto>> getMembersByDogId(final @PathVariable UUID dogId) {
         var members = dogHasHandlerService.getMembersByDogId(dogId);
-        return ResponseEntity.ok(MEMBER_MAPPER.toDtoSet(members));
+        return ResponseEntity.ok(MEMBER_MAPPER.toTargetSet(members));
     }
 
     @PostMapping
     ResponseEntity<DogHasHandlerDto> saveDogHasHandler(final @RequestBody @Valid DogHasHandlerDto dogHasHandlerDto) {
-        var dogHasHandler = dogHasHandlerService.saveDogHasHandler(DOG_HAS_HANDLER_MAPPER.toDocument(dogHasHandlerDto));
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDto(dogHasHandler));
+        var dogHasHandler = dogHasHandlerService.saveDogHasHandler(DOG_HAS_HANDLER_MAPPER.toSource(dogHasHandlerDto));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandler));
     }
 
     @DeleteMapping("/by-dog-id/{dogId}")
@@ -89,19 +89,19 @@ class DogHasHandlerRestController {
     @GetMapping("/search-by-name")
     ResponseEntity<Set<DogHasHandlerDto>> searchByName(final @RequestParam(required = false, defaultValue = "") String name) {
         var dogHasHandlers = dogHasHandlerService.searchByName(name);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlers));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
     }
 
     @GetMapping
     ResponseEntity<Set<DogHasHandlerDto>> getAllDogHasHandler() {
         var dogHasHandlers = dogHasHandlerService.getAllDogHasHandler();
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlers));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
     }
 
     @GetMapping("/by-ids")
     ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlersByHandlerIds(final @RequestParam @Size(min = 1) Set<UUID> ids) {
         var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByIds(ids);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toDtoSet(dogHasHandlers));
+        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
     }
 
     @GetMapping("/dog-has-handler-ids-by-member-id/{memberId}")

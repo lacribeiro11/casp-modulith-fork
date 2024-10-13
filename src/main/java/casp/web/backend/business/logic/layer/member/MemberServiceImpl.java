@@ -63,7 +63,7 @@ class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDto getMemberById(final UUID id) {
-        var memberDto = MEMBER_MAPPER.toDto(memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE));
+        var memberDto = MEMBER_MAPPER.toTarget(memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE));
         var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByMemberId(id);
         memberDto.setDogHasHandlerSet(MEMBER_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerSet));
         return memberDto;

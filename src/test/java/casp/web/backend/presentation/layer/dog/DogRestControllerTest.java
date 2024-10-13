@@ -130,7 +130,7 @@ class DogRestControllerTest {
         examParticipant.setEntityStatus(entityStatus);
         baseParticipantRepository.saveAll(Set.of(examParticipant, space));
 
-        var dto = DOG_MAPPER.toDto(dogRepository.save(dog));
+        var dto = DOG_MAPPER.toTarget(dogRepository.save(dog));
         var dogHasHandlerReferences = dogHasHandlerReferenceRepository.findAllByDogId(dog.getId());
         dto.setDogHasHandlerSet(DOG_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerReferences));
         return dto;
@@ -163,7 +163,7 @@ class DogRestControllerTest {
 
         assertThat(MvcMapper.toObject(mvcResult, Dog.class)).
                 usingRecursiveAssertion()
-                .isEqualTo(DOG_MAPPER.toDocument(charlie));
+                .isEqualTo(DOG_MAPPER.toSource(charlie));
     }
 
     @Nested
@@ -207,7 +207,7 @@ class DogRestControllerTest {
         @Test
         void dogIsAlwaysAsActiveSaved() throws Exception {
             charlie.setEntityStatus(EntityStatus.DELETED);
-            performPost(DOG_MAPPER.toDocument(charlie))
+            performPost(DOG_MAPPER.toSource(charlie))
                     .andExpect(status().isOk());
 
             var mvcResult = getDogById(charlie.getId())
@@ -260,7 +260,7 @@ class DogRestControllerTest {
             assertThat(dogPage.getContent())
                     .singleElement()
                     .usingRecursiveAssertion()
-                    .isEqualTo(DOG_MAPPER.toDocument(charlie));
+                    .isEqualTo(DOG_MAPPER.toSource(charlie));
         }
 
         @Test
@@ -274,7 +274,7 @@ class DogRestControllerTest {
                     .allSatisfy(actual -> assertThat(Set.of(charlie, bonsai))
                             .anySatisfy(expected -> assertThat(actual)
                                     .usingRecursiveAssertion()
-                                    .isEqualTo(DOG_MAPPER.toDocument(expected))));
+                                    .isEqualTo(DOG_MAPPER.toSource(expected))));
         }
     }
 

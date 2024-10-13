@@ -13,5 +13,5 @@ public interface DogHasHandlerMapper extends BaseMapper<DogHasHandler, DogHasHan
     @Mapping(target = "member", ignore = true)
     @Mapping(target = "dog", ignore = true)
     @Override
-    DogHasHandler toDocument(DogHasHandlerDto dto);
+    DogHasHandler toSource(DogHasHandlerDto dto);
 }
