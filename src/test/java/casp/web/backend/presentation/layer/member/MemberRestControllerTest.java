@@ -13,7 +13,6 @@ import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
 import casp.web.backend.presentation.layer.RestResponsePage;
-import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -33,9 +32,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
+import static casp.web.backend.presentation.layer.member.MemberReadMapper.READ_MAPPER;
+import static casp.web.backend.presentation.layer.member.MemberWriteMapper.WRITE_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -48,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class MemberRestControllerTest {
     private static final String MEMBER_URL_PREFIX = "/member";
-    private static final TypeReference<RestResponsePage<MemberDto>> PAGE_TYPE_REFERENCE = new TypeReference<>() {
+    private static final TypeReference<RestResponsePage<MemberRead>> PAGE_TYPE_REFERENCE = new TypeReference<>() {
     };
     private static final String MEMBER_NOT_FOUND_MESSAGE = "Member with id %s not found or it isn't %s.";
 
@@ -71,7 +72,7 @@ class MemberRestControllerTest {
     private MemberDto john;
     private MemberDto zephyr;
     private Member inactive;
-    private DogHasHandlerDto dogHasHandler;
+    private Set<MemberRead> expectedActiveMembers;
 
     @BeforeEach
     void setUp() {
@@ -89,8 +90,6 @@ class MemberRestControllerTest {
         memberRepository.save(inactive);
         var bonsaiDocument = TestFixture.createDog();
         dogRepository.save(bonsaiDocument);
-        var hasHandler = TestFixture.createDogHasHandler(bonsaiDocument, johnDocument);
-        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerOldRepository.save(hasHandler));
         var eventParticipant = TestFixture.createEventParticipant();
         eventParticipant.setMemberOrHandlerId(johnDocument.getId());
         var event = eventParticipant.getBaseEvent();
@@ -103,19 +102,7 @@ class MemberRestControllerTest {
         course.setMemberId(johnDocument.getId());
         baseEventRepository.saveAll(Set.of(event, course));
         baseParticipantRepository.saveAll(Set.of(eventParticipant, coTrainer));
-    }
-
-    @Test
-    void getMembers() throws Exception {
-        var mvcResult = mockMvc.perform(get(MEMBER_URL_PREFIX)
-                        .param("entityStatus", EntityStatus.ACTIVE.name())
-                        .param("page", "0")
-                        .param("size", "10"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var memberDtoPage = MvcMapper.toObject(mvcResult, PAGE_TYPE_REFERENCE);
-        assertThat(memberDtoPage.getContent()).containsExactlyInAnyOrder(john, zephyr);
+        expectedActiveMembers = READ_MAPPER.toTargetSet(Set.of(john, zephyr));
     }
 
     @Test
@@ -127,7 +114,7 @@ class MemberRestControllerTest {
                 .andReturn();
 
         var memberDtoPage = MvcMapper.toObject(mvcResult, PAGE_TYPE_REFERENCE);
-        assertThat(memberDtoPage.getContent()).containsExactlyInAnyOrder(john, zephyr);
+        assertThat(memberDtoPage).containsExactlyInAnyOrderElementsOf(expectedActiveMembers);
     }
 
     @Test
@@ -161,6 +148,13 @@ class MemberRestControllerTest {
         verify(memberService).migrateDataToV2();
     }
 
+    private ResultActions performPost(final MemberWrite member) throws Exception {
+        return mockMvc.perform(post(MEMBER_URL_PREFIX)
+                .content(MvcMapper.toString(member))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
     private ResultActions getMemberById(final UUID id) throws Exception {
         return mockMvc.perform(get(MEMBER_URL_PREFIX + "/{id}", id));
     }
@@ -169,20 +163,37 @@ class MemberRestControllerTest {
         return mockMvc.perform(post(MEMBER_URL_PREFIX + "/{id}/deactivate", memberId));
     }
 
-    private void assertDogHasHandlerDtoSet(final MemberDto memberDto) {
-        assertThat(memberDto.getDogHasHandlerSet())
-                .singleElement()
-                .satisfies(dh -> {
-                    assertEquals(dh.getId(), dogHasHandler.getId());
-                    assertEquals(dh.getDogId(), dogHasHandler.getDog().getId());
-                });
-    }
+    @Nested
+    class GetMembers {
+        @Test
+        void entityStatusIsValid() throws Exception {
+            var mvcResult = getMemberPage(EntityStatus.ACTIVE)
+                    .andExpect(status().isOk())
+                    .andReturn();
 
-    private ResultActions performPost(final Member member) throws Exception {
-        return mockMvc.perform(post(MEMBER_URL_PREFIX)
-                .content(MvcMapper.toString(member))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+            var memberDtoPage = MvcMapper.toObject(mvcResult, PAGE_TYPE_REFERENCE);
+            assertThat(memberDtoPage).containsExactlyInAnyOrderElementsOf(expectedActiveMembers);
+        }
+
+        @Test
+        void entityStatusIsInvalid() throws Exception {
+            var exception = getMemberPage(EntityStatus.DELETED)
+                    .andExpect(status().isBadRequest())
+                    .andReturn()
+                    .getResolvedException();
+
+            assertThat(exception)
+                    .isNotNull()
+                    .satisfies(e -> assertThat(e.getMessage()).contains("Failed to convert value", "DELETE"));
+
+        }
+
+        private ResultActions getMemberPage(final EntityStatus entityStatus) throws Exception {
+            return mockMvc.perform(get(MEMBER_URL_PREFIX)
+                    .param("entityStatusParam", entityStatus.name())
+                    .param("page", "0")
+                    .param("size", "10"));
+        }
     }
 
     @Nested
@@ -191,14 +202,12 @@ class MemberRestControllerTest {
 
         @Test
         void validRequest() throws Exception {
-            TypeReference<RestResponsePage<Member>> typeReference = new TypeReference<>() {
-            };
             var mvcResult = performGet(john.getFirstName(), john.getLastName())
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var membersPage = MvcMapper.toObject(mvcResult, typeReference);
-            assertThat(membersPage.getContent()).containsExactly(MEMBER_MAPPER.toSource(john));
+            var membersPage = MvcMapper.toObject(mvcResult, PAGE_TYPE_REFERENCE);
+            assertThat(membersPage).containsExactly(READ_MAPPER.toTarget(john));
         }
 
         @Test
@@ -243,11 +252,9 @@ class MemberRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
-                assertSame(EntityStatus.ACTIVE, dto.getEntityStatus());
-                assertEquals(john, dto);
-                assertDogHasHandlerDtoSet(dto);
-            });
+            assertThat(MvcMapper.toObject(mvcResult, MemberRead.class))
+                    .usingRecursiveAssertion()
+                    .isEqualTo(READ_MAPPER.toTarget(john));
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.ACTIVE, dh.getEntityStatus()));
             assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.ACTIVE, p.getEntityStatus()));
             assertThat(baseEventRepository.findAll()).allSatisfy(e -> assertSame(EntityStatus.ACTIVE, e.getEntityStatus()));
@@ -276,7 +283,7 @@ class MemberRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
+            assertThat(MvcMapper.toObject(mvcResult, MemberRead.class)).satisfies(dto -> {
                 assertSame(EntityStatus.INACTIVE, dto.getEntityStatus());
             });
             assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.INACTIVE, dh.getEntityStatus()));
@@ -326,31 +333,28 @@ class MemberRestControllerTest {
     @Nested
     class SaveMember {
         @Captor
-        private ArgumentCaptor<Member> memberCaptor;
+        private ArgumentCaptor<MemberDto> memberCaptor;
 
         @Test
         void memberIsAlwaysAsActiveSaved() throws Exception {
             john.setEntityStatus(EntityStatus.DELETED);
-            var mvcResult = performPost(MEMBER_MAPPER.toSource(john))
+            var mvcResult = performPost(WRITE_MAPPER.toTarget(john))
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(MvcMapper.toObject(mvcResult, MemberDto.class)).satisfies(dto -> {
-                assertSame(EntityStatus.ACTIVE, dto.getEntityStatus());
-                assertEquals(john, dto);
-                assertDogHasHandlerDtoSet(dto);
-            });
-
+            assertThat(MvcMapper.toObject(mvcResult, MemberRead.class))
+                    .usingRecursiveAssertion()
+                    .isEqualTo(READ_MAPPER.toTarget(john));
         }
 
         @Test
         void newMemberWithExistingEMail() throws Exception {
-            var member = TestFixture.createMember();
+            var member = MEMBER_MAPPER.toTarget(TestFixture.createMember());
             member.setEmail(john.getEmail());
 
-            performPost(member)
+            performPost(WRITE_MAPPER.toTarget(member))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("Member with email %s already exists.".formatted(john.getEmail())));
+                    .andExpect(jsonPath("$.message").value("Member with email %s already exists." .formatted(john.getEmail())));
 
             verify(memberService).saveMember(memberCaptor.capture());
             assertEquals(member.getId(), memberCaptor.getValue().getId());
@@ -358,7 +362,7 @@ class MemberRestControllerTest {
 
         @Test
         void newMemberIsInvalid() throws Exception {
-            var exception = performPost(new MemberDto())
+            var exception = performPost(new MemberWrite())
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResolvedException();
@@ -367,6 +371,28 @@ class MemberRestControllerTest {
                     .isNotNull()
                     .satisfies(e -> assertThat(e.getMessage())
                             .contains("NotBlank.lastName", "NotBlank.firstName", "NotNull.email"));
+        }
+
+        @Test
+        void saveNewMember() throws Exception {
+            var memberDto = MEMBER_MAPPER.toTarget(TestFixture.createMember());
+            var memberWrite = WRITE_MAPPER.toTarget(memberDto);
+            memberWrite.setId(null);
+            memberWrite.setVersion(null);
+
+            var mvcResult = performPost(memberWrite)
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var actual = MvcMapper.toObject(mvcResult, MemberRead.class);
+            assertNotNull(actual.getId());
+            assertEquals(1, actual.getVersion());
+
+            var expected = READ_MAPPER.toTarget(memberDto);
+            expected.setId(actual.getId());
+            expected.setVersion(actual.getVersion());
+            assertThat(actual).usingRecursiveAssertion().isEqualTo(expected);
+
         }
     }
 
@@ -378,9 +404,10 @@ class MemberRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var memberDto = MvcMapper.toObject(mvcResult, MemberDto.class);
-            assertThat(memberDto).isEqualTo(john);
-            assertDogHasHandlerDtoSet(memberDto);
+            var memberDto = MvcMapper.toObject(mvcResult, MemberRead.class);
+            assertThat(memberDto)
+                    .usingRecursiveAssertion()
+                    .isEqualTo(READ_MAPPER.toTarget(john));
         }
 
         @Test
@@ -424,12 +451,14 @@ class MemberRestControllerTest {
             var cardV2 = createCard(10);
             johnDto.setCards(Set.of(cardV2));
 
-            var mvcResult = performPost(johnDto)
+            var mvcResult = performPost(WRITE_MAPPER.toTarget(johnDto))
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var actualCards = MvcMapper.toObject(mvcResult, MemberDto.class).getCards();
-            assertThat(actualCards).singleElement().satisfies(card -> assertCard(cardV2, card));
+            var actualCards = MvcMapper.toObject(mvcResult, MemberRead.class).getCards();
+            assertThat(actualCards)
+                    .singleElement()
+                    .satisfies(card -> assertCard(cardV2, card));
         }
 
         @Test
@@ -438,7 +467,7 @@ class MemberRestControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            var actualCards = MvcMapper.toObject(mvcResult, MemberDto.class).getCards();
+            var actualCards = MvcMapper.toObject(mvcResult, MemberRead.class).getCards();
             assertThat(actualCards)
                     .hasSize(2)
                     .allSatisfy(actualCard -> assertThat(johnDomain.getCards())

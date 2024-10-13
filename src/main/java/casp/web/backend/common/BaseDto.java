@@ -3,8 +3,8 @@ package casp.web.backend.common;
 import java.util.Objects;
 import java.util.UUID;
 
-abstract class BaseDto {
-    protected UUID id;
+public abstract class BaseDto {
+    protected UUID id = UUID.randomUUID();
     protected long version;
 
     public UUID getId() {

@@ -51,36 +51,42 @@ class MemberServiceImpl implements MemberService {
         this.dogHasHandlerReferenceRepository = dogHasHandlerReferenceRepository;
     }
 
-    @Override
-    public Page<Member> getMembersByFirstNameAndLastName(final String firstName, final String lastName, final Pageable pageable) {
-        return memberRepository.findAllByFirstNameAndLastName(firstName, lastName, pageable);
+    private static void checkIfEMailAlreadyExistAndSetCreatedFields(final Member actualMember, final Member newMember) {
+        if (!newMember.equals(actualMember)) {
+            var msg = "Member with email %s already exists.".formatted(newMember.getEmail());
+            LOG.error(msg);
+            throw new IllegalStateException(msg);
+        } else {
+            newMember.setCreatedBy(actualMember.getCreatedBy());
+            newMember.setCreated(actualMember.getCreated());
+        }
     }
 
     @Override
-    public Page<Member> getMembersByEntityStatus(final EntityStatus entityStatus, final Pageable pageable) {
-        return memberRepository.findAllByEntityStatus(entityStatus, pageable);
+    public Page<MemberDto> getMembersByFirstNameAndLastName(final String firstName, final String lastName, final Pageable pageable) {
+        var memberPage = memberRepository.findAllByFirstNameAndLastName(firstName, lastName, pageable);
+        return MEMBER_MAPPER.toTargetPage(memberPage);
+    }
+
+    @Override
+    public Page<MemberDto> getMembersByEntityStatus(final EntityStatus entityStatus, final Pageable pageable) {
+        var memberPage = memberRepository.findAllByEntityStatus(entityStatus, pageable);
+        return MEMBER_MAPPER.toTargetPage(memberPage);
     }
 
     @Override
     public MemberDto getMemberById(final UUID id) {
-        var memberDto = MEMBER_MAPPER.toTarget(memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE));
-        var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByMemberId(id);
-        memberDto.setDogHasHandlerSet(MEMBER_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerSet));
-        return memberDto;
+        return mapToMemberDto(memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE));
     }
 
     @Override
-    public MemberDto saveMember(final Member member) {
-        memberRepository.findMemberByEmail(member.getEmail())
-                .ifPresent(m -> {
-                    if (!member.equals(m)) {
-                        var msg = "Member with email %s already exists.".formatted(m.getEmail());
-                        LOG.error(msg);
-                        throw new IllegalStateException(msg);
-                    }
-                });
-        memberRepository.save(member);
-        return getMemberById(member.getId());
+    public MemberDto saveMember(final MemberDto memberDto) {
+        var member = MEMBER_MAPPER.toSource(memberDto);
+
+        memberRepository.findMemberByEmail(memberDto.getEmail())
+                .ifPresent(m -> checkIfEMailAlreadyExistAndSetCreatedFields(m, member));
+
+        return mapToMemberDto(memberRepository.save(member));
     }
 
     @Override
@@ -95,13 +101,13 @@ class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member deactivateMember(final UUID id) {
+    public MemberDto deactivateMember(final UUID id) {
         var member = memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE);
         dogHasHandlerService.deactivateDogHasHandlersByMemberId(id);
         baseParticipantObserver.deactivateParticipantsByMemberOrHandlerId(id);
         baseEventObserver.deactivateBaseEventsByMemberId(id);
         member.setEntityStatus(EntityStatus.INACTIVE);
-        return memberRepository.save(member);
+        return MEMBER_MAPPER.toTarget(memberRepository.save(member));
     }
 
     @Override
@@ -111,13 +117,13 @@ class MemberServiceImpl implements MemberService {
         baseParticipantObserver.activateParticipantsByMemberOrHandlerId(id);
         baseEventObserver.activateBaseEventsByMemberId(id);
         member.setEntityStatus(EntityStatus.ACTIVE);
-        memberRepository.save(member);
-        return getMemberById(id);
+        return mapToMemberDto(memberRepository.save(member));
     }
 
     @Override
-    public Page<Member> getMembersByName(final String name, final Pageable pageable) {
-        return memberRepository.findAllByValue(name, pageable);
+    public Page<MemberDto> getMembersByName(final String name, final Pageable pageable) {
+        var memberPage = memberRepository.findAllByValue(name, pageable);
+        return MEMBER_MAPPER.toTargetPage(memberPage);
     }
 
     @Override
@@ -144,5 +150,12 @@ class MemberServiceImpl implements MemberService {
             mv1.setCards(MEMBER_V2_MAPPER.toCardV2Set(cardV1Set));
             memberRepository.save(mv1);
         });
+    }
+
+    private MemberDto mapToMemberDto(final Member member) {
+        var memberDto = MEMBER_MAPPER.toTarget(member);
+        var dogHasHandlerSet = dogHasHandlerReferenceRepository.findAllByMemberId(member.getId());
+        memberDto.setDogHasHandlerSet(MEMBER_MAPPER.toDogHasHandlerDtoSet(dogHasHandlerSet));
+        return memberDto;
     }
 }

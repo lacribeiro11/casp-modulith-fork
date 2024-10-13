@@ -1,6 +1,6 @@
 package casp.web.backend.business.logic.layer.member;
 
-import casp.web.backend.common.BaseMapper;
+import casp.web.backend.common.BaseDtoMapper;
 import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.data.access.layer.member.Member;
 import org.mapstruct.Mapper;
@@ -11,12 +11,16 @@ import java.util.Set;
 
 // FIXME Remove public
 @Mapper
-public interface MemberMapper extends BaseMapper<Member, MemberDto> {
+public interface MemberMapper extends BaseDtoMapper<Member, MemberDto> {
     MemberMapper MEMBER_MAPPER = Mappers.getMapper(MemberMapper.class);
+
+    @Mapping(target = "entityStatus", ignore = true)
+    @Override
+    Member toSource(MemberDto source);
 
     @Mapping(target = "dogId", source = "dogHasHandler.dog.id")
     @Mapping(target = "dogName", source = "dogHasHandler.dog.name")
-    DogHasHandlerDto toDogHasHandlerDto(DogHasHandlerReference dogHasHandler);
+    DogHasHandler toDogHasHandlerDto(DogHasHandlerReference dogHasHandler);
 
-    Set<DogHasHandlerDto> toDogHasHandlerDtoSet(Set<DogHasHandlerReference> dogHasHandlerSet);
+    Set<DogHasHandler> toDogHasHandlerDtoSet(Set<DogHasHandlerReference> dogHasHandlerSet);
 }

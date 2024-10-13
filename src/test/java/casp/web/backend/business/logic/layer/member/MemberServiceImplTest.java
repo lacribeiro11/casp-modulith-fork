@@ -25,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -82,7 +84,9 @@ class MemberServiceImplTest {
         var pageable = Pageable.unpaged();
         when(memberRepository.findAllByFirstNameAndLastName(member.getFirstName(), member.getLastName(), pageable)).thenReturn(page);
 
-        assertThat(memberService.getMembersByFirstNameAndLastName(member.getFirstName(), member.getLastName(), pageable)).containsExactly(member);
+        var memberDtoPage = memberService.getMembersByFirstNameAndLastName(member.getFirstName(), member.getLastName(), pageable);
+
+        assertThat(memberDtoPage).containsExactly(MEMBER_MAPPER.toTarget(member));
     }
 
     @Test
@@ -90,7 +94,9 @@ class MemberServiceImplTest {
         var page = new PageImpl<>(List.of(member));
         when(memberRepository.findAllByEntityStatus(EntityStatus.ACTIVE, Pageable.unpaged())).thenReturn(page);
 
-        assertThat(memberService.getMembersByEntityStatus(EntityStatus.ACTIVE, Pageable.unpaged())).containsExactly(member);
+        var memberDtoPage = memberService.getMembersByEntityStatus(EntityStatus.ACTIVE, Pageable.unpaged());
+
+        assertThat(memberDtoPage).containsExactly(MEMBER_MAPPER.toTarget(member));
     }
 
     @Test
@@ -98,7 +104,9 @@ class MemberServiceImplTest {
         var page = new PageImpl<>(List.of(member));
         when(memberRepository.findAllByValue(member.getLastName(), Pageable.unpaged())).thenReturn(page);
 
-        assertThat(memberService.getMembersByName(member.getLastName(), Pageable.unpaged())).containsExactly(member);
+        var memberDtoPage = memberService.getMembersByName(member.getLastName(), Pageable.unpaged());
+
+        assertThat(memberDtoPage).containsExactly(MEMBER_MAPPER.toTarget(member));
     }
 
     @Test
@@ -123,12 +131,10 @@ class MemberServiceImplTest {
     @Test
     void activateMember() {
         when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.INACTIVE)).thenReturn(member);
-        when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
-
+        when(memberRepository.save(member)).thenAnswer(i -> i.getArgument(0));
         memberService.activateMember(member.getId());
 
         verify(member).setEntityStatus(EntityStatus.ACTIVE);
-        verify(memberRepository).save(member);
         verify(dogHasHandlerService).activateDogHasHandlersByMemberId(member.getId());
         verify(baseParticipantObserver).activateParticipantsByMemberOrHandlerId(member.getId());
         verify(baseEventObserver).activateBaseEventsByMemberId(member.getId());
@@ -236,18 +242,37 @@ class MemberServiceImplTest {
     class SaveMember {
         @Test
         void emailDoesNotExists() {
-            when(memberRepository.findByIdAndEntityStatusCustom(member.getId(), EntityStatus.ACTIVE)).thenReturn(member);
+            when(memberRepository.save(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
 
-            memberService.saveMember(member);
+            memberService.saveMember(MEMBER_MAPPER.toTarget(member));
 
-            verify(memberRepository).save(member);
+            verify(memberRepository).save(memberCaptor.capture());
+            assertThat(memberCaptor.getValue())
+                    .usingRecursiveComparison()
+                    .isEqualTo(member);
         }
 
         @Test
         void emailExists() {
             when(memberRepository.findMemberByEmail(member.getEmail())).thenReturn(Optional.of(new Member()));
+            var memberDto = MEMBER_MAPPER.toTarget(member);
 
-            assertThrows(IllegalStateException.class, () -> memberService.saveMember(member));
+            assertThrows(IllegalStateException.class, () -> memberService.saveMember(memberDto));
+        }
+
+        @Test
+        void memberExist() {
+            member.setCreated(LocalDateTime.MIN);
+            member.setCreatedBy("Bonsai");
+            when(memberRepository.findMemberByEmail(member.getEmail())).thenReturn(Optional.of(member));
+            when(memberRepository.save(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
+
+            memberService.saveMember(MEMBER_MAPPER.toTarget(member));
+
+            verify(memberRepository).save(memberCaptor.capture());
+            assertThat(memberCaptor.getValue())
+                    .usingRecursiveComparison()
+                    .isEqualTo(member);
         }
     }
 

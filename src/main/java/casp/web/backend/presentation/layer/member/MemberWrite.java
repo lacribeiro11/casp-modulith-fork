@@ -1,45 +1,28 @@
-package casp.web.backend.data.access.layer.member;
+package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.business.logic.layer.member.MemberRequiredFields;
-import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.BaseView;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
-import com.querydsl.core.annotations.QueryEntity;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import casp.web.backend.data.access.layer.member.Card;
+import casp.web.backend.data.access.layer.member.MembershipFee;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@QueryEntity
-@Document
-public class Member extends BaseDocument implements MemberRequiredFields {
+class MemberWrite extends BaseView implements MemberRequiredFields {
     private String firstName;
-
     private String lastName;
-
     private LocalDate birthDate;
-
     private Gender gender;
-
     private String telephoneNumber;
-
-    @Indexed(unique = true)
     private String email;
-
     private String address;
-
     private String postcode;
-
     private String city;
-
-    private Set<Role> roles = new HashSet<>(List.of(Role.USER));
-
-    private Set<MembershipFee> membershipFees = new HashSet<>();
-
-    private Set<Card> cards = new HashSet<>();
+    private Set<Role> roles;
+    private Set<MembershipFee> membershipFees;
+    private Set<Card> cards;
 
     @Override
     public String getFirstName() {
@@ -47,7 +30,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -57,7 +40,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
@@ -67,7 +50,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(final LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -77,7 +60,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setGender(Gender gender) {
+    public void setGender(final Gender gender) {
         this.gender = gender;
     }
 
@@ -87,7 +70,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setTelephoneNumber(String telephoneNumber) {
+    public void setTelephoneNumber(final String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
     }
 
@@ -97,7 +80,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -107,7 +90,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setAddress(String address) {
+    public void setAddress(final String address) {
         this.address = address;
     }
 
@@ -117,7 +100,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setPostcode(String postcode) {
+    public void setPostcode(final String postcode) {
         this.postcode = postcode;
     }
 
@@ -127,7 +110,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setCity(String city) {
+    public void setCity(final String city) {
         this.city = city;
     }
 
@@ -137,7 +120,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(final Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -147,7 +130,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setMembershipFees(Set<MembershipFee> membershipFees) {
+    public void setMembershipFees(final Set<MembershipFee> membershipFees) {
         this.membershipFees = membershipFees;
     }
 
@@ -157,7 +140,7 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     }
 
     @Override
-    public void setCards(Set<Card> cards) {
+    public void setCards(final Set<Card> cards) {
         this.cards = cards;
     }
 

@@ -1,10 +1,7 @@
 package casp.web.backend.presentation.layer.member;
 
-import casp.web.backend.business.logic.layer.member.MemberDto;
 import casp.web.backend.business.logic.layer.member.MemberService;
-import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
-import casp.web.backend.data.access.layer.member.Member;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -27,6 +24,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static casp.web.backend.presentation.layer.member.MemberReadMapper.READ_MAPPER;
+import static casp.web.backend.presentation.layer.member.MemberWriteMapper.WRITE_MAPPER;
+
 @RestController
 @RequestMapping("member")
 @Validated
@@ -40,26 +40,31 @@ class MemberRestController {
     }
 
     @GetMapping
-    ResponseEntity<Page<Member>> getMembers(final @RequestParam EntityStatus entityStatus,
-                                            final @ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMembersByEntityStatus(entityStatus, pageable));
+    ResponseEntity<Page<MemberRead>> getMembers(final @RequestParam EntityStatusParam entityStatusParam,
+                                                final @ParameterObject Pageable pageable) {
+        var memberDtoPage = memberService.getMembersByEntityStatus(entityStatusParam.getEntityStatus(), pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(memberDtoPage));
     }
 
     @GetMapping("{id}")
-    ResponseEntity<MemberDto> getMemberById(final @PathVariable UUID id) {
-        return ResponseEntity.ok(memberService.getMemberById(id));
+    ResponseEntity<MemberRead> getMemberById(final @PathVariable UUID id) {
+        var memberDto = memberService.getMemberById(id);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(memberDto));
     }
 
     @GetMapping("search-members-by-firstname-and-lastname")
-    ResponseEntity<Page<Member>> getMemberByFirstNameAndLastName(final @RequestParam @NotBlank String firstName,
-                                                                 final @RequestParam @NotBlank String lastName,
-                                                                 final @ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMembersByFirstNameAndLastName(firstName, lastName, pageable));
+    ResponseEntity<Page<MemberRead>> getMemberByFirstNameAndLastName(final @RequestParam @NotBlank String firstName,
+                                                                     final @RequestParam @NotBlank String lastName,
+                                                                     final @ParameterObject Pageable pageable) {
+        var memberDtoPage = memberService.getMembersByFirstNameAndLastName(firstName, lastName, pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(memberDtoPage));
     }
 
     @PostMapping
-    ResponseEntity<MemberDto> saveMember(final @RequestBody @Valid Member member) {
-        return ResponseEntity.ok(memberService.saveMember(member));
+    ResponseEntity<MemberRead> saveMember(final @RequestBody @Valid MemberWrite memberWrite) {
+        var memberDto = WRITE_MAPPER.toSource(memberWrite);
+        memberDto = memberService.saveMember(memberDto);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(memberDto));
     }
 
     @DeleteMapping("{id}")
@@ -69,19 +74,22 @@ class MemberRestController {
     }
 
     @PostMapping("{id}/deactivate")
-    ResponseEntity<Member> deactivateMember(final @PathVariable UUID id) {
-        return ResponseEntity.ok(memberService.deactivateMember(id));
+    ResponseEntity<MemberRead> deactivateMember(final @PathVariable UUID id) {
+        var memberDto = memberService.deactivateMember(id);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(memberDto));
     }
 
     @PostMapping("{id}/activate")
-    ResponseEntity<MemberDto> activateMember(final @PathVariable UUID id) {
-        return ResponseEntity.ok(memberService.activateMember(id));
+    ResponseEntity<MemberRead> activateMember(final @PathVariable UUID id) {
+        var memberDto = memberService.activateMember(id);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(memberDto));
     }
 
     @GetMapping("search-members-by-name")
-    ResponseEntity<Page<Member>> searchMembersByFirstNameOrLastName(final @RequestParam(required = false, defaultValue = "") String name,
-                                                                    final @ParameterObject Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMembersByName(name, pageable));
+    ResponseEntity<Page<MemberRead>> searchMembersByFirstNameOrLastName(final @RequestParam(required = false, defaultValue = "") String name,
+                                                                        final @ParameterObject Pageable pageable) {
+        var memberDtoPage = memberService.getMembersByName(name, pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(memberDtoPage));
     }
 
     @GetMapping("roles")

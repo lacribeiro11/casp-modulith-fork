@@ -3,7 +3,7 @@ package casp.web.backend.common;
 import java.util.Objects;
 import java.util.UUID;
 
-abstract class BaseView {
+public abstract class BaseView {
     protected UUID id;
     protected Long version;
 
@@ -26,8 +26,8 @@ abstract class BaseView {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof BaseDto baseDto)) return false;
-        return Objects.equals(id, baseDto.id);
+        if (!(o instanceof BaseView baseView)) return false;
+        return Objects.equals(id, baseView.id);
     }
 
     @Override
