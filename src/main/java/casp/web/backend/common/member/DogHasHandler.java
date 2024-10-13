@@ -1,4 +1,4 @@
-package casp.web.backend.business.logic.layer.member;
+package casp.web.backend.common.member;
 
 import jakarta.validation.constraints.NotNull;
 

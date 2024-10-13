@@ -1,9 +1,7 @@
-package casp.web.backend.business.logic.layer.member;
+package casp.web.backend.common.member;
 
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
-import casp.web.backend.data.access.layer.member.Card;
-import casp.web.backend.data.access.layer.member.MembershipFee;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

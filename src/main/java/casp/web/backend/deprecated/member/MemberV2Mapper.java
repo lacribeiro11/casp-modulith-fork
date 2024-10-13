@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.member;
 
-import casp.web.backend.data.access.layer.member.Card;
+import casp.web.backend.common.member.Card;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

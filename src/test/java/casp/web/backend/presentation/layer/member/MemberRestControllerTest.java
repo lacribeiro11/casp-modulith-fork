@@ -5,6 +5,7 @@ import casp.web.backend.business.logic.layer.member.MemberDto;
 import casp.web.backend.business.logic.layer.member.MemberService;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Role;
+import casp.web.backend.common.member.Card;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;
@@ -426,14 +427,14 @@ class MemberRestControllerTest {
 
         private Member johnDomain;
 
-        private static casp.web.backend.data.access.layer.member.Card createCard(final int balance) {
-            var cardV2 = new casp.web.backend.data.access.layer.member.Card();
+        private static Card createCard(final int balance) {
+            var cardV2 = new Card();
             cardV2.setCode(UUID.randomUUID().toString());
             cardV2.setBalance(balance);
             return cardV2;
         }
 
-        private static void assertCard(final casp.web.backend.data.access.layer.member.Card expectedCard, final casp.web.backend.data.access.layer.member.Card actualCard) {
+        private static void assertCard(final Card expectedCard, final Card actualCard) {
             assertEquals(expectedCard.getCode(), actualCard.getCode());
             assertEquals(expectedCard.getBalance(), actualCard.getBalance());
         }

@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.member;
+package casp.web.backend.common.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;

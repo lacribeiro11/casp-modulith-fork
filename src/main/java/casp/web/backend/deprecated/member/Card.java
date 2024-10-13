@@ -13,7 +13,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 /**
- * @deprecated use {@link casp.web.backend.data.access.layer.member.Card} instead. It will be removed in #3.
+ * @deprecated use {@link casp.web.backend.common.member.Card} instead. It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
 @QueryEntity

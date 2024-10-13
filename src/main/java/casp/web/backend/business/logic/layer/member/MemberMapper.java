@@ -2,6 +2,7 @@ package casp.web.backend.business.logic.layer.member;
 
 import casp.web.backend.common.BaseDtoMapper;
 import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.member.DogHasHandler;
 import casp.web.backend.data.access.layer.member.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

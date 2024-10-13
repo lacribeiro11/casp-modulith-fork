@@ -1,9 +1,11 @@
 package casp.web.backend.data.access.layer.member;
 
-import casp.web.backend.business.logic.layer.member.MemberRequiredFields;
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
+import casp.web.backend.common.member.Card;
+import casp.web.backend.common.member.MemberRequiredFields;
+import casp.web.backend.common.member.MembershipFee;
 import com.querydsl.core.annotations.QueryEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

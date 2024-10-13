@@ -1,13 +1,13 @@
 package casp.web.backend.presentation.layer.member;
 
-import casp.web.backend.business.logic.layer.member.DogHasHandler;
-import casp.web.backend.business.logic.layer.member.MemberDtoRequiredFields;
 import casp.web.backend.common.BaseView;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.Gender;
 import casp.web.backend.common.Role;
-import casp.web.backend.data.access.layer.member.Card;
-import casp.web.backend.data.access.layer.member.MembershipFee;
+import casp.web.backend.common.member.Card;
+import casp.web.backend.common.member.DogHasHandler;
+import casp.web.backend.common.member.MemberDtoRequiredFields;
+import casp.web.backend.common.member.MembershipFee;
 
 import java.time.LocalDate;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package casp.web.backend.business.logic.layer.member;
+package casp.web.backend.common.member;
 
 import casp.web.backend.common.EntityStatus;
 import jakarta.validation.Valid;

@@ -1,8 +1,8 @@
 package casp.web.backend;
 
+import casp.web.backend.common.member.MembershipFee;
 import casp.web.backend.data.access.layer.dog.Dog;
 import casp.web.backend.data.access.layer.member.Member;
-import casp.web.backend.data.access.layer.member.MembershipFee;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.event.calendar.Calendar;
 import casp.web.backend.deprecated.event.options.DailyEventOption;

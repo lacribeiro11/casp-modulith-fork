@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.member;
+package casp.web.backend.common.member;
 
 import casp.web.backend.configuration.Payment;
 import casp.web.backend.configuration.PaymentConstraint;
