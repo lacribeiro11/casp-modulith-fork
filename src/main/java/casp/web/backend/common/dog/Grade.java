@@ -1,4 +1,4 @@
-package casp.web.backend.data.access.layer.dog;
+package casp.web.backend.common.dog;
 
 import casp.web.backend.common.enums.GradeType;
 import jakarta.validation.constraints.NotBlank;
@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Grade {
     @NotBlank
@@ -50,5 +51,17 @@ public class Grade {
 
     public void setExamDate(final LocalDate examDate) {
         this.examDate = examDate;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Grade grade)) return false;
+        return points == grade.points && Objects.equals(name, grade.name) && type == grade.type && Objects.equals(examDate, grade.examDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type, points, examDate);
     }
 }

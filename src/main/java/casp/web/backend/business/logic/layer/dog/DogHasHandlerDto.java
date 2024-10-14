@@ -1,29 +1,23 @@
-package casp.web.backend.data.access.layer.dog;
+package casp.web.backend.business.logic.layer.dog;
 
-import casp.web.backend.common.base.BaseDocument;
+import casp.web.backend.common.base.BaseDto;
+import casp.web.backend.common.dog.DogHasHandlerDtoRequiredFields;
 import casp.web.backend.common.dog.DogHasHandlerRequiredFields;
 import casp.web.backend.common.dog.Grade;
 import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.common.reference.MemberReference;
-import com.querydsl.core.annotations.QueryEntity;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-@QueryEntity
-@Document
-public class DogHasHandler extends BaseDocument implements DogHasHandlerRequiredFields {
-
-    @DBRef
+public class DogHasHandlerDto extends BaseDto implements DogHasHandlerRequiredFields, DogHasHandlerDtoRequiredFields {
     private MemberReference member;
-
-    @DBRef
     private DogReference dog;
-
     private Set<Grade> grades = new HashSet<>();
+    private UUID memberId;
+    private UUID dogId;
 
     @Override
     public MemberReference getMember() {
@@ -31,7 +25,7 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setMember(MemberReference member) {
+    public void setMember(final MemberReference member) {
         this.member = member;
     }
 
@@ -41,7 +35,7 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setDog(DogReference dog) {
+    public void setDog(final DogReference dog) {
         this.dog = dog;
     }
 
@@ -51,20 +45,40 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setGrades(Set<Grade> grades) {
+    public void setGrades(final Set<Grade> grades) {
         this.grades = grades;
+    }
+
+    @Override
+    public UUID getMemberId() {
+        return memberId;
+    }
+
+    @Override
+    public void setMemberId(final UUID memberId) {
+        this.memberId = memberId;
+    }
+
+    @Override
+    public UUID getDogId() {
+        return dogId;
+    }
+
+    @Override
+    public void setDogId(final UUID dogId) {
+        this.dogId = dogId;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DogHasHandler that)) return false;
+        if (!(o instanceof DogHasHandlerDto that)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(member, that.member) && Objects.equals(dog, that.dog);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(member.getId(), dog.getId());
+        return Objects.hash(super.hashCode(), member, dog);
     }
 }

@@ -1,9 +1,8 @@
 package casp.web.backend.business.logic.layer.dog;
 
-import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.member.Member;
-import casp.web.backend.deprecated.dog.DogHasHandler;
 import jakarta.annotation.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -17,7 +16,7 @@ public interface DogHasHandlerService {
      * @param dogHasHandler instance of DogHasHandler
      * @return saved instance of DogHasHandler
      */
-    DogHasHandler saveDogHasHandler(DogHasHandler dogHasHandler);
+    DogHasHandlerDto saveDogHasHandler(DogHasHandlerDto dogHasHandler);
 
     /**
      * Search for an active DogHasHandler by its id.
@@ -25,31 +24,15 @@ public interface DogHasHandlerService {
      * @param id of the DogHasHandler
      * @return an instance of DogHasHandler with the given id, or throws an exception if not found
      */
-    DogHasHandler getDogHasHandlerById(UUID id);
+    DogHasHandlerDto getDogHasHandlerById(UUID id);
 
-    /**
-     * Set all DogHasHandlers with the given memberId to deleted status.
-     * This is used when a member is deleted.
-     *
-     * @param memberId the id of the member
-     */
+    // FIXME add it to member service
     void deleteDogHasHandlersByMemberId(UUID memberId);
 
-    /**
-     * Set all DogHasHandlers with the given dogId to deleted status.
-     * This is used when a dog is deleted.
-     *
-     * @param dogId the id of the dog
-     */
+    // FIXME add it to dog service
     void deleteDogHasHandlersByDogId(UUID dogId);
 
-    Set<Dog> getDogsByMemberId(UUID memberId);
-
-    Set<Member> getMembersByDogId(UUID dogId);
-
-    Set<DogHasHandler> getDogHasHandlersByMemberId(UUID memberId);
-
-    Set<DogHasHandler> getDogHasHandlersByDogId(UUID dogId);
+    void deleteDogHasHandlerById(UUID id);
 
     /**
      * Search for an active DogHasHandler by name in members and dogs.
@@ -57,32 +40,18 @@ public interface DogHasHandlerService {
      * @param name of the DogHasHandler
      * @return a set of DogHasHandler with the given name, or an empty set if not found
      */
-    Set<DogHasHandler> searchByName(@Nullable String name);
+    Page<DogHasHandlerDto> searchByName(@Nullable String name, Pageable pageable);
 
-    Set<DogHasHandler> getAllDogHasHandler();
+    Page<DogHasHandlerDto> getAllDogHasHandlers(Pageable pageable);
 
-    Set<DogHasHandler> getDogHasHandlersByIds(Set<UUID> handlerIds);
+    Set<DogHasHandlerDto> getDogHasHandlersByIds(Set<UUID> ids);
 
-    Set<UUID> getDogHasHandlerIdsByMemberId(UUID memberId);
+    Set<String> getEmailsByDogHasHandlersIds(Set<UUID> ids);
 
-    Set<UUID> getDogHasHandlerIdsByDogId(UUID dogId);
-
-    Set<String> getMembersEmailByIds(Set<UUID> handlerIds);
-
-    /**
-     * Set all DogHasHandlers with the given memberId to inactive status.
-     * This is used when a member is deactivated.
-     *
-     * @param memberId the id of the member
-     */
+    // FIXME add it to member service
     void deactivateDogHasHandlersByMemberId(UUID memberId);
 
-    /**
-     * Set all DogHasHandlers with the given memberId to active status.
-     * This is used when a member is activated.
-     *
-     * @param memberId the id of the member
-     */
+    // FIXME add it to member service
     void activateDogHasHandlersByMemberId(UUID memberId);
 
     /**

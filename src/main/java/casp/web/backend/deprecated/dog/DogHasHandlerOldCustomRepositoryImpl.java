@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
 @Component
-class DogHasHandlerCustomRepositoryImpl implements DogHasHandlerCustomRepository {
+class DogHasHandlerOldCustomRepositoryImpl implements DogHasHandlerOldCustomRepository {
     private static final QMember MEMBER = QMember.member;
     private static final QDogHasHandler DOG_HAS_HANDLER = QDogHasHandler.dogHasHandler;
     private static final QDog DOG = QDog.dog;
     private final MongoOperations mongoOperations;
 
     @Autowired
-    DogHasHandlerCustomRepositoryImpl(final MongoOperations mongoOperations) {
+    DogHasHandlerOldCustomRepositoryImpl(final MongoOperations mongoOperations) {
         this.mongoOperations = mongoOperations;
     }
 

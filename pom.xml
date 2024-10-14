@@ -176,13 +176,15 @@
                     <excludes>
                         <exclude>**/*Test*.class</exclude>
                         <exclude>**/AdminApplication.class</exclude>
-                        <exclude>**/common/**/*.class</exclude>
-                        <exclude>**/configuration/*.class</exclude>
-                        <exclude>**/commons/**/*.class</exclude>
-                        <exclude>**/dtos/**/*.class</exclude>
+                        <exclude>**/DevCorsConfiguration.class</exclude>
+                        <exclude>**/GlobalExceptionHandler.class</exclude>
                         <exclude>**/deprecated/**/*.class</exclude>
+                        <exclude>**/*BaseView.class</exclude>
+                        <exclude>**/*BaseDocument.class</exclude>
                         <exclude>**/*Dog.class</exclude>
+                        <exclude>**/*DogReference.class</exclude>
                         <exclude>**/*DogHasHandler.class</exclude>
+                        <exclude>**/*DogHasHandlerReference.class</exclude>
                         <exclude>**/*Grade.class</exclude>
                         <exclude>**/*Calendar.class</exclude>
                         <exclude>**/*CalendarEntry.class</exclude>
@@ -200,11 +202,13 @@
                         <exclude>**/*Event.class</exclude>
                         <exclude>**/*Exam.class</exclude>
                         <exclude>**/*Member.class</exclude>
+                        <exclude>**/*MemberReference.class</exclude>
+                        <exclude>**/*MembershipFee.class</exclude>
+                        <exclude>**/*Card.class</exclude>
                         <exclude>**/*Dto.class</exclude>
                         <exclude>**/*Read.class</exclude>
                         <exclude>**/*Write.class</exclude>
-                        <exclude>**/*Mapper.class</exclude>
-                        <exclude>**/*MapperImpl.class</exclude>
+                        <exclude>**/*Mapper*.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

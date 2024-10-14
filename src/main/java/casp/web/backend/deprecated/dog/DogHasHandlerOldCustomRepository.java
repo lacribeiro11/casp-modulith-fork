@@ -8,6 +8,6 @@ import java.util.Set;
  * @deprecated It will be removed in #3.
  */
 @Deprecated(forRemoval = true, since = "0.0.0")
-public interface DogHasHandlerCustomRepository {
+public interface DogHasHandlerOldCustomRepository {
     Set<DogHasHandler> findAllByMemberNameOrDogName(@Nullable String name);
 }

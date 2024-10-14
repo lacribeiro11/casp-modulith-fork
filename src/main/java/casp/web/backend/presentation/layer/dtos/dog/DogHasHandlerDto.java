@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.dog;
 
-import casp.web.backend.data.access.layer.dog.Grade;
+import casp.web.backend.common.dog.Grade;
 import casp.web.backend.presentation.layer.dtos.member.SimpleMemberDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

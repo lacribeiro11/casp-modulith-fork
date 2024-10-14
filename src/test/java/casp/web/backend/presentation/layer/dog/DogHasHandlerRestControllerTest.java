@@ -1,20 +1,28 @@
 package casp.web.backend.presentation.layer.dog;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.business.logic.layer.dog.DogDto;
+import casp.web.backend.business.logic.layer.dog.DogHasHandlerDto;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
-import casp.web.backend.business.logic.layer.member.MemberDto;
+import casp.web.backend.common.base.BaseDocument;
+import casp.web.backend.common.dog.Grade;
 import casp.web.backend.common.enums.EntityStatus;
+import casp.web.backend.common.enums.GradeType;
+import casp.web.backend.common.reference.DogReferenceRepository;
+import casp.web.backend.common.reference.MemberReferenceRepository;
+import casp.web.backend.data.access.layer.dog.DogHasHandler;
+import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
-import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
-import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
+import casp.web.backend.presentation.layer.RestResponsePage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,16 +31,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
-import static casp.web.backend.business.logic.layer.dog.DogMapper.DOG_MAPPER;
-import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
+import static casp.web.backend.business.logic.layer.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogHasHandlerReadMapper.READ_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,206 +50,185 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class DogHasHandlerRestControllerTest {
     private static final String DOG_HAS_HANDLER_URL_PREFIX = "/dog-has-handler";
-    private static final TypeReference<Set<DogHasHandlerDto>> DOG_HAS_HANDLER_SET_TYPE_REFERENCE = new TypeReference<>() {
+    private static final String DOG_NAME = "Riley";
+    private static final TypeReference<RestResponsePage<DogHasHandlerRead>> DOG_HAS_HANDLER_PAGE = new TypeReference<>() {
     };
-    private static final TypeReference<Set<String>> STRING_SET_TYPE_REFERENCE = new TypeReference<>() {
-    };
+    private static final String IDS_SET_IS_NOT_PRESENT = "Required request parameter 'ids' for method parameter type Set is not present";
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
-    @Autowired
     private DogRepository dogRepository;
     @Autowired
-    private BaseParticipantRepository baseParticipantRepository;
+    private DogHasHandlerOldRepository dogHasHandlerOldRepository;
+    @Autowired
+    private DogReferenceRepository dogReferenceRepository;
+    @Autowired
+    private MemberReferenceRepository memberReferenceRepository;
+    @Autowired
+    private DogHasHandlerRepository dogHasHandlerRepository;
 
     @SpyBean
     private DogHasHandlerService dogHasHandlerService;
 
-    private DogHasHandlerDto dogHasHandler;
-    private MemberDto member;
-    private DogDto dog;
+    private DogHasHandlerDto dogHasHandlerDto;
+
+    private static String createMessageDogHasHandlerDoesNotExist(final UUID id) {
+        return "DogHasHandler with id %s not found or it isn't active".formatted(id);
+    }
 
     @BeforeEach
     void setUp() {
-        baseParticipantRepository.deleteAll();
         dogHasHandlerOldRepository.deleteAll();
+        dogHasHandlerRepository.deleteAll();
         memberRepository.deleteAll();
         dogRepository.deleteAll();
 
-        var dogHasHandlerDocument = TestFixture.createDogHasHandler();
-        var memberDocument = dogHasHandlerDocument.getMember();
-        var dogDocument = dogHasHandlerDocument.getDog();
-        var space = TestFixture.createSpace();
-        space.setMemberOrHandlerId(dogHasHandlerDocument.getId());
 
-        member = MEMBER_MAPPER.toTarget(memberRepository.save(memberDocument));
-        dog = DOG_MAPPER.toTarget(dogRepository.save(dogDocument));
-        dogHasHandler = DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerOldRepository.save(dogHasHandlerDocument));
-        baseParticipantRepository.save(space);
+        var member = memberRepository.save(TestFixture.createMember());
+        var dog = dogRepository.save(TestFixture.createDog());
+        var dogHasHandler = new DogHasHandler();
+        dogReferenceRepository.findById(dog.getId()).ifPresent(dogHasHandler::setDog);
+        memberReferenceRepository.findById(member.getId()).ifPresent(dogHasHandler::setMember);
+        dogHasHandler = dogHasHandlerRepository.save(dogHasHandler);
+        dogHasHandlerDto = DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandler);
     }
 
-    private ResultActions getDogHasHandlerById(final UUID id) throws Exception {
-        return mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/{id}", id));
-    }
-
-    @Test
-    void getDogHasHandlerByDogId() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/by-dog-id/{dogId}", dog.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_SET_TYPE_REFERENCE))
-                .singleElement()
-                .satisfies(this::assertDogHasHandler);
-    }
-
-    @Test
-    void getDogHasHandlerByMemberId() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/by-member-id/{memberId}", member.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_SET_TYPE_REFERENCE))
-                .singleElement()
-                .satisfies(this::assertDogHasHandler);
-    }
-
-    @Test
-    void getDogsByMemberId() throws Exception {
-        TypeReference<Set<DogDto>> typeReference = new TypeReference<>() {
-        };
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/dogs-by-member-id/{memberId}", member.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, typeReference)).containsOnly(dog);
-    }
-
-    @Test
-    void getMembersByDogId() throws Exception {
-        TypeReference<Set<MemberDto>> typeReference = new TypeReference<>() {
-        };
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/members-by-dog-id/{dogId}", dog.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, typeReference)).containsOnly(member);
-    }
-
-    @Test
-    void deleteDogHasHandlersByDogId() throws Exception {
-        mockMvc.perform(delete(DOG_HAS_HANDLER_URL_PREFIX + "/by-dog-id/{dogId}", dog.getId()))
-                .andExpect(status().isNoContent());
-
-        assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
-        assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
-    }
-
-    @Test
-    void deleteDogHasHandlersByMemberId() throws Exception {
-        mockMvc.perform(delete(DOG_HAS_HANDLER_URL_PREFIX + "/by-member-id/{memberId}", member.getId()))
-                .andExpect(status().isNoContent());
-
-        assertThat(dogHasHandlerOldRepository.findAll()).allSatisfy(dh -> assertSame(EntityStatus.DELETED, dh.getEntityStatus()));
-        assertThat(baseParticipantRepository.findAll()).allSatisfy(p -> assertSame(EntityStatus.DELETED, p.getEntityStatus()));
-    }
-
-    @Test
-    void searchByName() throws Exception {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {DOG_NAME})
+    void searchByName(final String name) throws Exception {
         var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/search-by-name")
-                        .param("name", dog.getName()))
+                        .param("name", name))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertThat(MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_SET_TYPE_REFERENCE))
-                .singleElement()
-                .satisfies(this::assertDogHasHandler);
+        var dogHasHandlerPage = MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_PAGE);
+        assertThat(dogHasHandlerPage)
+                .contains(READ_MAPPER.toTarget(dogHasHandlerDto));
     }
 
     @Test
-    void getAllDogHasHandler() throws Exception {
+    void getAllDogHasHandlers() throws Exception {
         var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertThat(MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_SET_TYPE_REFERENCE))
-                .singleElement()
-                .satisfies(this::assertDogHasHandler);
-    }
-
-    @Test
-    void getDogHasHandlersByHandlerIds() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/by-ids")
-                        .param("ids", dogHasHandler.getId().toString()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_SET_TYPE_REFERENCE)).singleElement()
-                .satisfies(this::assertDogHasHandler);
-    }
-
-    @Test
-    void getDogHasHandlerIdsByMemberId() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/dog-has-handler-ids-by-member-id/{memberId}", member.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, STRING_SET_TYPE_REFERENCE)).containsOnly(dogHasHandler.getId().toString());
-    }
-
-    @Test
-    void getDogHasHandlerIdsByDogId() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/dog-has-handler-ids-by-dog-id/{dogId}", dog.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, STRING_SET_TYPE_REFERENCE)).containsOnly(dogHasHandler.getId().toString());
-    }
-
-    @Test
-    void getMembersEmailByIds() throws Exception {
-        var mvcResult = mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/get-emails-by-ids")
-                        .param("ids", dogHasHandler.getId().toString()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(MvcMapper.toObject(mvcResult, STRING_SET_TYPE_REFERENCE)).containsOnly(member.getEmail());
+        var dogHasHandlerPage = MvcMapper.toObject(mvcResult, DOG_HAS_HANDLER_PAGE);
+        assertThat(dogHasHandlerPage)
+                .contains(READ_MAPPER.toTarget(dogHasHandlerDto));
     }
 
     @Test
     void migrateDataToV2() throws Exception {
+        dogHasHandlerRepository.deleteAll();
+        var dogHasHandler = new casp.web.backend.deprecated.dog.DogHasHandler();
+        dogHasHandler.setDogId(dogHasHandlerDto.getDog().getId());
+        dogHasHandler.setMemberId(dogHasHandlerDto.getMember().getId());
+        dogHasHandlerOldRepository.save(dogHasHandler);
+
         mockMvc.perform(post(DOG_HAS_HANDLER_URL_PREFIX + "/migrate-data"))
                 .andExpect(status().isNoContent());
 
         verify(dogHasHandlerService).migrateDataToV2();
     }
 
-    private void assertDogHasHandler(final DogHasHandlerDto dh) {
-        assertEquals(dogHasHandler.getId(), dh.getId());
-        assertEquals(dogHasHandler.getMember().getId(), dh.getMember().getId());
-        assertEquals(dogHasHandler.getDog().getId(), dh.getDog().getId());
+    private void assertDogAndMemberFields(final DogHasHandlerRead dhh) {
+        assertThat(dhh.getDog())
+                .usingRecursiveAssertion()
+                .isEqualTo(dogHasHandlerDto.getDog());
+        assertThat(dhh.getMember())
+                .usingRecursiveAssertion()
+                .isEqualTo(dogHasHandlerDto.getMember());
+    }
+
+    @Nested
+    class GetMembersEmailByIds {
+        private static final String URL_TEMPLATE = DOG_HAS_HANDLER_URL_PREFIX + "/emails-by-ids";
+
+        @Test
+        void callWithIds() throws Exception {
+            var mvcResult = mockMvc.perform(get(URL_TEMPLATE)
+                            .param("ids", dogHasHandlerDto.getId().toString()))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            assertThat(MvcMapper.toObject(mvcResult, new TypeReference<Set<String>>() {
+            })).containsOnly(dogHasHandlerDto.getMember().getEmail());
+        }
+
+        @Test
+        void callWithoutIds() throws Exception {
+            mockMvc.perform(get(URL_TEMPLATE))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message")
+                            .value(IDS_SET_IS_NOT_PRESENT));
+
+            verifyNoInteractions(dogHasHandlerService);
+        }
+    }
+
+    @Nested
+    class GetDogHasHandlersByHandlerIds {
+        private static final String URL_TEMPLATE = DOG_HAS_HANDLER_URL_PREFIX + "/by-ids";
+
+        @Test
+        void callWithIds() throws Exception {
+            var mvcResult = mockMvc.perform(get(URL_TEMPLATE)
+                            .param("ids", dogHasHandlerDto.getId().toString()))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            assertThat(MvcMapper.toObject(mvcResult, new TypeReference<Set<DogHasHandlerRead>>() {
+            })).containsOnly(READ_MAPPER.toTarget(dogHasHandlerDto));
+        }
+
+        @Test
+        void callWithoutIds() throws Exception {
+            mockMvc.perform(get(URL_TEMPLATE))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message")
+                            .value(IDS_SET_IS_NOT_PRESENT));
+
+            verifyNoInteractions(dogHasHandlerService);
+        }
+    }
+
+    @Nested
+    class DeleteDogHasHandlerById {
+        @Test
+        void itExist() throws Exception {
+            deleteDogHasHandlerById(dogHasHandlerDto.getId())
+                    .andExpect(status().isNoContent());
+
+            var dogHasHandler = dogHasHandlerRepository.findById(dogHasHandlerDto.getId());
+            assertThat(dogHasHandler)
+                    .map(BaseDocument::getEntityStatus)
+                    .hasValue(EntityStatus.DELETED);
+        }
+
+        @Test
+        void doesNotExist() throws Exception {
+            var id = UUID.randomUUID();
+            deleteDogHasHandlerById(id)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(createMessageDogHasHandlerDoesNotExist(id)));
+
+            verify(dogHasHandlerService).deleteDogHasHandlerById(id);
+        }
+
+        private ResultActions deleteDogHasHandlerById(final UUID id) throws Exception {
+            return mockMvc.perform(delete(DOG_HAS_HANDLER_URL_PREFIX + "/{id}", id));
+        }
     }
 
     @Nested
     class SaveDogHasHandler {
         @Test
-        void dogHasHandlerIsAlwaysAsActiveSaved() throws Exception {
-
-            var mvcResult = performPost(dogHasHandler)
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            assertThat(MvcMapper.toObject(mvcResult, DogHasHandlerDto.class))
-                    .satisfies(dh -> assertEquals(dogHasHandler.getId(), dh.getId()));
-        }
-
-        @Test
-        void itIsInvalid() throws Exception {
-            var exception = performPost(new DogHasHandlerDto())
+        void dogHasHandlerIsInvalid() throws Exception {
+            var exception = performPost(new DogHasHandlerWrite())
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResolvedException();
@@ -252,9 +238,75 @@ class DogHasHandlerRestControllerTest {
                     .satisfies(e -> assertThat(e.getMessage()).contains("NotNull.dogId", "NotNull.memberId"));
         }
 
-        private ResultActions performPost(final DogHasHandlerDto dogHasHandlerDto) throws Exception {
+        @Test
+        void cardIsInvalid() throws Exception {
+            var dogHasHandlerWrite = createDogHasHandlerWrite();
+            dogHasHandlerWrite.setGrades(Set.of(new Grade()));
+
+            var exception = performPost(dogHasHandlerWrite)
+                    .andExpect(status().isBadRequest())
+                    .andReturn()
+                    .getResolvedException();
+
+            assertThat(exception)
+                    .isNotNull()
+                    .satisfies(e -> assertThat(e.getMessage()).contains("NotBlank.name", "NotNull.type", "Positive.points", "NotNull.examDate"));
+
+        }
+
+        @Test
+        void cardIsValid() throws Exception {
+            var dogHasHandlerWrite = createDogHasHandlerWrite();
+            var grade = new Grade();
+            grade.setName("name");
+            grade.setType(GradeType.BH1);
+            grade.setPoints(1);
+            grade.setExamDate(LocalDate.now());
+            dogHasHandlerWrite.setGrades(Set.of(grade));
+
+            var mvcResult = performPost(dogHasHandlerWrite)
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var dogHasHandlerRead = MvcMapper.toObject(mvcResult, DogHasHandlerRead.class);
+            assertThat(dogHasHandlerRead)
+                    .satisfies(dhh -> {
+                        assertDogAndMemberFields(dhh);
+                        assertThat(dhh.getGrades())
+                                .singleElement()
+                                .usingRecursiveAssertion()
+                                .isEqualTo(grade);
+                    });
+        }
+
+        @Test
+        void cardIsNull() throws Exception {
+            var dogHasHandlerWrite = createDogHasHandlerWrite();
+            dogHasHandlerWrite.setGrades(null);
+
+            var mvcResult = performPost(dogHasHandlerWrite)
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            var dogHasHandlerRead = MvcMapper.toObject(mvcResult, DogHasHandlerRead.class);
+            assertThat(dogHasHandlerRead)
+                    .satisfies(dhh -> {
+                        assertDogAndMemberFields(dhh);
+                        assertThat(dhh.getGrades())
+                                .isEmpty();
+                    });
+        }
+
+        private DogHasHandlerWrite createDogHasHandlerWrite() {
+            var dogHasHandlerWrite = new DogHasHandlerWrite();
+            dogHasHandlerWrite.setDogId(dogHasHandlerDto.getDog().getId());
+            dogHasHandlerWrite.setMemberId(dogHasHandlerDto.getMember().getId());
+            return dogHasHandlerWrite;
+        }
+
+        private ResultActions performPost(final DogHasHandlerWrite dogHasHandlerWrite) throws Exception {
             return mockMvc.perform(post(DOG_HAS_HANDLER_URL_PREFIX)
-                    .content(MvcMapper.toString(dogHasHandlerDto))
+                    .content(MvcMapper.toString(dogHasHandlerWrite))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON));
         }
@@ -264,12 +316,16 @@ class DogHasHandlerRestControllerTest {
     class GetDogHasHandlerById {
         @Test
         void itExist() throws Exception {
-            var mvcResult = getDogHasHandlerById(dogHasHandler.getId())
+            var mvcResult = getDogHasHandlerById(dogHasHandlerDto.getId())
                     .andExpect(status().isOk())
                     .andReturn();
 
-            assertThat(MvcMapper.toObject(mvcResult, DogHasHandlerDto.class))
-                    .satisfies(DogHasHandlerRestControllerTest.this::assertDogHasHandler);
+            var dogHasHandlerRead = MvcMapper.toObject(mvcResult, DogHasHandlerRead.class);
+            assertThat(dogHasHandlerRead)
+                    .satisfies(dhh -> {
+                        assertDogAndMemberFields(dhh);
+                        assertThat(dhh.getGrades()).isEmpty();
+                    });
         }
 
         @Test
@@ -277,7 +333,13 @@ class DogHasHandlerRestControllerTest {
             var id = UUID.randomUUID();
             getDogHasHandlerById(id)
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message").value("DogHasHandler with id %s not found or it isn't active".formatted(id)));
+                    .andExpect(jsonPath("$.message").value(createMessageDogHasHandlerDoesNotExist(id)));
+
+            verify(dogHasHandlerService).getDogHasHandlerById(id);
+        }
+
+        private ResultActions getDogHasHandlerById(final UUID id) throws Exception {
+            return mockMvc.perform(get(DOG_HAS_HANDLER_URL_PREFIX + "/{id}", id));
         }
     }
 }

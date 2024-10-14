@@ -1,28 +1,18 @@
-package casp.web.backend.data.access.layer.dog;
+package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.common.base.BaseDocument;
+import casp.web.backend.common.base.BaseView;
 import casp.web.backend.common.dog.DogHasHandlerRequiredFields;
 import casp.web.backend.common.dog.Grade;
 import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.common.reference.MemberReference;
-import com.querydsl.core.annotations.QueryEntity;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@QueryEntity
-@Document
-public class DogHasHandler extends BaseDocument implements DogHasHandlerRequiredFields {
-
-    @DBRef
+public class DogHasHandlerRead extends BaseView implements DogHasHandlerRequiredFields {
     private MemberReference member;
-
-    @DBRef
     private DogReference dog;
-
     private Set<Grade> grades = new HashSet<>();
 
     @Override
@@ -31,7 +21,7 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setMember(MemberReference member) {
+    public void setMember(final MemberReference member) {
         this.member = member;
     }
 
@@ -41,7 +31,7 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setDog(DogReference dog) {
+    public void setDog(final DogReference dog) {
         this.dog = dog;
     }
 
@@ -51,20 +41,20 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
     }
 
     @Override
-    public void setGrades(Set<Grade> grades) {
+    public void setGrades(final Set<Grade> grades) {
         this.grades = grades;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DogHasHandler that)) return false;
+        if (!(o instanceof DogHasHandlerRead that)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(member, that.member) && Objects.equals(dog, that.dog);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(member.getId(), dog.getId());
+        return Objects.hash(super.hashCode(), member, dog);
     }
 }

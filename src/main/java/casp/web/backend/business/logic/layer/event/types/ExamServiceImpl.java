@@ -2,9 +2,10 @@ package casp.web.backend.business.logic.layer.event.types;
 
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.ExamParticipantService;
-import casp.web.backend.common.DogHasHandlerReference;
-import casp.web.backend.common.DogHasHandlerReferenceRepository;
-import casp.web.backend.common.MemberReference;
+import casp.web.backend.common.reference.DogHasHandlerReference;
+import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
+import casp.web.backend.common.reference.MemberReference;
+import casp.web.backend.common.reference.MemberReferenceRepository;
 import casp.web.backend.data.access.layer.event.types.ExamV2Repository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
@@ -12,7 +13,6 @@ import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.ExamParticipant;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.deprecated.event.types.Exam;
-import casp.web.backend.deprecated.reference.MemberReferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

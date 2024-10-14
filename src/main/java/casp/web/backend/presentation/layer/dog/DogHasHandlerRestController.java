@@ -1,12 +1,12 @@
 package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.business.logic.layer.dog.DogDto;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
-import casp.web.backend.business.logic.layer.member.MemberDto;
-import casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 import java.util.UUID;
 
-import static casp.web.backend.business.logic.layer.dog.DogMapper.DOG_MAPPER;
-import static casp.web.backend.business.logic.layer.member.MemberMapper.MEMBER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerMapper.DOG_HAS_HANDLER_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogHasHandlerReadMapper.READ_MAPPER;
+import static casp.web.backend.presentation.layer.dog.DogHasHandlerWriteMapper.WRITE_MAPPER;
+
 
 @RestController
-@RequestMapping("/dog-has-handler")
+@RequestMapping("dog-has-handler")
 @Validated
 class DogHasHandlerRestController {
 
@@ -37,93 +37,54 @@ class DogHasHandlerRestController {
         this.dogHasHandlerService = dogHasHandlerService;
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<DogHasHandlerDto> getDogHasHandlerById(final @PathVariable UUID id) {
-        var dogHasHandler = dogHasHandlerService.getDogHasHandlerById(id);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandler));
+    @GetMapping("{id}")
+    ResponseEntity<DogHasHandlerRead> getDogHasHandlerById(final @PathVariable UUID id) {
+        var dogHasHandlerDto = dogHasHandlerService.getDogHasHandlerById(id);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(dogHasHandlerDto));
     }
 
-    @GetMapping("/by-dog-id/{dogId}")
-    ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlerByDogId(final @PathVariable UUID dogId) {
-        var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByDogId(dogId);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
-    }
-
-    @GetMapping("/by-member-id/{memberId}")
-    ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlerByMemberId(final @PathVariable UUID memberId) {
-        var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByMemberId(memberId);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
-    }
-
-
-    @GetMapping("/dogs-by-member-id/{memberId}")
-    ResponseEntity<Set<DogDto>> getDogsByMemberId(final @PathVariable UUID memberId) {
-        var dogSet = dogHasHandlerService.getDogsByMemberId(memberId);
-        return ResponseEntity.ok(DOG_MAPPER.toTargetSet(dogSet));
-    }
-
-    @GetMapping("/members-by-dog-id/{dogId}")
-    ResponseEntity<Set<MemberDto>> getMembersByDogId(final @PathVariable UUID dogId) {
-        var members = dogHasHandlerService.getMembersByDogId(dogId);
-        return ResponseEntity.ok(MEMBER_MAPPER.toTargetSet(members));
-    }
 
     @PostMapping
-    ResponseEntity<DogHasHandlerDto> saveDogHasHandler(final @RequestBody @Valid DogHasHandlerDto dogHasHandlerDto) {
-        var dogHasHandler = dogHasHandlerService.saveDogHasHandler(DOG_HAS_HANDLER_MAPPER.toSource(dogHasHandlerDto));
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandler));
+    ResponseEntity<DogHasHandlerRead> saveDogHasHandler(final @RequestBody @Valid DogHasHandlerWrite dogHasHandlerWrite) {
+        var dogHasHandlerDto = WRITE_MAPPER.toSource(dogHasHandlerWrite);
+        dogHasHandlerDto = dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
+        return ResponseEntity.ok(READ_MAPPER.toTarget(dogHasHandlerDto));
     }
 
-    @DeleteMapping("/by-dog-id/{dogId}")
-    ResponseEntity<Void> deleteDogHasHandlersByDogId(final @PathVariable UUID dogId) {
-        dogHasHandlerService.deleteDogHasHandlersByDogId(dogId);
+    @DeleteMapping("{id}")
+    ResponseEntity<Void> deleteDogHasHandlerById(final @PathVariable UUID id) {
+        dogHasHandlerService.deleteDogHasHandlerById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/by-member-id/{memberId}")
-    ResponseEntity<Void> deleteDogHasHandlersByMemberId(final @PathVariable UUID memberId) {
-        dogHasHandlerService.deleteDogHasHandlersByMemberId(memberId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search-by-name")
-    ResponseEntity<Set<DogHasHandlerDto>> searchByName(final @RequestParam(required = false, defaultValue = "") String name) {
-        var dogHasHandlers = dogHasHandlerService.searchByName(name);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
+    @GetMapping("search-by-name")
+    ResponseEntity<Page<DogHasHandlerRead>> searchByName(final @RequestParam(required = false, defaultValue = "") String name, final @ParameterObject Pageable pageable) {
+        var dogHasHandlerDtoPage = dogHasHandlerService.searchByName(name, pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(dogHasHandlerDtoPage));
     }
 
     @GetMapping
-    ResponseEntity<Set<DogHasHandlerDto>> getAllDogHasHandler() {
-        var dogHasHandlers = dogHasHandlerService.getAllDogHasHandler();
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
+    ResponseEntity<Page<DogHasHandlerRead>> getAllDogHasHandlers(final @ParameterObject Pageable pageable) {
+        var dogHasHandlerDtoPage = dogHasHandlerService.getAllDogHasHandlers(pageable);
+        return ResponseEntity.ok(READ_MAPPER.toTargetPage(dogHasHandlerDtoPage));
     }
 
-    @GetMapping("/by-ids")
-    ResponseEntity<Set<DogHasHandlerDto>> getDogHasHandlersByHandlerIds(final @RequestParam @Size(min = 1) Set<UUID> ids) {
-        var dogHasHandlers = dogHasHandlerService.getDogHasHandlersByIds(ids);
-        return ResponseEntity.ok(DOG_HAS_HANDLER_MAPPER.toTargetSet(dogHasHandlers));
+    @GetMapping("by-ids")
+    ResponseEntity<Set<DogHasHandlerRead>> getDogHasHandlersByHandlerIds(final @RequestParam @Size(min = 1) Set<UUID> ids) {
+        var dogHasHandlerDtoSet = dogHasHandlerService.getDogHasHandlersByIds(ids);
+        return ResponseEntity.ok(READ_MAPPER.toTargetSet(dogHasHandlerDtoSet));
     }
 
-    @GetMapping("/dog-has-handler-ids-by-member-id/{memberId}")
-    ResponseEntity<Set<UUID>> getDogHasHandlerIdsByMemberId(final @PathVariable UUID memberId) {
-        return ResponseEntity.ok(dogHasHandlerService.getDogHasHandlerIdsByMemberId(memberId));
-    }
-
-    @GetMapping("/dog-has-handler-ids-by-dog-id/{dogId}")
-    ResponseEntity<Set<UUID>> getDogHasHandlerIdsByDogId(final @PathVariable UUID dogId) {
-        return ResponseEntity.ok(dogHasHandlerService.getDogHasHandlerIdsByDogId(dogId));
-    }
-
-    @GetMapping("/get-emails-by-ids")
+    @GetMapping("emails-by-ids")
     ResponseEntity<Set<String>> getMembersEmailByIds(final @RequestParam @Size(min = 1) Set<UUID> ids) {
-        return ResponseEntity.ok(dogHasHandlerService.getMembersEmailByIds(ids));
+        return ResponseEntity.ok(dogHasHandlerService.getEmailsByDogHasHandlersIds(ids));
     }
 
     /**
      * @deprecated It will be removed in #3.
      */
     @Deprecated(forRemoval = true, since = "0.0.0")
-    @PostMapping("/migrate-data")
+    @PostMapping("migrate-data")
     ResponseEntity<Void> migrateDataToV2() {
         dogHasHandlerService.migrateDataToV2();
         return ResponseEntity.noContent().build();

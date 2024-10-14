@@ -1,8 +1,8 @@
 package casp.web.backend.deprecated.dog;
 
-import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.base.BaseDocument;
+import casp.web.backend.common.dog.Grade;
 import casp.web.backend.data.access.layer.dog.Dog;
-import casp.web.backend.data.access.layer.dog.Grade;
 import casp.web.backend.data.access.layer.member.Member;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;
