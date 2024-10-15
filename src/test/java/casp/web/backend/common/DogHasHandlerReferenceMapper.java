@@ -1,5 +1,6 @@
 package casp.web.backend.common;
 
+import casp.web.backend.common.reference.MemberReference;
 import casp.web.backend.data.access.layer.dog.Dog;
 import casp.web.backend.data.access.layer.member.Member;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.common.BaseParticipantType;
-import casp.web.backend.common.MemberReference;
+import casp.web.backend.common.reference.MemberReference;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.DBRef;
