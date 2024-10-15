@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.dog;
 
-import casp.web.backend.common.DogReference;
+import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.data.access.layer.dog.Dog;
 import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import org.mapstruct.Mapper;

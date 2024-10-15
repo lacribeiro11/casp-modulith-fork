@@ -1,6 +1,5 @@
 package casp.web.backend.common.reference;
 
-import casp.web.backend.common.DogReference;
 import casp.web.backend.common.EntityStatus;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;

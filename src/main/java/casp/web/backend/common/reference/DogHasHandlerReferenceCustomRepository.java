@@ -1,7 +1,5 @@
 package casp.web.backend.common.reference;
 
-import casp.web.backend.common.DogReference;
-
 import java.util.Set;
 import java.util.UUID;
 
