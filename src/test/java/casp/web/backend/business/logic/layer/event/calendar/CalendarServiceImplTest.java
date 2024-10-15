@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.event.calendar;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.event.options.EventOptionServiceUtility;
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.deprecated.event.calendar.Calendar;
 import casp.web.backend.deprecated.event.calendar.CalendarRepository;
 import casp.web.backend.deprecated.event.types.BaseEvent;

@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;

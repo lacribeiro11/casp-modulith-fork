@@ -1,6 +1,6 @@
 package casp.web.backend.common.member;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import jakarta.validation.Valid;
 
 import java.util.Set;

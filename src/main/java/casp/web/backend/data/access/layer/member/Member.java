@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.member;
 
-import casp.web.backend.common.BaseDocument;
-import casp.web.backend.common.Gender;
-import casp.web.backend.common.Role;
+import casp.web.backend.common.base.BaseDocument;
+import casp.web.backend.common.enums.Gender;
+import casp.web.backend.common.enums.Role;
 import casp.web.backend.common.member.Card;
 import casp.web.backend.common.member.MemberRequiredFields;
 import casp.web.backend.common.member.MembershipFee;

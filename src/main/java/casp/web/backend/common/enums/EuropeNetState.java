@@ -1,4 +1,4 @@
-package casp.web.backend.common;
+package casp.web.backend.common.enums;
 
 public enum EuropeNetState {
     DOG_IS_REGISTERED,

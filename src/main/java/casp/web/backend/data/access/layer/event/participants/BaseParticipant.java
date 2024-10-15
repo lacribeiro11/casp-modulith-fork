@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 
-import casp.web.backend.common.BaseParticipantType;
-import casp.web.backend.common.EventResponse;
+import casp.web.backend.common.enums.BaseParticipantType;
+import casp.web.backend.common.enums.EventResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 

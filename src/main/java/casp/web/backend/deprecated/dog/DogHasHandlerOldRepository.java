@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.dog;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 

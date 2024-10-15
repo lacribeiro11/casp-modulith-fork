@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.dog;
 
 
-import casp.web.backend.common.EntityStatus;
-import casp.web.backend.common.EuropeNetState;
+import casp.web.backend.common.enums.EntityStatus;
+import casp.web.backend.common.enums.EuropeNetState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

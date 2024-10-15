@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.dog;
 
-import casp.web.backend.common.GradeType;
+import casp.web.backend.common.enums.GradeType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

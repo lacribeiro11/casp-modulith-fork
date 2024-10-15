@@ -2,7 +2,7 @@ package casp.web.backend.business.logic.layer.dog;
 
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.common.EuropeNetState;
+import casp.web.backend.common.enums.EuropeNetState;
 import casp.web.backend.data.access.layer.dog.Dog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

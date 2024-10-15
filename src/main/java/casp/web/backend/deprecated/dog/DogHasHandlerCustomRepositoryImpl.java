@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.dog;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.data.access.layer.dog.Dog;
 import casp.web.backend.data.access.layer.dog.QDog;
 import casp.web.backend.data.access.layer.member.Member;

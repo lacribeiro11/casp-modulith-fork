@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.event.types;
 
-import casp.web.backend.common.BaseEventType;
+import casp.web.backend.common.enums.BaseEventType;
 import casp.web.backend.configuration.CourseSpacesConstraint;
 import casp.web.backend.configuration.CourseValidation;
 import casp.web.backend.data.access.layer.event.participants.CoTrainer;

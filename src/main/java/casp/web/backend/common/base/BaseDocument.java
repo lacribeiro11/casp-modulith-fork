@@ -1,5 +1,6 @@
-package casp.web.backend.common;
+package casp.web.backend.common.base;
 
+import casp.web.backend.common.enums.EntityStatus;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

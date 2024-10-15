@@ -1,7 +1,7 @@
 package casp.web.backend.deprecated.event.types;
 
 
-import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.base.BaseDocument;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.deprecated.event.TypesRegex;
 import casp.web.backend.deprecated.event.options.DailyEventOption;

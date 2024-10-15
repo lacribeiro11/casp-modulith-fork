@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.common.EventResponse;
+import casp.web.backend.common.enums.EventResponse;
 import casp.web.backend.configuration.Payment;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;

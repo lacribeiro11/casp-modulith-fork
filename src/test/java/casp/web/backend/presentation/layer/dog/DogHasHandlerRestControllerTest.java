@@ -4,7 +4,7 @@ import casp.web.backend.TestFixture;
 import casp.web.backend.business.logic.layer.dog.DogDto;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.business.logic.layer.member.MemberDto;
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;

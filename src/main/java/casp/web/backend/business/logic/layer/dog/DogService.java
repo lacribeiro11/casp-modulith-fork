@@ -1,5 +1,6 @@
 package casp.web.backend.business.logic.layer.dog;
 
+import casp.web.backend.common.enums.EuropeNetState;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +30,8 @@ public interface DogService {
 
     /**
      * Get dogs that were not checked.
-     * A dog is not checked, if its EuropeNet state is neither {@link casp.web.backend.common.EuropeNetState#DOG_IS_REGISTERED}
-     * nor {@link casp.web.backend.common.EuropeNetState#DOG_NOT_REGISTERED}  and its chip number isn't empty.
+     * A dog is not checked, if its EuropeNet state is neither {@link EuropeNetState#DOG_IS_REGISTERED}
+     * nor {@link EuropeNetState#DOG_NOT_REGISTERED}  and its chip number isn't empty.
      *
      * @return a page of dogs that were not checked.
      */

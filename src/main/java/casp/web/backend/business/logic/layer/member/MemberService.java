@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.member;
 
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;

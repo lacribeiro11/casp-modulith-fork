@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.member;
 
-import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.base.BaseDocument;
 import casp.web.backend.data.access.layer.member.Member;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.Valid;

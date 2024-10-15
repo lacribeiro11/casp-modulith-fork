@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.options;
 
 
-import casp.web.backend.common.BaseEventOptionType;
+import casp.web.backend.common.enums.BaseEventOptionType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 

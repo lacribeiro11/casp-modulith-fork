@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.member;
 
 import casp.web.backend.business.logic.layer.member.MemberService;
-import casp.web.backend.common.Role;
+import casp.web.backend.common.enums.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

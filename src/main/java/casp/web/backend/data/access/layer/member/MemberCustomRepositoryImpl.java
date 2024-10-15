@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.member;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;

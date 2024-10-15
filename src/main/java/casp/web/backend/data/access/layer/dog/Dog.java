@@ -1,9 +1,9 @@
 package casp.web.backend.data.access.layer.dog;
 
-import casp.web.backend.common.BaseDocument;
-import casp.web.backend.common.EuropeNetState;
-import casp.web.backend.common.Gender;
+import casp.web.backend.common.base.BaseDocument;
 import casp.web.backend.common.dog.DogRequiredFields;
+import casp.web.backend.common.enums.EuropeNetState;
+import casp.web.backend.common.enums.Gender;
 import com.querydsl.core.annotations.QueryEntity;
 import org.springframework.data.mongodb.core.mapping.Document;
 

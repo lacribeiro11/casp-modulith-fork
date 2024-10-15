@@ -1,7 +1,7 @@
 package casp.web.backend.common.dog;
 
-import casp.web.backend.common.EuropeNetState;
-import casp.web.backend.common.Gender;
+import casp.web.backend.common.enums.EuropeNetState;
+import casp.web.backend.common.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

@@ -4,7 +4,7 @@ package casp.web.backend.business.logic.layer.member;
 import casp.web.backend.business.logic.layer.dog.DogHasHandlerService;
 import casp.web.backend.business.logic.layer.event.participants.BaseParticipantObserver;
 import casp.web.backend.business.logic.layer.event.types.BaseEventObserver;
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.data.access.layer.member.Member;
 import casp.web.backend.data.access.layer.member.MemberRepository;

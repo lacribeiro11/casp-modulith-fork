@@ -1,11 +1,11 @@
-package casp.web.backend.common;
+package casp.web.backend.common.base;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class BaseView {
-    protected UUID id;
-    protected Long version;
+public abstract class BaseDto {
+    protected UUID id = UUID.randomUUID();
+    protected long version;
 
     public UUID getId() {
         return id;
@@ -15,19 +15,19 @@ public abstract class BaseView {
         this.id = id;
     }
 
-    public Long getVersion() {
+    public long getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(long version) {
         this.version = version;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof BaseView baseView)) return false;
-        return Objects.equals(id, baseView.id);
+        if (!(o instanceof BaseDto baseDto)) return false;
+        return Objects.equals(id, baseDto.id);
     }
 
     @Override

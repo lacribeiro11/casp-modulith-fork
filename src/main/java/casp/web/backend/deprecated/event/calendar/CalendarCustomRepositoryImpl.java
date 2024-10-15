@@ -1,6 +1,6 @@
 package casp.web.backend.deprecated.event.calendar;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuery;

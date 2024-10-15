@@ -1,6 +1,6 @@
 package casp.web.backend.business.logic.layer.event.participants;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.deprecated.event.participants.BaseParticipant;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.types.BaseEvent;

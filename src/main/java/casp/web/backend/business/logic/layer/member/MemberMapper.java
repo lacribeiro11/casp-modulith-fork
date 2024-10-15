@@ -1,6 +1,6 @@
 package casp.web.backend.business.logic.layer.member;
 
-import casp.web.backend.common.BaseDtoMapper;
+import casp.web.backend.common.base.BaseDtoMapper;
 import casp.web.backend.common.member.DogHasHandler;
 import casp.web.backend.common.reference.DogHasHandlerReference;
 import casp.web.backend.data.access.layer.member.Member;

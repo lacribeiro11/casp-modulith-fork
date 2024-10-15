@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.member;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 
 enum EntityStatusParam {
     ACTIVE(EntityStatus.ACTIVE),

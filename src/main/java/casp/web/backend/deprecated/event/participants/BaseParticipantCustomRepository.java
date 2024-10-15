@@ -1,7 +1,7 @@
 package casp.web.backend.deprecated.event.participants;
 
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 
 import java.util.Set;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package casp.web.backend.common;
+package casp.web.backend.common.enums;
 
 /**
  * This enum class describes the mail exam/grade types which are used in the ÖHU

@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.dog;
 
-import casp.web.backend.common.BaseMapper;
+import casp.web.backend.common.base.BaseMapper;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

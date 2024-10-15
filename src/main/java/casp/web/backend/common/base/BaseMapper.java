@@ -1,4 +1,4 @@
-package casp.web.backend.common;
+package casp.web.backend.common.base;
 
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;

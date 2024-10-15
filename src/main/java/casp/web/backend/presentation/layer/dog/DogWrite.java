@@ -1,9 +1,9 @@
 package casp.web.backend.presentation.layer.dog;
 
-import casp.web.backend.common.BaseView;
-import casp.web.backend.common.EuropeNetState;
-import casp.web.backend.common.Gender;
+import casp.web.backend.common.base.BaseView;
 import casp.web.backend.common.dog.DogRequiredFields;
+import casp.web.backend.common.enums.EuropeNetState;
+import casp.web.backend.common.enums.Gender;
 
 import java.time.LocalDate;
 

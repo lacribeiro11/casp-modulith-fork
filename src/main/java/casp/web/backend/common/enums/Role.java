@@ -1,4 +1,4 @@
-package casp.web.backend.common;
+package casp.web.backend.common.enums;
 
 import java.util.Arrays;
 import java.util.Comparator;

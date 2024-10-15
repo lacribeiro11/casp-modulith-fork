@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.dtos.event.participants;
 
-import casp.web.backend.common.BaseDocument;
+import casp.web.backend.common.base.BaseDocument;
 import org.mapstruct.Mapping;
 
 import java.util.Set;

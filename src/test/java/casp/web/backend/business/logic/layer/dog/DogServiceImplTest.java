@@ -1,7 +1,7 @@
 package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.common.reference.DogHasHandlerReference;
 import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.data.access.layer.dog.Dog;

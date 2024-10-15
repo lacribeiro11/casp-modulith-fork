@@ -1,6 +1,6 @@
 package casp.web.backend.data.access.layer.event.types;
 
-import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.data.access.layer.event.participants.EventParticipant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
