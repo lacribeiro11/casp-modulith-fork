@@ -1,9 +1,9 @@
 package casp.web.backend.business.logic.layer.dog;
 
 import casp.web.backend.TestFixture;
-import casp.web.backend.common.DogHasHandlerReference;
-import casp.web.backend.common.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.EntityStatus;
+import casp.web.backend.common.reference.DogHasHandlerReference;
+import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.data.access.layer.dog.Dog;
 import casp.web.backend.data.access.layer.dog.DogRepository;
 import org.junit.jupiter.api.BeforeEach;

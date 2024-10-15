@@ -1,5 +1,6 @@
-package casp.web.backend.common;
+package casp.web.backend.common.reference;
 
+import casp.web.backend.common.EntityStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;

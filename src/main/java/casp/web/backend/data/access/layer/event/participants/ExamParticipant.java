@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.common.BaseParticipantType;
-import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.reference.DogHasHandlerReference;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.DBRef;

@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.participants;
 
 import casp.web.backend.common.BaseParticipantType;
-import casp.web.backend.common.DogHasHandlerReference;
+import casp.web.backend.common.reference.DogHasHandlerReference;
 import casp.web.backend.configuration.Payment;
 import casp.web.backend.configuration.PaymentConstraint;
 import jakarta.validation.Valid;

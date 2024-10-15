@@ -1,4 +1,4 @@
-package casp.web.backend.common;
+package casp.web.backend.common.reference;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

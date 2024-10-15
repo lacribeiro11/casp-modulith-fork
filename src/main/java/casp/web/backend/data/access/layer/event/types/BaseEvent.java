@@ -3,9 +3,9 @@ package casp.web.backend.data.access.layer.event.types;
 
 import casp.web.backend.common.BaseDocument;
 import casp.web.backend.common.BaseEventType;
-import casp.web.backend.common.DogHasHandlerReference;
 import casp.web.backend.common.EntityStatus;
 import casp.web.backend.common.MemberReference;
+import casp.web.backend.common.reference.DogHasHandlerReference;
 import casp.web.backend.data.access.layer.event.calendar.CalendarEntry;
 import casp.web.backend.data.access.layer.event.options.BaseEventOption;
 import jakarta.validation.Valid;

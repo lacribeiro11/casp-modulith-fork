@@ -1,4 +1,7 @@
-package casp.web.backend.common;
+package casp.web.backend.common.reference;
+
+import casp.web.backend.common.DogReference;
+import casp.web.backend.common.MemberReference;
 
 import java.util.Set;
 import java.util.UUID;
