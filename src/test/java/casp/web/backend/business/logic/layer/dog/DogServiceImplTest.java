@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -89,8 +88,8 @@ class DogServiceImplTest {
     class SaveDog {
         @Test
         void createNewDog() {
-            when(dogRepository.findById(dog.getId())).thenReturn(Optional.empty());
-            when(dogRepository.save(dog)).thenAnswer(i -> i.getArgument(0));
+            when(dogRepository.setMetadataAndSave(dog)).thenAnswer(i -> i.getArgument(0));
+
             var actualDogDto = dogService.saveDog(dogDto);
 
             assertThat(actualDogDto).usingRecursiveAssertion().isEqualTo(dogDto);
@@ -98,14 +97,11 @@ class DogServiceImplTest {
 
         @Test
         void updateExistingDog() {
-            dog.setCreated(LocalDateTime.MIN);
-            dog.setCreatedBy("Bonsai");
-            when(dogRepository.findById(dog.getId())).thenReturn(Optional.of(dog));
-            when(dogRepository.save(dog)).thenAnswer(i -> i.getArgument(0));
+            when(dogRepository.setMetadataAndSave(dog)).thenAnswer(i -> i.getArgument(0));
 
             dogService.saveDog(dogDto);
 
-            verify(dogRepository).save(dogCaptor.capture());
+            verify(dogRepository).setMetadataAndSave(dogCaptor.capture());
             assertThat(dogCaptor.getValue()).usingRecursiveAssertion().isEqualTo(dog);
         }
     }
@@ -177,9 +173,10 @@ class DogServiceImplTest {
 
         @Test
         void dogWasNotFound() {
-            when(dogRepository.findDogByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.empty());
+            var dogId = dog.getId();
+            when(dogRepository.findDogByIdAndEntityStatus(dogId, EntityStatus.ACTIVE)).thenReturn(Optional.empty());
 
-            assertThrows(NoSuchElementException.class, () -> dogService.getDogById(dog.getId()));
+            assertThrows(NoSuchElementException.class, () -> dogService.getDogById(dogId));
         }
 
         @Test
