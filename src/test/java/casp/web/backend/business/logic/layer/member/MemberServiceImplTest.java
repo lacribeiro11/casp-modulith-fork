@@ -25,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -242,18 +241,18 @@ class MemberServiceImplTest {
     class SaveMember {
         @Test
         void emailDoesNotExists() {
-            when(memberRepository.save(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
+            when(memberRepository.setMetadataAndSave(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
 
             memberService.saveMember(MEMBER_MAPPER.toTarget(member));
 
-            verify(memberRepository).save(memberCaptor.capture());
+            verify(memberRepository).setMetadataAndSave(memberCaptor.capture());
             assertThat(memberCaptor.getValue())
                     .usingRecursiveComparison()
                     .isEqualTo(member);
         }
 
         @Test
-        void emailExists() {
+        void emailExistsButBelongsToOtherMember() {
             when(memberRepository.findMemberByEmail(member.getEmail())).thenReturn(Optional.of(new Member()));
             var memberDto = MEMBER_MAPPER.toTarget(member);
 
@@ -261,15 +260,13 @@ class MemberServiceImplTest {
         }
 
         @Test
-        void memberExist() {
-            member.setCreated(LocalDateTime.MIN);
-            member.setCreatedBy("Bonsai");
+        void updateMember() {
             when(memberRepository.findMemberByEmail(member.getEmail())).thenReturn(Optional.of(member));
-            when(memberRepository.save(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
+            when(memberRepository.setMetadataAndSave(argThat(m -> member.getId() == m.getId()))).thenAnswer(i -> i.getArgument(0));
 
             memberService.saveMember(MEMBER_MAPPER.toTarget(member));
 
-            verify(memberRepository).save(memberCaptor.capture());
+            verify(memberRepository).setMetadataAndSave(memberCaptor.capture());
             assertThat(memberCaptor.getValue())
                     .usingRecursiveComparison()
                     .isEqualTo(member);

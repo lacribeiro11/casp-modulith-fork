@@ -51,17 +51,6 @@ class MemberServiceImpl implements MemberService {
         this.dogHasHandlerReferenceRepository = dogHasHandlerReferenceRepository;
     }
 
-    private static void checkIfEMailAlreadyExistAndSetCreatedFields(final Member actualMember, final Member newMember) {
-        if (!newMember.equals(actualMember)) {
-            var msg = "Member with email %s already exists.".formatted(newMember.getEmail());
-            LOG.error(msg);
-            throw new IllegalStateException(msg);
-        } else {
-            newMember.setCreatedBy(actualMember.getCreatedBy());
-            newMember.setCreated(actualMember.getCreated());
-        }
-    }
-
     @Override
     public Page<MemberDto> getMembersByFirstNameAndLastName(final String firstName, final String lastName, final Pageable pageable) {
         var memberPage = memberRepository.findAllByFirstNameAndLastName(firstName, lastName, pageable);
@@ -84,9 +73,15 @@ class MemberServiceImpl implements MemberService {
         var member = MEMBER_MAPPER.toSource(memberDto);
 
         memberRepository.findMemberByEmail(memberDto.getEmail())
-                .ifPresent(m -> checkIfEMailAlreadyExistAndSetCreatedFields(m, member));
+                .ifPresent(m -> {
+                    if (!member.equals(m)) {
+                        var msg = "Member with email %s already exists.".formatted(member.getEmail());
+                        LOG.error(msg);
+                        throw new IllegalStateException(msg);
+                    }
+                });
 
-        return mapToMemberDto(memberRepository.save(member));
+        return mapToMemberDto(memberRepository.setMetadataAndSave(member));
     }
 
     @Override
