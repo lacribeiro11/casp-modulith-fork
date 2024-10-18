@@ -299,6 +299,8 @@ class DogHasHandlerRestControllerTest {
 
         private DogHasHandlerWrite createDogHasHandlerWrite() {
             var dogHasHandlerWrite = new DogHasHandlerWrite();
+            dogHasHandlerWrite.setId(dogHasHandlerDto.getId());
+            dogHasHandlerWrite.setVersion(dogHasHandlerDto.getVersion());
             dogHasHandlerWrite.setDogId(dogHasHandlerDto.getDog().getId());
             dogHasHandlerWrite.setMemberId(dogHasHandlerDto.getMember().getId());
             return dogHasHandlerWrite;

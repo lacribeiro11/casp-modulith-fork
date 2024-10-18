@@ -59,6 +59,16 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         var member = memberReferenceRepository.findOneByIdAndEntityStatus(dogHasHandlerDto.getMemberId(), EntityStatus.ACTIVE).
                 orElseThrow(() -> throwNoSuchElementException(MemberReference.class.getSimpleName(), dogHasHandlerDto.getMemberId()));
 
+        dogHasHandlerRepository.findByDogIdAndMemberId(dogHasHandlerDto.getDogId(), dogHasHandlerDto.getMemberId())
+                .ifPresent(dhh -> {
+                    if (!dhh.getId().equals(dogHasHandlerDto.getId())) {
+                        var msg = "There is already a DogHasHandler[id: %s] with this dog[id: %s] and this member[id: %s]"
+                                .formatted(dhh.getId(), dhh.getDog().getId(), dhh.getMember().getId());
+                        LOG.error(msg);
+                        throw new IllegalStateException(msg);
+                    }
+                });
+
         var dogHasHandler = DOG_HAS_HANDLER_MAPPER.toSource(dogHasHandlerDto);
         dogHasHandlerRepository.findById(dogHasHandler.getId()).ifPresent(dhh -> {
             dogHasHandler.setCreated(dhh.getCreated());

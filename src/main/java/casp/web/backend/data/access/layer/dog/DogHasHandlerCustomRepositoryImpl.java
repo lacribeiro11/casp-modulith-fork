@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuery;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,6 +59,17 @@ class DogHasHandlerCustomRepositoryImpl implements DogHasHandlerCustomRepository
         return query()
                 .where(expression)
                 .fetchPage(pageable);
+    }
+
+    @Override
+    public Optional<DogHasHandler> findByDogIdAndMemberId(final UUID dogId, final UUID memberId) {
+        var expression = DOG_HAS_HANDLER.entityStatus.eq(EntityStatus.ACTIVE)
+                .and(DOG_HAS_HANDLER.dog.id.eq(dogId))
+                .and(DOG_HAS_HANDLER.member.id.eq(memberId));
+        return query()
+                .where(expression)
+                .stream()
+                .findAny();
     }
 
     private Set<UUID> findAllByDogName(final String name, final Pageable pageable) {

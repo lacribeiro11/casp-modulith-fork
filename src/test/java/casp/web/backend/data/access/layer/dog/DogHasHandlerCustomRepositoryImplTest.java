@@ -96,6 +96,15 @@ class DogHasHandlerCustomRepositoryImplTest {
         dogId = dog.getId();
     }
 
+    @Test
+    void findByDogIdAndMemberId() {
+        var dogHasHandlerOptional = dogHasHandlerRepository.findByDogIdAndMemberId(dogId, memberId);
+
+        assertThat(dogHasHandlerOptional)
+                .isPresent()
+                .hasValue(activeDogHasHandler);
+    }
+
     @Nested
     class FindAllByName {
 

@@ -255,10 +255,12 @@ class DogHasHandlerServiceImplTest {
         @Test
         void dogHasHandlerExist() {
             var existingDogHasHandler = mock(DogHasHandler.class);
+            when(existingDogHasHandler.getId()).thenReturn(dogHasHandler.getId());
             when(existingDogHasHandler.getCreated()).thenReturn(LocalDateTime.MIN);
             when(existingDogHasHandler.getCreatedBy()).thenReturn("user");
             when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
             when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
+            when(dogHasHandlerRepository.findByDogIdAndMemberId(dog.getId(), member.getId())).thenReturn(Optional.of(existingDogHasHandler));
             when(dogHasHandlerRepository.findById(dogHasHandler.getId())).thenReturn(Optional.of(existingDogHasHandler));
 
             dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
@@ -267,6 +269,18 @@ class DogHasHandlerServiceImplTest {
             var actualDogHasHandler = dogHasHandlerCaptor.getValue();
             assertSame(LocalDateTime.MIN, actualDogHasHandler.getCreated());
             assertSame("user", actualDogHasHandler.getCreatedBy());
+        }
+
+        @Test
+        void dontSaveDuplicatedDogHasHandlers() {
+            var existingDogHasHandler = new DogHasHandler();
+            existingDogHasHandler.setDog(dog);
+            existingDogHasHandler.setMember(member);
+            when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
+            when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
+            when(dogHasHandlerRepository.findByDogIdAndMemberId(dog.getId(), member.getId())).thenReturn(Optional.of(existingDogHasHandler));
+
+            assertThrows(IllegalStateException.class, () -> dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto));
         }
     }
 
