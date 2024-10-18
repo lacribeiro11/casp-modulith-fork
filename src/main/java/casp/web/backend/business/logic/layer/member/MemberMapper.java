@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Set;
 
-// FIXME Remove public
 @Mapper
 public interface MemberMapper extends BaseDtoMapper<Member, MemberDto> {
     MemberMapper MEMBER_MAPPER = Mappers.getMapper(MemberMapper.class);

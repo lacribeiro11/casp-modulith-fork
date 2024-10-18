@@ -26,10 +26,8 @@ public interface DogHasHandlerService {
      */
     DogHasHandlerDto getDogHasHandlerById(UUID id);
 
-    // FIXME add it to member service
     void deleteDogHasHandlersByMemberId(UUID memberId);
 
-    // FIXME add it to dog service
     void deleteDogHasHandlersByDogId(UUID dogId);
 
     void deleteDogHasHandlerById(UUID id);
@@ -48,10 +46,8 @@ public interface DogHasHandlerService {
 
     Set<String> getEmailsByDogHasHandlersIds(Set<UUID> ids);
 
-    // FIXME add it to member service
     void deactivateDogHasHandlersByMemberId(UUID memberId);
 
-    // FIXME add it to member service
     void activateDogHasHandlersByMemberId(UUID memberId);
 
     /**

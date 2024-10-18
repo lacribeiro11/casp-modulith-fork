@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Set;
 
-// FIXME remove public
 @Mapper
 public interface DogMapper extends BaseMapper<Dog, DogDto> {
     DogMapper DOG_MAPPER = Mappers.getMapper(DogMapper.class);
