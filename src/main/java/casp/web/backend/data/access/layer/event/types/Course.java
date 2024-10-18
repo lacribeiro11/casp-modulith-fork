@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.types;
 
 import casp.web.backend.common.enums.BaseEventType;
-import casp.web.backend.configuration.CourseSpacesConstraint;
-import casp.web.backend.configuration.CourseValidation;
+import casp.web.backend.common.validation.CourseSpacesConstraint;
+import casp.web.backend.common.validation.CourseValidation;
 import casp.web.backend.data.access.layer.event.participants.CoTrainer;
 import casp.web.backend.data.access.layer.event.participants.Space;
 import com.querydsl.core.annotations.QueryEntity;

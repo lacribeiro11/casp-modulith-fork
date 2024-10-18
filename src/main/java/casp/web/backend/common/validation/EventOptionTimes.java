@@ -1,4 +1,4 @@
-package casp.web.backend.configuration;
+package casp.web.backend.common.validation;
 
 import java.time.LocalTime;
 

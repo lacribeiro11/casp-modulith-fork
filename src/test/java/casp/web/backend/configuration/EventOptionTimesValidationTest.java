@@ -1,5 +1,7 @@
 package casp.web.backend.configuration;
 
+import casp.web.backend.common.validation.EventOptionTimes;
+import casp.web.backend.common.validation.EventOptionTimesValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

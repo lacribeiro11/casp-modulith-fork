@@ -1,7 +1,7 @@
 package casp.web.backend.data.access.layer.event.calendar;
 
-import casp.web.backend.configuration.CalendarFromToConstraint;
-import casp.web.backend.configuration.CalendarValidation;
+import casp.web.backend.common.validation.CalendarFromToConstraint;
+import casp.web.backend.common.validation.CalendarValidation;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 

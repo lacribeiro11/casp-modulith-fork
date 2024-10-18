@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.options;
 
 
-import casp.web.backend.configuration.EventOptionTimes;
-import casp.web.backend.configuration.EventOptionTimesConstraint;
+import casp.web.backend.common.validation.EventOptionTimes;
+import casp.web.backend.common.validation.EventOptionTimesConstraint;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.DayOfWeek;

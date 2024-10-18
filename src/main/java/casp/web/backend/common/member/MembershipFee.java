@@ -1,7 +1,7 @@
 package casp.web.backend.common.member;
 
-import casp.web.backend.configuration.Payment;
-import casp.web.backend.configuration.PaymentConstraint;
+import casp.web.backend.common.validation.Payment;
+import casp.web.backend.common.validation.PaymentConstraint;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.PositiveOrZero;
 

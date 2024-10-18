@@ -1,8 +1,8 @@
 package casp.web.backend.data.access.layer.event.options;
 
 import casp.web.backend.common.enums.BaseEventOptionType;
-import casp.web.backend.configuration.BaseEventOptionRecurrencesConstraint;
-import casp.web.backend.configuration.BaseEventOptionValidation;
+import casp.web.backend.common.validation.BaseEventOptionRecurrencesConstraint;
+import casp.web.backend.common.validation.BaseEventOptionValidation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

@@ -1,5 +1,7 @@
 package casp.web.backend.configuration;
 
+import casp.web.backend.common.validation.BaseEventOptionRecurrencesValidation;
+import casp.web.backend.common.validation.BaseEventOptionValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

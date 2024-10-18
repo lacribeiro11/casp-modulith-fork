@@ -1,7 +1,7 @@
 package casp.web.backend.deprecated.dtos.event.participants;
 
 import casp.web.backend.common.enums.EventResponse;
-import casp.web.backend.configuration.Payment;
+import casp.web.backend.common.validation.Payment;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

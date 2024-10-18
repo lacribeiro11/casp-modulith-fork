@@ -1,7 +1,7 @@
 package casp.web.backend.deprecated.event.participants;
 
-import casp.web.backend.configuration.Payment;
-import casp.web.backend.configuration.PaymentConstraint;
+import casp.web.backend.common.validation.Payment;
+import casp.web.backend.common.validation.PaymentConstraint;
 import casp.web.backend.deprecated.dog.DogHasHandler;
 import casp.web.backend.deprecated.event.types.Course;
 import com.querydsl.core.annotations.QueryEntity;
