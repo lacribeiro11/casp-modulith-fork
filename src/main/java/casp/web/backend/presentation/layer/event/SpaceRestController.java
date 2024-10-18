@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.event;
 
-import casp.web.backend.presentation.layer.dtos.event.participants.SpaceReadDto;
-import casp.web.backend.presentation.layer.dtos.event.participants.SpaceWriteDto;
+import casp.web.backend.deprecated.dtos.event.participants.SpaceReadDto;
+import casp.web.backend.deprecated.dtos.event.participants.SpaceWriteDto;
 import casp.web.backend.presentation.layer.event.facades.SpaceFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

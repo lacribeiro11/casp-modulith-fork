@@ -2,12 +2,12 @@ package casp.web.backend.presentation.layer.event;
 
 import casp.web.backend.TestFixture;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
+import casp.web.backend.deprecated.dtos.event.participants.SpaceReadDto;
+import casp.web.backend.deprecated.dtos.event.participants.SpaceWriteDto;
 import casp.web.backend.deprecated.event.participants.BaseParticipantRepository;
 import casp.web.backend.deprecated.event.participants.Space;
 import casp.web.backend.deprecated.event.types.BaseEventRepository;
 import casp.web.backend.presentation.layer.MvcMapper;
-import casp.web.backend.presentation.layer.dtos.event.participants.SpaceReadDto;
-import casp.web.backend.presentation.layer.dtos.event.participants.SpaceWriteDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

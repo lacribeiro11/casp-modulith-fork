@@ -4,9 +4,9 @@ import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.CoTrainerService;
 import casp.web.backend.business.logic.layer.event.participants.SpaceService;
 import casp.web.backend.business.logic.layer.event.types.CourseService;
+import casp.web.backend.deprecated.dtos.event.types.CourseDto;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.Course;
-import casp.web.backend.presentation.layer.dtos.event.types.CourseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static casp.web.backend.presentation.layer.dtos.event.calendar.CalendarMapper.CALENDAR_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.event.participants.CoTrainerMapper.CO_TRAINER_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.event.participants.SpaceMapper.SPACE_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.event.types.CourseMapper.COURSE_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.calendar.CalendarMapper.CALENDAR_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.participants.CoTrainerMapper.CO_TRAINER_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.participants.SpaceMapper.SPACE_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.types.CourseMapper.COURSE_MAPPER;
 
 @Service
 class CourseFacadeImpl implements CourseFacade {

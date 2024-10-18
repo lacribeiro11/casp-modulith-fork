@@ -3,9 +3,9 @@ package casp.web.backend.presentation.layer.event.facades;
 import casp.web.backend.business.logic.layer.event.calendar.CalendarService;
 import casp.web.backend.business.logic.layer.event.participants.ExamParticipantService;
 import casp.web.backend.business.logic.layer.event.types.ExamService;
+import casp.web.backend.deprecated.dtos.event.types.ExamDto;
 import casp.web.backend.deprecated.event.types.BaseEvent;
 import casp.web.backend.deprecated.event.types.Exam;
-import casp.web.backend.presentation.layer.dtos.event.types.ExamDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static casp.web.backend.presentation.layer.dtos.event.calendar.CalendarMapper.CALENDAR_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.event.participants.ExamParticipantMapper.EXAM_PARTICIPANT_MAPPER;
-import static casp.web.backend.presentation.layer.dtos.event.types.ExamMapper.EXAM_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.calendar.CalendarMapper.CALENDAR_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.participants.ExamParticipantMapper.EXAM_PARTICIPANT_MAPPER;
+import static casp.web.backend.deprecated.dtos.event.types.ExamMapper.EXAM_MAPPER;
 
 @Service
 class ExamFacadeImpl implements ExamFacade {

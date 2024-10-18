@@ -27,7 +27,7 @@
 ### DogDto
 
 * `casp.web.backend.presentation.layer.dtos.dog.DogDto.dogHasHandlerDtoSet` is type
-  `casp.web.backend.presentation.layer.dtos.dog.DogHasHandlerDto`
+  `casp.web.backend.deprecated.dog.dtos.DogHasHandlerDto`
     * `casp.web.backend.presentation.layer.dtos.member.DogHasHandlerDto` contains
         * `casp.web.backend.data.access.layer.dog.DogHasHandler.id`
         * `casp.web.backend.data.access.layer.dog.DogHasHandler.member.id` is `memberId`

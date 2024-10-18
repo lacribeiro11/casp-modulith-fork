@@ -1,7 +1,7 @@
 package casp.web.backend.presentation.layer.event.facades;
 
+import casp.web.backend.deprecated.dtos.event.types.BaseEventDto;
 import casp.web.backend.deprecated.event.types.BaseEvent;
-import casp.web.backend.presentation.layer.dtos.event.types.BaseEventDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

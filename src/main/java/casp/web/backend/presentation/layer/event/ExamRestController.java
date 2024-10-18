@@ -1,6 +1,6 @@
 package casp.web.backend.presentation.layer.event;
 
-import casp.web.backend.presentation.layer.dtos.event.types.ExamDto;
+import casp.web.backend.deprecated.dtos.event.types.ExamDto;
 import casp.web.backend.presentation.layer.event.facades.ExamFacade;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
