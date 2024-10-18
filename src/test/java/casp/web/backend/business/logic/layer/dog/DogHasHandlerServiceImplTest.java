@@ -1,16 +1,12 @@
 package casp.web.backend.business.logic.layer.dog;
 
-import casp.web.backend.business.logic.layer.event.participants.BaseParticipantObserver;
 import casp.web.backend.common.enums.EntityStatus;
-import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.common.reference.DogReferenceRepository;
 import casp.web.backend.common.reference.MemberReference;
 import casp.web.backend.common.reference.MemberReferenceRepository;
 import casp.web.backend.data.access.layer.dog.DogHasHandler;
 import casp.web.backend.data.access.layer.dog.DogHasHandlerRepository;
-import casp.web.backend.data.access.layer.dog.DogRepository;
-import casp.web.backend.data.access.layer.member.MemberRepository;
 import casp.web.backend.deprecated.dog.DogHasHandlerOldRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -25,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -46,15 +41,7 @@ class DogHasHandlerServiceImplTest {
     @Mock
     private DogHasHandlerOldRepository dogHasHandlerOldRepository;
     @Mock
-    private DogRepository dogRepository;
-    @Mock
-    private MemberRepository memberRepository;
-    @Mock
-    private BaseParticipantObserver baseParticipantObserver;
-    @Mock
     private MemberReferenceRepository memberReferenceRepository;
-    @Mock
-    private DogHasHandlerReferenceRepository dogHasHandlerReferenceRepository;
     @Mock
     private DogReferenceRepository dogReferenceRepository;
     @Mock
@@ -244,7 +231,7 @@ class DogHasHandlerServiceImplTest {
         void memberAndDogExist() {
             when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
             when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
-            when(dogHasHandlerRepository.save(dogHasHandler)).thenAnswer(i -> i.getArgument(0));
+            when(dogHasHandlerRepository.setMetadataAndSave(dogHasHandler)).thenAnswer(i -> i.getArgument(0));
 
             var actualDogHasHandlerDto = dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
 
@@ -256,19 +243,15 @@ class DogHasHandlerServiceImplTest {
         void dogHasHandlerExist() {
             var existingDogHasHandler = mock(DogHasHandler.class);
             when(existingDogHasHandler.getId()).thenReturn(dogHasHandler.getId());
-            when(existingDogHasHandler.getCreated()).thenReturn(LocalDateTime.MIN);
-            when(existingDogHasHandler.getCreatedBy()).thenReturn("user");
             when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
             when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
             when(dogHasHandlerRepository.findByDogIdAndMemberId(dog.getId(), member.getId())).thenReturn(Optional.of(existingDogHasHandler));
-            when(dogHasHandlerRepository.findById(dogHasHandler.getId())).thenReturn(Optional.of(existingDogHasHandler));
+            when(dogHasHandlerRepository.setMetadataAndSave(dogHasHandler)).thenAnswer(i -> i.getArgument(0));
 
-            dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
+            var actualDogHasHandlerDto = dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
 
-            verify(dogHasHandlerRepository).save(dogHasHandlerCaptor.capture());
-            var actualDogHasHandler = dogHasHandlerCaptor.getValue();
-            assertSame(LocalDateTime.MIN, actualDogHasHandler.getCreated());
-            assertSame("user", actualDogHasHandler.getCreatedBy());
+            assertSame(dog, actualDogHasHandlerDto.getDog());
+            assertSame(member, actualDogHasHandlerDto.getMember());
         }
 
         @Test

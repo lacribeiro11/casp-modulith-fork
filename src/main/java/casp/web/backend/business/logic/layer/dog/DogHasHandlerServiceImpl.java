@@ -70,14 +70,10 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
                 });
 
         var dogHasHandler = DOG_HAS_HANDLER_MAPPER.toSource(dogHasHandlerDto);
-        dogHasHandlerRepository.findById(dogHasHandler.getId()).ifPresent(dhh -> {
-            dogHasHandler.setCreated(dhh.getCreated());
-            dogHasHandler.setCreatedBy(dhh.getCreatedBy());
-        });
         dogHasHandler.setDog(dog);
         dogHasHandler.setMember(member);
 
-        return DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerRepository.save(dogHasHandler));
+        return DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerRepository.setMetadataAndSave(dogHasHandler));
     }
 
     @Override
