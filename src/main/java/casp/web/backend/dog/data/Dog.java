@@ -21,7 +21,7 @@ public class Dog extends BaseDocument implements DogRequiredFields {
     private Gender gender = Gender.FEMALE;
     private String chipNumber;
     private LocalDate rabiesDate;
-    private float height;
+    private Float height;
     private String ownerName;
     private String ownerAddress;
     private EuropeNetState europeNetState = EuropeNetState.NOT_CHECKED;
@@ -107,12 +107,12 @@ public class Dog extends BaseDocument implements DogRequiredFields {
     }
 
     @Override
-    public float getHeight() {
+    public Float getHeight() {
         return height;
     }
 
     @Override
-    public void setHeight(float height) {
+    public void setHeight(Float height) {
         this.height = height;
     }
 
