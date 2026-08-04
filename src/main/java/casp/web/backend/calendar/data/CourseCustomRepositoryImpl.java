@@ -62,7 +62,7 @@ class CourseCustomRepositoryImpl extends BaseEventCustomRepositoryImpl<Course> i
     @SuppressWarnings("java:S1192")
     @Override
     public CoursesFeesStatsDto getCoursesFeesStats() {
-        var thisYear = LocalDate.now().getYear();
+        var thisYear = LocalDate.now(zoneId).getYear();
         var lastYear = thisYear - 1;
         var twoYearsAgo = thisYear - 2;
         var participantsFieldName = COURSE.participants.getMetadata().getName();

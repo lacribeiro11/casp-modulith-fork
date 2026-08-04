@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.repository.support.SpringDataMongodbQuer
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,10 +35,12 @@ class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private static final String TOTAL_PAID = "totalPaid";
     private static final String AGGREGATION_ID = "_id";
     private final MongoOperations mongoOperations;
+    private final ZoneId zoneId;
 
     @Autowired
-    MemberCustomRepositoryImpl(MongoOperations mongoOperations) {
+    MemberCustomRepositoryImpl(MongoOperations mongoOperations, ZoneId zoneId) {
         this.mongoOperations = mongoOperations;
+        this.zoneId = zoneId;
     }
 
     @Override
@@ -77,7 +80,7 @@ class MemberCustomRepositoryImpl implements MemberCustomRepository {
 
     @Override
     public MembershipFeesStatsDto getMembershipFeesStats() {
-        var thisYear = LocalDate.now().getYear();
+        var thisYear = LocalDate.now(zoneId).getYear();
         var lastYear = thisYear - 1;
         var twoYearsAgo = thisYear - 2;
         var membershipFeeFieldName = MEMBER.membershipFees.getMetadata().getName();
