@@ -8,8 +8,8 @@ import casp.web.backend.dog.DogHasHandlerService;
 import casp.web.backend.member.data.Member;
 import casp.web.backend.member.data.MemberRepository;
 import casp.web.backend.member.data.Role;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static casp.web.backend.member.MemberMapper.MEMBER_MAPPER;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 class MemberServiceImpl implements MemberService {
@@ -29,13 +30,6 @@ class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final DogHasHandlerService dogHasHandlerService;
     private final BaseEventObserver baseEventObserver;
-
-    @Autowired
-    MemberServiceImpl(MemberRepository memberRepository, DogHasHandlerService dogHasHandlerService, BaseEventObserver baseEventObserver) {
-        this.memberRepository = memberRepository;
-        this.dogHasHandlerService = dogHasHandlerService;
-        this.baseEventObserver = baseEventObserver;
-    }
 
     @Override
     public Page<MemberDto> getMembersByEntityStatusNameAndRoles(EntityStatus entityStatus, String name, Set<Role> roles, Pageable pageable) {
