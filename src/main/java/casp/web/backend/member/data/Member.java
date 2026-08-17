@@ -26,7 +26,12 @@ public class Member extends BaseDocument implements MemberRequiredFields {
     private LocalDate birthDate;
     private Gender gender;
     private String telephoneNumber;
-    @Indexed(unique = true)
+    // cf. not casp.web.backend.common.enums.EntityStatus.DELETED
+    // MongoDB is rejecting the index because $ne is not supported in partial indexes.
+    @Indexed(
+            unique = true,
+            partialFilter = "{ 'entityStatus': { '$in': ['ACTIVE', 'INACTIVE'] } }"
+    )
     private String email;
     private String address;
     private String postcode;
