@@ -25,7 +25,6 @@ import static casp.web.backend.member.MemberMapper.MEMBER_MAPPER;
 @Slf4j
 @Service
 class MemberServiceImpl implements MemberService {
-    private static final String EMAIL_FORMAT_IF_DELETED = "%s---%s";
 
     private final MemberRepository memberRepository;
     private final DogHasHandlerService dogHasHandlerService;
@@ -57,7 +56,6 @@ class MemberServiceImpl implements MemberService {
         var member = memberRepository.findByIdAndEntityStatusCustom(id, EntityStatus.ACTIVE);
         dogHasHandlerService.deleteDogHasHandlersByMemberId(id);
         baseEventObserver.deleteBaseEventsByMemberId(id);
-        member.setEmail(EMAIL_FORMAT_IF_DELETED.formatted(member.getEmail(), id));
         member.setEntityStatus(EntityStatus.DELETED);
         memberRepository.save(member);
     }
@@ -98,7 +96,7 @@ class MemberServiceImpl implements MemberService {
                 throw new MemberStateConflictException(msg);
             }
         });
-        memberRepository.findOneByEmail(member.getEmail()).ifPresent(m -> {
+        memberRepository.findOneByEmailAndEntityStatusIsNot(member.getEmail(), EntityStatus.DELETED).ifPresent(m -> {
             if (!member.equals(m)) {
                 var msg = "Member with email %s already exists.".formatted(member.getEmail());
                 log.error(msg);
