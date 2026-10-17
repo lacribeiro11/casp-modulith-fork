@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -25,11 +25,11 @@ public class DogHasHandlerReference {
     private EntityStatus entityStatus = EntityStatus.ACTIVE;
     @Valid
     @NotNull
-    @DBRef
+    @DocumentReference
     private MemberReference member;
     @Valid
     @NotNull
-    @DBRef
+    @DocumentReference
     private DogReference dog;
 
     public boolean isActive() {

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class CoTrainer extends BaseParticipant {
     @Valid
     @NotNull
-    @DBRef
+    @DocumentReference
     private MemberReference member;
 
     public CoTrainer() {
