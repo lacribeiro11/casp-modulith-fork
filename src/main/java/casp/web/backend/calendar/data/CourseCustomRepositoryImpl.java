@@ -68,8 +68,8 @@ class CourseCustomRepositoryImpl extends BaseEventCustomRepositoryImpl<Course> i
         var participantsFieldName = COURSE.participants.getMetadata().getName();
         var paidDateFieldName = SPACE.paidDate.getMetadata().getName();
         var paidPriceFieldName = SPACE.paidPrice.getMetadata().getName();
-        var dogHasHandlerIdFieldName = "%s.%s.%s".formatted(participantsFieldName,
-                SPACE.dogHasHandler.getMetadata().getName(), "$id");
+        var dogHasHandlerIdFieldName = "%s.%s".formatted(participantsFieldName,
+                SPACE.dogHasHandler.getMetadata().getName());
         var dhhInfo = "dhhInfo";
         var dhhEntityStatusFieldName = "%s.%s".formatted(dhhInfo,
                 SPACE.dogHasHandler.entityStatus.getMetadata().getName());
