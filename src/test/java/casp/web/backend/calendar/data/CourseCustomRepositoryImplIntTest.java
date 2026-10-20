@@ -1,5 +1,6 @@
 package casp.web.backend.calendar.data;
 
+import casp.web.backend.MongoIntegrationTest;
 import casp.web.backend.ReferenceTestFixture;
 import casp.web.backend.calendar.data.participants.Space;
 import casp.web.backend.common.enums.EntityStatus;
@@ -13,12 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.domain.Pageable;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 
@@ -28,12 +24,9 @@ import static casp.web.backend.calendar.CalendarFixture.createCalendarEntryPlusY
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Testcontainers
-@SpringBootTest
-class CourseCustomRepositoryImplTest {
-    @Container
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+@MongoIntegrationTest
+class CourseCustomRepositoryImplIntTest {
+
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -120,12 +113,12 @@ class CourseCustomRepositoryImplTest {
         @BeforeEach
         void setUp() {
             dogHasHandlerReference = createDogHasHandlerReference();
-            space = createSpace(dogHasHandlerReference, CourseCustomRepositoryImplTest.this.course);
+            space = createSpace(dogHasHandlerReference, course);
         }
 
         @Test
         void multipleCourses() {
-            var course2 = createCourse(CourseCustomRepositoryImplTest.this.calendarEntry);
+            var course2 = createCourse(calendarEntry);
             course2.setSpaceLimit(1);
             course2.addSpace(space);
             courseRepository.save(course2);
@@ -137,7 +130,7 @@ class CourseCustomRepositoryImplTest {
 
         @Test
         void oneCourseIsNotActive() {
-            var course2 = createCourse(CourseCustomRepositoryImplTest.this.calendarEntry);
+            var course2 = createCourse(calendarEntry);
             course2.setSpaceLimit(1);
             course2.addSpace(space);
             course2.setEntityStatus(EntityStatus.DELETED);
@@ -152,7 +145,7 @@ class CourseCustomRepositoryImplTest {
         void spaceIsNotActive() {
             dogHasHandlerReference.setEntityStatus(EntityStatus.DELETED);
             dogHasHandlerReferenceRepository.save(dogHasHandlerReference);
-            var course2 = createCourse(CourseCustomRepositoryImplTest.this.calendarEntry);
+            var course2 = createCourse(calendarEntry);
             course2.setSpaceLimit(1);
             course2.addSpace(space);
             courseRepository.save(course2);

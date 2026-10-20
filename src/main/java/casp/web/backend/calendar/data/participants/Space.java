@@ -5,7 +5,7 @@ import casp.web.backend.common.reference.DogHasHandlerReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,7 +18,7 @@ public class Space extends BaseParticipant implements SpaceWriteRequiredFields {
     private Double paidPrice;
     private LocalDate paidDate;
 
-    @DBRef
+    @DocumentReference
     private DogHasHandlerReference dogHasHandler;
 
     public Space() {

@@ -7,8 +7,8 @@ import casp.web.backend.dog.DogHasHandlerRequiredFields;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -21,16 +21,15 @@ import java.util.Set;
 @QueryEntity
 @Document
 public class DogHasHandler extends BaseDocument implements DogHasHandlerRequiredFields {
-    @DBRef
+    @DocumentReference
     private MemberReference member;
     private String firstName;
     private String lastName;
-    @DBRef
+    @DocumentReference
     private DogReference dog;
     private String dogName;
     private String ownerName;
     private Set<Grade> grades = new HashSet<>();
-
 
     public String getFirstName() {
         this.firstName = member.getFirstName();

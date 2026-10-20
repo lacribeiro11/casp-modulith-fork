@@ -1,5 +1,6 @@
 package casp.web.backend.member.data;
 
+import casp.web.backend.MongoIntegrationTest;
 import casp.web.backend.common.enums.EntityStatus;
 import casp.web.backend.common.reference.DogHasHandlerReferenceRepository;
 import casp.web.backend.common.reference.DogReferenceRepository;
@@ -11,12 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.domain.Pageable;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -28,12 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Testcontainers
-@SpringBootTest
-class MemberCustomRepositoryImplTest {
-    @Container
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+@MongoIntegrationTest
+class MemberCustomRepositoryImplIntTest {
 
     @Autowired
     private MemberRepository memberRepository;

@@ -25,7 +25,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
     private static final String CALENDAR_ENTRIES_FIELD = "calendarEntries";
     private static final String EVENT_TYPE_FIELD = "eventType";
     private static final String NAME_FIELD = "name";
-    private static final String MEMBER_ID_FIELD = "member.$id";
+    private static final String MEMBER_ID_FIELD = "member";
     private static final String PARTICIPANTS_PREFIX = "participants.";
     private static final String MIN_TIME_FIELD = "minODT";
     private static final String MAX_TIME_FIELD = "maxODT";
@@ -43,7 +43,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
     // cf. Exam & Course
     private static final String DOG_HAS_HANDLER_FIELD = "dogHasHandler";
-    private static final String DOG_HAS_HANDLER_ID_FIELD = PARTICIPANTS_PREFIX + DOG_HAS_HANDLER_FIELD + ".$id";
+    private static final String DOG_HAS_HANDLER_ID_FIELD = PARTICIPANTS_PREFIX + DOG_HAS_HANDLER_FIELD;
     private static final String RESOLVED_DOG_HAS_HANDLER = "resolvedDogHasHandler";
     private static final String RESOLVED_MEMBER_ID_FIELD = RESOLVED_DOG_HAS_HANDLER + "." + MEMBER_ID_FIELD;
     private static final String COLLECTION_ID = "_id";

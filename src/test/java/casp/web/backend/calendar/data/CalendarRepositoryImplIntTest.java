@@ -1,5 +1,6 @@
 package casp.web.backend.calendar.data;
 
+import casp.web.backend.MongoIntegrationTest;
 import casp.web.backend.ReferenceTestFixture;
 import casp.web.backend.calendar.CalendarFixture;
 import casp.web.backend.calendar.data.participants.BaseParticipant;
@@ -18,11 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -31,12 +27,8 @@ import java.util.Set;
 import static casp.web.backend.calendar.CalendarFixture.createCalendarEntry;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
-@SpringBootTest
+@MongoIntegrationTest
 class CalendarRepositoryImplIntTest {
-    @Container
-    @ServiceConnection
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
 
     @Autowired
     private MemberReferenceRepository memberReferenceRepository;

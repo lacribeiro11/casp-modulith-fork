@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public abstract class BaseEvent<P extends BaseParticipant> extends BaseDocument 
     protected String description;
     protected String location;
     @NotNull
-    @DBRef
+    @DocumentReference
     protected MemberReference member;
     protected RecurrenceOption recurrenceOption;
     protected List<CalendarEntry> calendarEntries = new ArrayList<>();
