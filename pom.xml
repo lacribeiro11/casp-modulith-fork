@@ -22,7 +22,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-ui.version>3.0.3</springdoc-openapi-starter-webmvc-ui.version>
-        <javers-spring-boot-starter-mongo.version>7.11.6</javers-spring-boot-starter-mongo.version>
+        <javers-spring-boot-starter-mongo.version>7.11.9</javers-spring-boot-starter-mongo.version>
         <git-commit-id-maven-plugin.version>10.0.0</git-commit-id-maven-plugin.version>
     </properties>
     <dependencyManagement>
