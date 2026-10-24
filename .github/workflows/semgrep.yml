@@ -1,0 +1,16 @@
+name: Semgrep Feature and develop Branches
+on:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - 'feature/**'
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: semgrep scan --config p/java --config .semgrep.yml --error

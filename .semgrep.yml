@@ -1,0 +1,14 @@
+rules:
+  - id: mongo-raw-query-string-injection
+    languages: [java]
+    severity: ERROR
+    message: >
+      Raw MongoDB query built from a dynamic string may allow NoSQL injection.
+      Use Criteria/Query builders instead.
+    pattern-either:
+      - pattern: new BasicQuery($X + ...)
+      - pattern: new BasicQuery(String.format(...))
+      - pattern: new BasicQuery($S.formatted(...))
+      - pattern: org.bson.Document.parse($X + ...)
+      - pattern: Document.parse(String.format(...))
+      - pattern: Document.parse($S.formatted(...))
