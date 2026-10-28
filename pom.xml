@@ -21,7 +21,7 @@
         <spring-boot-admin.version>4.1.4</spring-boot-admin.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
-        <springdoc-openapi-starter-webmvc-ui.version>3.1.1</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>3.2.0</springdoc-openapi-starter-webmvc-ui.version>
         <javers-spring-boot-starter-mongo.version>7.11.9</javers-spring-boot-starter-mongo.version>
         <git-commit-id-maven-plugin.version>10.0.1</git-commit-id-maven-plugin.version>
     </properties>
