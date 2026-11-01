@@ -1,9 +1,9 @@
 FROM eclipse-temurin:21
 
-USER casp:casp
-
 WORKDIR /app
 
-COPY --chown=casp:casp target/adminV2.jar app.jar
+COPY --chown=10001:10001 target/adminV2.jar app.jar
+
+USER 10001:10001
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
