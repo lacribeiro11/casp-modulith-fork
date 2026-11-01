@@ -46,6 +46,7 @@ jobs:
         with:
           name: codeql-results
           path: codeql-results/*.sarif
+          retention-days: 60
 
       - name: Fail if findings exist
         run: |
