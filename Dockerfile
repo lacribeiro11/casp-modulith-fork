@@ -1,4 +1,4 @@
-FROM eclipse-temurin:24
+FROM eclipse-temurin:25
 
 COPY ./target/adminV2.jar /app.jar
 
