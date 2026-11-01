@@ -1,9 +1,5 @@
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25
 
-WORKDIR /app
+COPY ./target/adminV2.jar /app.jar
 
-COPY --chown=10001:10001 target/adminV2.jar app.jar
-
-USER 10001:10001
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
