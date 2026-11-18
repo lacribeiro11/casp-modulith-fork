@@ -1,28 +1,22 @@
 package casp.web.backend.common.reference;
 
+import casp.web.backend.common.base.BaseDocument;
 import casp.web.backend.common.enums.EntityStatus;
 import com.querydsl.core.annotations.QueryEntity;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-import java.util.Objects;
-import java.util.UUID;
-
+@EqualsAndHashCode(callSuper = false, of = {"member", "dog"})
 @Setter
 @Getter
 @QueryEntity
 @Document(collection = "dogHasHandler")
-public class DogHasHandlerReference {
-    @Id
-    @NotNull
-    private UUID id = UUID.randomUUID();
-    @NotNull
-    private EntityStatus entityStatus = EntityStatus.ACTIVE;
+public class DogHasHandlerReference extends BaseDocument {
     @NotNull
     @Indexed
     @DocumentReference
@@ -36,18 +30,5 @@ public class DogHasHandlerReference {
         return entityStatus == EntityStatus.ACTIVE
                 && member.getEntityStatus() == EntityStatus.ACTIVE
                 && dog.getEntityStatus() == EntityStatus.ACTIVE;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DogHasHandlerReference that)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(member, that.member) && Objects.equals(dog, that.dog);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(member.getId(), dog.getId());
     }
 }
