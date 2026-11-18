@@ -5,8 +5,10 @@ import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.common.reference.MemberReference;
 import casp.web.backend.dog.DogHasHandlerRequiredFields;
 import com.querydsl.core.annotations.QueryEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -21,10 +23,14 @@ import java.util.Set;
 @QueryEntity
 @Document
 public class DogHasHandler extends BaseDocument implements DogHasHandlerRequiredFields {
+    @NotNull
+    @Indexed
     @DocumentReference
     private MemberReference member;
     private String firstName;
     private String lastName;
+    @NotNull
+    @Indexed
     @DocumentReference
     private DogReference dog;
     private String dogName;

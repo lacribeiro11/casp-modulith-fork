@@ -2,11 +2,11 @@ package casp.web.backend.common.reference;
 
 import casp.web.backend.common.enums.EntityStatus;
 import com.querydsl.core.annotations.QueryEntity;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -23,12 +23,12 @@ public class DogHasHandlerReference {
     private UUID id = UUID.randomUUID();
     @NotNull
     private EntityStatus entityStatus = EntityStatus.ACTIVE;
-    @Valid
     @NotNull
+    @Indexed
     @DocumentReference
     private MemberReference member;
-    @Valid
     @NotNull
+    @Indexed
     @DocumentReference
     private DogReference dog;
 

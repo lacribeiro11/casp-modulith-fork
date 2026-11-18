@@ -2,9 +2,11 @@ package casp.web.backend.calendar.data.participants;
 
 import casp.web.backend.calendar.presentation.SpaceWriteRequiredFields;
 import casp.web.backend.common.reference.DogHasHandlerReference;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDate;
@@ -17,7 +19,8 @@ public class Space extends BaseParticipant implements SpaceWriteRequiredFields {
     private String note;
     private Double paidPrice;
     private LocalDate paidDate;
-
+    @NotNull
+    @Indexed
     @DocumentReference
     private DogHasHandlerReference dogHasHandler;
 

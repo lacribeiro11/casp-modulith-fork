@@ -29,6 +29,7 @@ public abstract class BaseEvent<P extends BaseParticipant> extends BaseDocument 
     protected String description;
     protected String location;
     @NotNull
+    @Indexed
     @DocumentReference
     protected MemberReference member;
     protected RecurrenceOption recurrenceOption;

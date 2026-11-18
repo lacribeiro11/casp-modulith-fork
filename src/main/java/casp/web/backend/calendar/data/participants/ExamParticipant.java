@@ -1,11 +1,11 @@
 package casp.web.backend.calendar.data.participants;
 
 import casp.web.backend.common.reference.DogHasHandlerReference;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.UUID;
@@ -14,8 +14,8 @@ import java.util.UUID;
 @Setter
 @Getter
 public class ExamParticipant extends BaseParticipant {
-    @Valid
     @NotNull
+    @Indexed
     @DocumentReference
     private DogHasHandlerReference dogHasHandler;
 
