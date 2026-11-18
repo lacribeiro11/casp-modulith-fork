@@ -30,75 +30,70 @@ class DogHasHandlerCustomRepositoryImplIntTest {
     @Autowired
     private MemberReferenceRepository memberRepository;
 
-    private DogHasHandler activeDogHasHandler;
-    private DogHasHandler inactiveDogHasHandler;
-    private UUID dogId;
-    private UUID memberId;
+    private DogHasHandler activeDogHasHandler1;
+    private DogHasHandler inactiveDogHasHandler1;
+    private DogHasHandler activeDogHasHandler2;
+    private DogHasHandler inactiveDogHasHandler2;
+    private UUID dogId1;
+    private UUID memberId1;
 
     @BeforeEach
     void setUp() {
         dogHasHandlerRepository.deleteAll();
         dogReferenceRepository.deleteAll();
         memberRepository.deleteAll();
-        var dog = dogReferenceRepository.save(ReferenceTestFixture.createDogReference());
-        dogId = dog.getId();
-        var member = memberRepository.save(ReferenceTestFixture.createMemberReference());
-        memberId = member.getId();
+        var dog1 = dogReferenceRepository.save(ReferenceTestFixture.createDogReference());
+        var dog2 = dogReferenceRepository.save(ReferenceTestFixture.createDogReference("Robert"));
+        dogId1 = dog1.getId();
+        var member1 = memberRepository.save(ReferenceTestFixture.createMemberReference());
+        var member2 = memberRepository.save(ReferenceTestFixture.createMemberReference("Maximilian", "Mustermann"));
+        memberId1 = member1.getId();
 
-        activeDogHasHandler = createDogHasHandler(EntityStatus.ACTIVE, member, dog);
-        inactiveDogHasHandler = createDogHasHandler(EntityStatus.INACTIVE, member, dog);
+        activeDogHasHandler1 = createDogHasHandler(EntityStatus.ACTIVE, member1, dog1);
+        inactiveDogHasHandler1 = createDogHasHandler(EntityStatus.INACTIVE, member2, dog1);
+        activeDogHasHandler2 = createDogHasHandler(EntityStatus.ACTIVE, member2, dog2);
+        inactiveDogHasHandler2 = createDogHasHandler(EntityStatus.INACTIVE, member1, dog2);
     }
 
     @Test
     void findAllByDogIdAndNotDeleted() {
-        var dogHasHandlers = dogHasHandlerRepository.findAllByDogIdAndNotDeleted(dogId);
+        var dogHasHandlers = dogHasHandlerRepository.findAllByDogIdAndNotDeleted(dogId1);
 
-        assertThat(dogHasHandlers).containsExactlyInAnyOrder(activeDogHasHandler, inactiveDogHasHandler);
+        assertThat(dogHasHandlers).containsExactlyInAnyOrder(activeDogHasHandler1, inactiveDogHasHandler1);
     }
 
     @Test
     void findAllByMemberIdAndNotDeleted() {
-        var dogHasHandlers = dogHasHandlerRepository.findAllByMemberIdAndNotDeleted(memberId);
+        var dogHasHandlers = dogHasHandlerRepository.findAllByMemberIdAndNotDeleted(memberId1);
 
-        assertThat(dogHasHandlers).containsExactlyInAnyOrder(activeDogHasHandler, inactiveDogHasHandler);
+        assertThat(dogHasHandlers).containsExactlyInAnyOrder(activeDogHasHandler1, inactiveDogHasHandler2);
     }
 
     @Test
     void findAllByMemberIdAndEntityStatus() {
-        var dogHasHandlers = dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId, EntityStatus.ACTIVE);
+        var dogHasHandlers = dogHasHandlerRepository.findAllByMemberIdAndEntityStatus(memberId1, EntityStatus.ACTIVE);
 
-        assertThat(dogHasHandlers).containsExactly(activeDogHasHandler);
+        assertThat(dogHasHandlers).containsExactly(activeDogHasHandler1);
     }
 
     @Test
     void findByDogIdAndMemberId() {
-        var dogHasHandlerOptional = dogHasHandlerRepository.findByDogIdAndMemberId(dogId, memberId);
+        var dogHasHandlerOptional = dogHasHandlerRepository.findByDogIdAndMemberId(dogId1, memberId1);
 
         assertThat(dogHasHandlerOptional)
                 .isPresent()
-                .hasValue(activeDogHasHandler);
+                .hasValue(activeDogHasHandler1);
     }
 
     @Test
     void findAllByDogIdAndEntityStatus() {
-        var dogHasHandlers = dogHasHandlerRepository.findAllByDogIdAndEntityStatus(dogId, EntityStatus.ACTIVE);
+        var dogHasHandlers = dogHasHandlerRepository.findAllByDogIdAndEntityStatus(dogId1, EntityStatus.ACTIVE);
 
-        assertThat(dogHasHandlers).containsExactly(activeDogHasHandler);
+        assertThat(dogHasHandlers).containsExactly(activeDogHasHandler1);
     }
 
     @Nested
     class FindAllByValue {
-
-        private DogHasHandler activeDogHasHandler2;
-
-        @BeforeEach
-        void setUp() {
-            activeDogHasHandler2 = new DogHasHandler();
-            var dog = ReferenceTestFixture.createDogReference("Robert");
-            activeDogHasHandler2.setDog(dogReferenceRepository.save(dog));
-            activeDogHasHandler2.setMember(memberRepository.save(ReferenceTestFixture.createMemberReference("Maximilian", "Mustermann")));
-            dogHasHandlerRepository.save(activeDogHasHandler2);
-        }
 
         @ParameterizedTest
         @NullAndEmptySource
@@ -106,7 +101,7 @@ class DogHasHandlerCustomRepositoryImplIntTest {
         void nameIsEmptyOrNull(String value) {
             var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(value, Pageable.unpaged());
 
-            assertThat(dogHasHandlerPage).containsExactlyInAnyOrder(activeDogHasHandler, activeDogHasHandler2);
+            assertThat(dogHasHandlerPage).containsExactlyInAnyOrder(activeDogHasHandler1, activeDogHasHandler2);
         }
 
         @ParameterizedTest
@@ -119,23 +114,23 @@ class DogHasHandlerCustomRepositoryImplIntTest {
 
         @Test
         void findByDogNameInCapitals() {
-            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler.getDog().getName().toUpperCase(), Pageable.unpaged());
+            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler1.getDog().getName().toUpperCase(), Pageable.unpaged());
 
-            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler);
+            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler1);
         }
 
         @Test
         void findByMemberFirstnameInCapitals() {
-            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler.getMember().getFirstName().toUpperCase(), Pageable.unpaged());
+            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler1.getMember().getFirstName().toUpperCase(), Pageable.unpaged());
 
-            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler);
+            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler1);
         }
 
         @Test
         void findByMemberLastnameInCapitals() {
-            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler.getMember().getLastName().toUpperCase(), Pageable.unpaged());
+            var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler1.getMember().getLastName().toUpperCase(), Pageable.unpaged());
 
-            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler);
+            assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler1);
         }
     }
 
