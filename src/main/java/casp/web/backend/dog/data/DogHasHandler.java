@@ -17,6 +17,12 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import java.util.HashSet;
 import java.util.Set;
 
+@CompoundIndex(
+        name = "dog_member_unique",
+        def = "{'dog': 1, 'member': 1}",
+        unique = true,
+        partialFilter = "{'entityStatus': {$in: ['ACTIVE','INACTIVE']}}"
+)
 @EqualsAndHashCode(callSuper = false, of = {"member", "dog"})
 //  Compound indexes support lookups by dog or member and entity status.
 @CompoundIndex(name = "dog_status", def = "{'dog': 1, 'entityStatus': 1}")

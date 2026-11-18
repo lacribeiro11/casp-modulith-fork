@@ -11,17 +11,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MongoIntegrationTest
-class DogHasHandlerCustomRepositoryImplIntTest {
+class DogHasHandlerRepositoryIntTest {
 
     @Autowired
     private DogHasHandlerRepository dogHasHandlerRepository;
@@ -131,6 +135,28 @@ class DogHasHandlerCustomRepositoryImplIntTest {
             var dogHasHandlerPage = dogHasHandlerRepository.findAllByValue(activeDogHasHandler1.getMember().getLastName().toUpperCase(), Pageable.unpaged());
 
             assertThat(dogHasHandlerPage).containsExactly(activeDogHasHandler1);
+        }
+    }
+
+    @Nested
+    class UniqueConstraint {
+
+        @ParameterizedTest
+        @EnumSource(value = EntityStatus.class, names = {"ACTIVE", "INACTIVE"})
+        void shouldNotAllowDuplicateDogHasHandler(EntityStatus entityStatus) {
+            var exception = assertThrows(DuplicateKeyException.class, () ->
+                    createDogHasHandler(entityStatus, activeDogHasHandler1.getMember(), activeDogHasHandler1.getDog()));
+
+            assertThat(exception.getMessage()).contains("E11000 duplicate key error collection");
+        }
+
+        @Test
+        void shouldAllowReusingDogMemberPairAfterDeletion() {
+            activeDogHasHandler1.setEntityStatus(EntityStatus.DELETED);
+            dogHasHandlerRepository.save(activeDogHasHandler1);
+
+            assertDoesNotThrow(() ->
+                    createDogHasHandler(EntityStatus.ACTIVE, activeDogHasHandler1.getMember(), activeDogHasHandler1.getDog()));
         }
     }
 
