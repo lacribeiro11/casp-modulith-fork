@@ -19,6 +19,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.event.Level;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -34,10 +38,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(OutputCaptureExtension.class)
 @ExtendWith(MockitoExtension.class)
 class DogHasHandlerServiceImplTest {
     @Mock
@@ -241,30 +246,22 @@ class DogHasHandlerServiceImplTest {
         }
 
         @Test
-        void dogHasHandlerExist() {
-            var existingDogHasHandler = mock(DogHasHandler.class);
-            when(existingDogHasHandler.getId()).thenReturn(dogHasHandler.getId());
-            when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
-            when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
-            when(dogHasHandlerRepository.findByDogIdAndMemberId(dog.getId(), member.getId())).thenReturn(Optional.of(existingDogHasHandler));
-            when(dogHasHandlerRepository.save(dogHasHandler)).thenAnswer(i -> i.getArgument(0));
-
-            var actualDogHasHandlerDto = dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto);
-
-            assertSame(dog, actualDogHasHandlerDto.getDog());
-            assertSame(member, actualDogHasHandlerDto.getMember());
-        }
-
-        @Test
-        void dontSaveDuplicatedDogHasHandlers() {
+        void dontSaveDuplicatedDogHasHandlers(CapturedOutput output) {
+            var duplicateKeyException = new DuplicateKeyException("Duplicate key");
+            var expectedMessage = "There is already a DogHasHandler with this dog[id: %s] and this member[id: %s]"
+                    .formatted(dog.getId(), member.getId());
             var existingDogHasHandler = new DogHasHandler();
             existingDogHasHandler.setDog(dog);
             existingDogHasHandler.setMember(member);
             when(dogReferenceRepository.findOneByIdAndEntityStatus(dog.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(dog));
             when(memberReferenceRepository.findOneByIdAndEntityStatus(member.getId(), EntityStatus.ACTIVE)).thenReturn(Optional.of(member));
-            when(dogHasHandlerRepository.findByDogIdAndMemberId(dog.getId(), member.getId())).thenReturn(Optional.of(existingDogHasHandler));
+            doThrow(duplicateKeyException).when(dogHasHandlerRepository).save(dogHasHandler);
 
-            assertThrows(DogHasHandlerConflictException.class, () -> dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto));
+            var actualException = assertThrows(DogHasHandlerConflictException.class, () -> dogHasHandlerService.saveDogHasHandler(dogHasHandlerDto));
+
+            assertThat(actualException.getMessage())
+                    .contains(expectedMessage);
+            assertThat(output).contains(Level.ERROR.name(), expectedMessage, duplicateKeyException.getLocalizedMessage());
         }
     }
 

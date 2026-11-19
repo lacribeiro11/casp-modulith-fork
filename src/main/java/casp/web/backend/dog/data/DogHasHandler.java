@@ -5,26 +5,43 @@ import casp.web.backend.common.reference.DogReference;
 import casp.web.backend.common.reference.MemberReference;
 import casp.web.backend.dog.DogHasHandlerRequiredFields;
 import com.querydsl.core.annotations.QueryEntity;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@CompoundIndex(
+        name = "dog_member_unique",
+        def = "{'dog': 1, 'member': 1}",
+        unique = true,
+        partialFilter = "{'entityStatus': {$in: ['ACTIVE','INACTIVE']}}"
+)
+@EqualsAndHashCode(callSuper = false, of = {"member", "dog"})
+//  Compound indexes support lookups by dog or member and entity status.
+@CompoundIndex(name = "dog_status", def = "{'dog': 1, 'entityStatus': 1}")
+@CompoundIndex(name = "member_status", def = "{'member': 1, 'entityStatus': 1}")
 @Getter
 @Setter
 // The values are derived from the DBRef fields, so the ignore parameters are unnecessary.
-@SuppressWarnings("java:S1172")
+@SuppressWarnings({"java:S1172", "unused"})
 @QueryEntity
 @Document
 public class DogHasHandler extends BaseDocument implements DogHasHandlerRequiredFields {
+    @NotNull
+    @Indexed
     @DocumentReference
     private MemberReference member;
     private String firstName;
     private String lastName;
+    @NotNull
+    @Indexed
     @DocumentReference
     private DogReference dog;
     private String dogName;
@@ -65,18 +82,5 @@ public class DogHasHandler extends BaseDocument implements DogHasHandlerRequired
 
     public void setOwnerName(String ignore) {
         this.ownerName = dog.getOwnerName();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DogHasHandler that)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(member, that.member) && Objects.equals(dog, that.dog);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(member.getId(), dog.getId());
     }
 }
