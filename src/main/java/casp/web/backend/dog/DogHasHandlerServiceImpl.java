@@ -11,6 +11,7 @@ import casp.web.backend.dog.data.DogHasHandlerRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,18 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         var dog = getActiveDogById(dogHasHandlerDto.getDogId());
         var member = getActiveMemberById(dogHasHandlerDto.getMemberId());
 
-        verifyForDogHasHandlerConflict(dogHasHandlerDto);
-
         var dogHasHandler = DOG_HAS_HANDLER_MAPPER.toSource(dogHasHandlerDto);
         dogHasHandler.setDog(dog);
         dogHasHandler.setMember(member);
 
-        return DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerRepository.save(dogHasHandler));
+        try {
+            return DOG_HAS_HANDLER_MAPPER.toTarget(dogHasHandlerRepository.save(dogHasHandler));
+        } catch (DuplicateKeyException e) {
+            var msg = "There is already a DogHasHandler with this dog[id: %s] and this member[id: %s]"
+                    .formatted(dog.getId(), member.getId());
+            log.error(msg, e);
+            throw new DogHasHandlerConflictException(msg);
+        }
     }
 
     @Override
@@ -132,18 +138,6 @@ class DogHasHandlerServiceImpl implements DogHasHandlerService {
         var dogHasHandlers = new HashSet<>(dogHasHandlerRepository.findAll());
         dogHasHandlers.forEach(this::setTheCorrectEntityStatus);
         dogHasHandlerRepository.saveAll(dogHasHandlers);
-    }
-
-    private void verifyForDogHasHandlerConflict(DogHasHandlerDto dogHasHandlerDto) {
-        dogHasHandlerRepository.findByDogIdAndMemberId(dogHasHandlerDto.getDogId(), dogHasHandlerDto.getMemberId())
-                .ifPresent(dhh -> {
-                    if (!dhh.getId().equals(dogHasHandlerDto.getId())) {
-                        var msg = "There is already a DogHasHandler[id: %s] with this dog[id: %s] and this member[id: %s]"
-                                .formatted(dhh.getId(), dhh.getDog().getId(), dhh.getMember().getId());
-                        log.error(msg);
-                        throw new DogHasHandlerConflictException(msg);
-                    }
-                });
     }
 
     private MemberReference getActiveMemberById(UUID memberId) {

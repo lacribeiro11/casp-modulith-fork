@@ -81,15 +81,6 @@ class DogHasHandlerRepositoryIntTest {
     }
 
     @Test
-    void findByDogIdAndMemberId() {
-        var dogHasHandlerOptional = dogHasHandlerRepository.findByDogIdAndMemberId(dogId1, memberId1);
-
-        assertThat(dogHasHandlerOptional)
-                .isPresent()
-                .hasValue(activeDogHasHandler1);
-    }
-
-    @Test
     void findAllByDogIdAndEntityStatus() {
         var dogHasHandlers = dogHasHandlerRepository.findAllByDogIdAndEntityStatus(dogId1, EntityStatus.ACTIVE);
 
