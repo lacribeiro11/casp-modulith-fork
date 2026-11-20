@@ -4,7 +4,6 @@ import casp.web.backend.calendar.CoursesFeesStatsByYearDto;
 import casp.web.backend.calendar.CoursesFeesStatsDto;
 import casp.web.backend.calendar.data.participants.QSpace;
 import casp.web.backend.common.enums.EntityStatus;
-import casp.web.backend.dog.data.QDogHasHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,8 +74,7 @@ class CourseCustomRepositoryImpl extends BaseEventCustomRepositoryImpl<Course> i
                 SPACE.dogHasHandler.entityStatus.getMetadata().getName());
 
         var aggregation = Aggregation.newAggregation(
-                Aggregation.unwind(participantsFieldName),
-                Aggregation.lookup(QDogHasHandler.dogHasHandler.getMetadata().getName(), dogHasHandlerIdFieldName,
+                Aggregation.unwind(participantsFieldName), Aggregation.lookup("dogHasHandler", dogHasHandlerIdFieldName,
                         AGGREGATION_ID,
                         dhhInfo),
                 Aggregation.unwind(dhhInfo),

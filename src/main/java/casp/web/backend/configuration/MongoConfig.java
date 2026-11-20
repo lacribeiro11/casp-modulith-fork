@@ -49,7 +49,7 @@ class MongoConfig {
     }
 
     @Bean
-    public ZoneId zoneId(JacksonProperties jacksonProperties) {
+    ZoneId zoneId(JacksonProperties jacksonProperties) {
         var timeZone = jacksonProperties.getTimeZone();
         if (timeZone == null) {
             throw new IllegalStateException("jacksonProperties.getTimeZone() must not be null");
