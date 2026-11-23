@@ -10,6 +10,7 @@ pipeline {
 
     options {
         disableConcurrentBuilds()
+        lock(resource: 'admin-v2-pipeline')
         buildDiscarder(logRotator(numToKeepStr: '5'))
         skipStagesAfterUnstable()
     }
