@@ -14,4 +14,5 @@ public class MembershipFee implements Payment {
     private Double paidPrice;
     @NotNull
     private LocalDate paidDate;
+    private String comment;
 }
